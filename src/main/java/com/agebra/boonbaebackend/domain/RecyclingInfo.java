@@ -22,6 +22,9 @@ public class RecyclingInfo {
     @Column(name = "info_name")
     private String name;
 
+    @Column(name = "image_url", length = 99999)
+    private String imageUrl;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "recycle_type")
