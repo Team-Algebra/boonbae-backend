@@ -21,6 +21,10 @@ public class Users implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pk;
 
+    @OneToOne
+    @JoinColumn(name ="tree_pk", referencedColumnName = "pk")
+    private Tree tree;
+
     @NotNull
     private String id;
 
@@ -38,6 +42,7 @@ public class Users implements UserDetails {
 
     @NotNull
     @Enumerated(EnumType.STRING)
+    @Column(name = "roles")
     private UserRole role = UserRole.USER;
 
     @NotNull
