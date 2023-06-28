@@ -1,3 +1,4 @@
+
 HELP.md
 .gradle
 build/
@@ -21,6 +22,7 @@ bin/
 .idea
 *.iws
 *.iml
+*.properties
 *.ipr
 out/
 !**/src/main/**/out/
@@ -29,9 +31,11 @@ out/
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
-/dist/
+/dist/  
 /nbdist/
 /.nb-gradle/
 
 ### VS Code ###
 .vscode/
+
+.DS_Store/
