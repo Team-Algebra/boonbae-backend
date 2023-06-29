@@ -5,10 +5,12 @@ import com.agebra.boonbaebackend.dto.UserDto;
 import com.agebra.boonbaebackend.exception.UserInfoDuplicatedException;
 import com.agebra.boonbaebackend.repository.UserRepository;
 
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,6 +85,10 @@ public class UserService {
           .orElseGet(() -> null);
 
         return (user == null)? false : true;
+    }
+
+    public void delete(Users user) {
+        userRepository.delete(user);
     }
 
 }
