@@ -2,6 +2,7 @@ package com.agebra.boonbaebackend.controller;
 
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.UserDto;
+import com.agebra.boonbaebackend.exception.UserInfoDuplicatedException;
 import com.agebra.boonbaebackend.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Map;
 
 @Tag(name = "UserController", description = "User관련한 컨트롤러 입니다")
@@ -71,6 +73,17 @@ public class UserController {
     @DeleteMapping("/")
     public ResponseEntity deleteUser(@AuthenticationPrincipal Users user) {
         userService.delete(user);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/username")
+    public ResponseEntity modifyNickname(@AuthenticationPrincipal Users user, @RequestBody Map<String, String> map) throws UserInfoDuplicatedException {
+        String userName = map.get("username");
+        if (userName == null)
+            throw new InputMismatchException();
+
+        userService.modifyUsername(user, userName);
 
         return ResponseEntity.ok().build();
     }

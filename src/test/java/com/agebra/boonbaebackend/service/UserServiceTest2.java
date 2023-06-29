@@ -54,47 +54,32 @@ public class UserServiceTest2 {
     assertTrue(passwordEncoder.matches(password, user.getPassword()));
   }
 
-  @DisplayName("중복아이디 회원가입 테스트")
+  @DisplayName("중복아이디, 닉네임 회원가입 테스트")
   @Test
   @Transactional //rollback
-  @Order(1)
-  void isDuplicatedUserId() {
+  @Order(2)
+  void isDuplicatedUserInfo() {
     //given
     UserDto.RegisterRequest request = new UserDto.RegisterRequest(id, nickName, password, "");
     Users user = userService.register(request);
 
     //when
     UserDto.RegisterRequest request2 = new UserDto.RegisterRequest(id, nickName+"1", password, "");
+    UserDto.RegisterRequest request3 = new UserDto.RegisterRequest(id+"1", nickName, password, "");
 
     //then
-    assertThrows(UserInfoDuplicatedException.class, () -> {
+    assertThrows(UserInfoDuplicatedException.class, () -> { //아이디 중복 테스트
       userService.register(request2);
     });
-  }
-
-  @DisplayName("중복닉네임 회원가입 테스트")
-  @Test
-  @Transactional //rollback
-  @Order(1)
-  void isDuplicatedNickname() {
-    //given
-    UserDto.RegisterRequest request = new UserDto.RegisterRequest(id, nickName, password, "");
-    Users user = userService.register(request);
-
-    //when
-    UserDto.RegisterRequest request2 = new UserDto.RegisterRequest(id+"1", nickName, password, "");
-
-    //then
-    assertThrows(UserInfoDuplicatedException.class, () -> {
-      userService.register(request2);
+    assertThrows(UserInfoDuplicatedException.class, () -> { //닉네임 중복 테스트
+      userService.register(request3);
     });
   }
-
 
   @DisplayName("로그인")
   @Test
   @Transactional //rollback
-  @Order(2)
+  @Order(3)
   void login() {
     UserDto.RegisterRequest request = new UserDto.RegisterRequest(id, nickName, password, "");
     Users user = userService.register(request);
@@ -104,5 +89,18 @@ public class UserServiceTest2 {
     UserDto.LoginResponse response = userService.authenticate(requestLogin);
     assertNotNull(response.getToken());
     assertNotNull(response.getUser());
+  }
+
+  @DisplayName("닉네임 변경")
+  @Test
+  @Transactional //rollback
+  @Order(4)
+  void modifyNickname() {
+    UserDto.RegisterRequest request = new UserDto.RegisterRequest(id, nickName, password, "");
+    Users user = userService.register(request);
+
+    userService.modifyUsername(user, nickName+"1");
+
+    assertEquals(nickName + 1, user.getNickname());
   }
 }

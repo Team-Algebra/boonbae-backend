@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
-@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -64,6 +63,10 @@ public class Users implements UserDetails {
 
     public void addReferralPoint(int addPoint) {
         this.ecoPoint += addPoint;
+    }
+
+    public void changeNickname(String newName) {
+        this.nickname = newName;
     }
 
     @Override

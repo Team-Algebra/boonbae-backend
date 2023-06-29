@@ -2,6 +2,7 @@ package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.UserDto;
+import com.agebra.boonbaebackend.exception.ForbiddenException;
 import com.agebra.boonbaebackend.exception.UserInfoDuplicatedException;
 import com.agebra.boonbaebackend.repository.UserRepository;
 
@@ -89,6 +90,16 @@ public class UserService {
 
     public void delete(Users user) {
         userRepository.delete(user);
+    }
+
+    public void modifyUsername(Users user, String nickName) throws UserInfoDuplicatedException {
+        Users findUsers = userRepository.findById(user.getPk())
+          .orElseThrow(() -> new ForbiddenException("일치하는 사용자가 없습니다"));
+
+        if (isExistNickname(nickName))
+            throw new UserInfoDuplicatedException();
+
+        findUsers.changeNickname(nickName);
     }
 
 }
