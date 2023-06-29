@@ -1,8 +1,8 @@
 package com.agebra.boonbaebackend.controller;
 
-import com.agebra.boonbaebackend.dto.AuthenticationResponse;
 import com.agebra.boonbaebackend.dto.UserDto;
 import com.agebra.boonbaebackend.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "UserController", description = "User관련한 컨트롤러 입니다")
 @RequiredArgsConstructor
 @RestController
 @Slf4j
@@ -19,19 +20,19 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
-      @RequestBody  UserDto.Register request
+    public ResponseEntity<UserDto.RegisterResponse> register(
+      @RequestBody UserDto.RegisterRequest request
     ) {
-        log.info("@@" + request.getPassword());
         userService.register(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(
+          UserDto.RegisterResponse.builder().id(request.getId()).username(request.getUsername()).build()
+        );
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
+    @PostMapping("/login")
+    public ResponseEntity<UserDto.LoginResponse> authenticate(
       @RequestBody UserDto.Login request
     ) {
         return ResponseEntity.ok(userService.authenticate(request));
     }
-
 }

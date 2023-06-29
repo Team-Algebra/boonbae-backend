@@ -1,28 +1,52 @@
 package com.agebra.boonbaebackend.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 public class UserDto {
-
-
-    @Data
+    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Register {
+    public static class RegisterRequest {
         private String id;
         private String username;
         private String password;
         private String refferer_id;
     }
 
-    @Data
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    public static class RegisterResponse {
+        private String id;
+        private String username;
+    }
+
+    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Login {
         private String id;
         private String password;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class LoginResponse {
+        private String token;
+        private UserInfo user;
+
+        public LoginResponse(String token, String id, String username) {
+            this.token = token;
+            this.user = new UserInfo(id, username);
+        }
+
+        @Data
+        @AllArgsConstructor
+        private class UserInfo {
+            private String id;
+            private String username;
+        }
     }
 }
