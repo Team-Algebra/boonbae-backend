@@ -3,13 +3,14 @@ package com.agebra.boonbaebackend.service;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.UserDto;
 import com.agebra.boonbaebackend.repository.UserRepository;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
@@ -18,7 +19,6 @@ import java.util.NoSuchElementException;
 @Transactional
 @Slf4j
 public class UserService {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -48,4 +48,14 @@ public class UserService {
         String jwtToken = jwtService.generateToken(user);
         return new UserDto.LoginResponse(jwtToken, user.getId(), user.getNickname());
     }
+
+    //중복 아이디 확인
+    @Transactional(readOnly = true)
+    public boolean isExistId(String id) {
+        Users user = userRepository.findById(id)
+          .orElseGet(() -> null);
+
+        return (user == null)? false : true;
+    }
+
 }
