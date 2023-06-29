@@ -6,9 +6,11 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
-@Data
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -17,6 +19,9 @@ public class RecyclingInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pk;
+
+    @OneToMany(mappedBy = "info")
+    private List<Tag> tagList = new ArrayList<>();
 
     @NotNull
     @Column(name = "info_name")
@@ -47,15 +52,19 @@ public class RecyclingInfo {
     @Column(name="create_date")
     private LocalDate createDate = LocalDate.now();
 
-    public static RecyclingInfo makeRecyclingInfo(String name, TrashType type, String process, String description, int viewCnt)
+    public static RecyclingInfo makeRecyclingInfo(String name, TrashType type, String process, String description, String imageUrl)
     {
         RecyclingInfo recyclingInfo = new RecyclingInfo();
         recyclingInfo.name = name;
         recyclingInfo.type = type;
         recyclingInfo.process = process;
         recyclingInfo.description = description;
-        recyclingInfo.viewCnt = viewCnt;
+        recyclingInfo.imageUrl = imageUrl;
         return recyclingInfo;
+    }
+
+    public void addTagList(List<Tag> tagList) {
+        this.tagList = tagList;
     }
 
 }
