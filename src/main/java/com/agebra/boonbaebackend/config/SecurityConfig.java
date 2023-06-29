@@ -25,27 +25,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf()
-//                .disable()
-//                .authorizeHttpRequests()
-//                .requestMatchers(whiteList)
-//                .permitAll()
-//                .anyRequest()
-//                .authenticated()
-//            .and()
-//                .authenticationProvider(authenticationProvider)
-//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
         http
-          .csrf()
-          .disable()
-          .authorizeHttpRequests()
-          .anyRequest()
-          .permitAll()
-          .and()
-          .authenticationProvider(authenticationProvider)
-          .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf()
+                .disable()
+                .authorizeHttpRequests()
+                .requestMatchers(whiteList)
+                .permitAll()
+                .anyRequest()
+                .authenticated()
+            .and()
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

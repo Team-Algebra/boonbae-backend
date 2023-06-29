@@ -21,7 +21,7 @@ public class RecyclingInfoController {
 
   private final RecyclingService recyclingService;
 
-  @PostMapping("/")
+  @PostMapping("/") //관리자용
   public ResponseEntity write(@RequestBody @Valid RecyclingDto.Write dto) {
     recyclingService.write(dto);
 
