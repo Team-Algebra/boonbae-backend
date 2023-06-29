@@ -58,4 +58,13 @@ public class UserService {
         return (user == null)? false : true;
     }
 
+    //중복 닉네임 확인
+    @Transactional(readOnly = true)
+    public boolean isExistNickname(String nickName) {
+        Users user = userRepository.findByNickname(nickName)
+          .orElseGet(() -> null);
+
+        return (user == null)? false : true;
+    }
+
 }

@@ -37,10 +37,27 @@ public class UserController {
         return ResponseEntity.ok(userService.authenticate(request));
     }
 
-    @GetMapping("/id/{id}/exists")
+    @GetMapping("/id/{id}/exists") //중복 아이디 확인
     public ResponseEntity<Map> isExistsId(@PathVariable("id") String id) {
         Map<String, Boolean> map = new HashMap<>();
         map.put("exists", userService.isExistId(id));
+
+        return ResponseEntity.status(HttpStatus.OK).body(map);
+    }
+
+    @GetMapping("/username/{username}/exists") //중복 닉네임 확인
+    public ResponseEntity<Map> isExistsNickname(@PathVariable("username") String nickName) {
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("exists", userService.isExistNickname(nickName));
+
+        return ResponseEntity.status(HttpStatus.OK).body(map);
+    }
+
+    ///api/v1/users/referrers?referrer={추천인 아이디}
+    @GetMapping("/referrers") //추천인 존재 확인
+    public ResponseEntity<Map> isExistsRefferer(@RequestParam("referrer") String referrerId) {
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("exists", userService.isExistId(referrerId));
 
         return ResponseEntity.status(HttpStatus.OK).body(map);
     }
