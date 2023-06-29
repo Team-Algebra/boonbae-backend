@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
+@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,7 +23,8 @@ public class Users implements UserDetails {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name ="tree_pk", referencedColumnName = "pk")
-    private Tree tree;
+    @Builder.Default
+    private Tree tree = new Tree();
 
     @NotNull
     private String id;
@@ -37,15 +39,18 @@ public class Users implements UserDetails {
     @NotNull
     @CreationTimestamp
     @Column(name = "create_date")
+    @Builder.Default
     private LocalDate createDate = LocalDate.now();
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "roles")
+    @Builder.Default
     private UserRole role = UserRole.USER;
 
     @NotNull
     @Column(name = "eco_point")
+    @Builder.Default
     private int ecoPoint = 0;
 
     @Lob
@@ -61,8 +66,14 @@ public class Users implements UserDetails {
         return user;
     }
 
+    //추천인 포인트
     public void addReferralPoint(int addPoint) {
         this.ecoPoint += addPoint;
+    }
+
+    //포인트 충전
+    public void chargePoint(int amount) {
+        this.ecoPoint = amount;
     }
 
     public void changeNickname(String newName) {

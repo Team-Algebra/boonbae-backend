@@ -41,14 +41,20 @@ public class UserService {
           .orElseGet(() -> null);
 
         if (referrerUser != null) { //추천인이 존재하면 해당 유저에게 포인트 지급
-            referrerUser.addReferralPoint(valueService.getAddPoint());
+            referrerUser.addReferralPoint(valueService.getReferralPoint());
         }
 
-        Users user = Users.makeUser(
-          dto.getId(),
-          passwordEncoder.encode(dto.getPassword()),
-          dto.getUsername()
-        );
+//        Users user = Users.makeUser(
+//          dto.getId(),
+//          passwordEncoder.encode(dto.getPassword()),
+//          dto.getUsername()
+//        );
+
+        Users user = Users.builder()
+            .id(dto.getId())
+            .password(passwordEncoder.encode(dto.getPassword()))
+            .nickname(dto.getUsername())
+            .build();
 
         userRepository.save(user);
 
@@ -100,6 +106,14 @@ public class UserService {
             throw new UserInfoDuplicatedException();
 
         findUsers.changeNickname(nickName);
+    }
+
+
+    public void chargePoint(Users user, int amount) {
+        Users findUser = userRepository.findById(user.getPk())
+          .orElseThrow(() -> new NoSuchElementException());
+
+        findUser.chargePoint(amount);
     }
 
 }
