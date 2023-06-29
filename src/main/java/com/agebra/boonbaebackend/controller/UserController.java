@@ -21,9 +21,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/") //회원가입
-    public ResponseEntity<UserDto.RegisterResponse> register (
-      @RequestBody UserDto.RegisterRequest request
-    ) throws RuntimeException {
+    public ResponseEntity<UserDto.RegisterResponse> register (@RequestBody UserDto.RegisterRequest request) throws RuntimeException {
         userService.register(request);
 
         return ResponseEntity.ok(

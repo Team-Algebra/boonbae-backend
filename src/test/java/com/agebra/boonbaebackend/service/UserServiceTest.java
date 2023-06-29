@@ -40,6 +40,4 @@ class UserServiceTest {
 
     assertEquals(true, isExistId);
   }
-
-
 }
