@@ -2,6 +2,7 @@ package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.UserDto;
+import com.agebra.boonbaebackend.exception.UserInfoDuplicatedException;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,43 @@ public class UserServiceTest2 {
     assertEquals(user.getNickname(), nickName);
     assertTrue(passwordEncoder.matches(password, user.getPassword()));
   }
+
+  @DisplayName("중복아이디 회원가입 테스트")
+  @Test
+  @Transactional //rollback
+  @Order(1)
+  void isDuplicatedUserId() {
+    //given
+    UserDto.RegisterRequest request = new UserDto.RegisterRequest(id, nickName, password, "");
+    Users user = userService.register(request);
+
+    //when
+    UserDto.RegisterRequest request2 = new UserDto.RegisterRequest(id, nickName+"1", password, "");
+
+    //then
+    assertThrows(UserInfoDuplicatedException.class, () -> {
+      userService.register(request2);
+    });
+  }
+
+  @DisplayName("중복닉네임 회원가입 테스트")
+  @Test
+  @Transactional //rollback
+  @Order(1)
+  void isDuplicatedNickname() {
+    //given
+    UserDto.RegisterRequest request = new UserDto.RegisterRequest(id, nickName, password, "");
+    Users user = userService.register(request);
+
+    //when
+    UserDto.RegisterRequest request2 = new UserDto.RegisterRequest(id+"1", nickName, password, "");
+
+    //then
+    assertThrows(UserInfoDuplicatedException.class, () -> {
+      userService.register(request2);
+    });
+  }
+
 
   @DisplayName("로그인")
   @Test
