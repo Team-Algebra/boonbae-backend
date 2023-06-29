@@ -62,6 +62,10 @@ public class Users implements UserDetails {
         return user;
     }
 
+    public void addReferralPoint() {
+        this.ecoPoint += 1000;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name())); //user는 하나의 역할만 가질 수 ㅇ

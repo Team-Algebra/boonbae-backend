@@ -21,12 +21,17 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/") //회원가입
-    public ResponseEntity<UserDto.RegisterResponse> register(
+    public ResponseEntity<UserDto.RegisterResponse> register (
       @RequestBody UserDto.RegisterRequest request
-    ) {
+    ) throws RuntimeException {
         userService.register(request);
+
         return ResponseEntity.ok(
-          UserDto.RegisterResponse.builder().id(request.getId()).username(request.getUsername()).build()
+          UserDto.RegisterResponse
+            .builder()
+            .id(request.getId())
+            .username(request.getUsername())
+            .build()
         );
     }
 
