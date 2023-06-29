@@ -14,7 +14,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private String[] whiteList = {"/api/v1/register", "/api/v1/authenticate", "/swagger-ui/index.html"};
+    private String[] whiteList = {
+      "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**",
+      "/api/v1/register", "/api/v1/login"
+    };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
