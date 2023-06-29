@@ -24,9 +24,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final ValueService valueService;
 
 
-    public void register(UserDto.RegisterRequest dto) throws RuntimeException {
+    public Users register(UserDto.RegisterRequest dto) throws RuntimeException {
         if (isExistId(dto.getId()))
             throw new UserInfoDuplicatedException("user의 아이디가 중복됩니다");
 
@@ -37,7 +38,7 @@ public class UserService {
           .orElseGet(() -> null);
 
         if (referrerUser != null) { //추천인이 존재하면 해당 유저에게 포인트 지급
-            referrerUser.addReferralPoint();
+            referrerUser.addReferralPoint(valueService.getAddPoint());
         }
 
         Users user = Users.makeUser(
@@ -47,6 +48,8 @@ public class UserService {
         );
 
         userRepository.save(user);
+
+        return user;
     }
 
     public UserDto.LoginResponse authenticate(UserDto.Login dto) {

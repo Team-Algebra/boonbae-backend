@@ -62,8 +62,8 @@ public class Users implements UserDetails {
         return user;
     }
 
-    public void addReferralPoint() {
-        this.ecoPoint += 1000;
+    public void addReferralPoint(int addPoint) {
+        this.ecoPoint += addPoint;
     }
 
     @Override
