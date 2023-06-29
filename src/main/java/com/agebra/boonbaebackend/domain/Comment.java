@@ -12,15 +12,24 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name="comment")
+@Table(name="comments")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pk;
 
+    @ManyToOne
+    @JoinColumn(name = "user_pk", referencedColumnName = "pk")
+    private Users user;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "info_pk", referencedColumnName = "pk")
+    private RecyclingInfo info;
+
     @NotNull
     @Column(name = "like_cnt")
-    private int likeCnt;
+    private int likeCnt = 0;
 
     @Lob
     @NotNull
@@ -28,8 +37,8 @@ public class Comment {
     private String content;
 
     @NotNull
-    @Column(name = "report_cnt")
-    private int reportCnt;
+    @Column(name = "report_cnt") //신고누적횟수
+    private int reportCnt = 0;
 
     @NotNull
     @CreationTimestamp
@@ -38,9 +47,7 @@ public class Comment {
 
     public static Comment makeComment(String content) {
         Comment comment = new Comment();
-        comment.likeCnt = 0;
         comment.content = content;
-        comment.reportCnt = 0;
         return comment;
     }
 }

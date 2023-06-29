@@ -21,11 +21,15 @@ public class Users implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pk;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name ="tree_pk", referencedColumnName = "pk")
+    private Tree tree;
+
     @NotNull
     private String id;
 
     @NotNull
-    private String username;
+    private String nickname;
 
     @NotNull
     @Column(name = "passwords")
@@ -38,6 +42,7 @@ public class Users implements UserDetails {
 
     @NotNull
     @Enumerated(EnumType.STRING)
+    @Column(name = "roles")
     private UserRole role = UserRole.USER;
 
     @NotNull
@@ -48,11 +53,12 @@ public class Users implements UserDetails {
     @Column(length = 999999999)
     private String introduction;
 
-    public static Users makeUser(String id, String password, String username) {
+    public static Users makeUser(String id, String password, String nickname) {
         Users user = new Users();
         user.id = id;
         user.password = password;
-        user.username = username;
+        user.nickname = nickname;
+        user.tree = new Tree();
         return user;
     }
 
