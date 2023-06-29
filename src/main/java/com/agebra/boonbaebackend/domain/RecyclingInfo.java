@@ -18,18 +18,23 @@ public class RecyclingInfo {
     private Long pk;
 
     @NotNull
+    @Column(name = "info_name")
     private String name;
+
+    @Column(name = "image_url", length = 99999)
+    private String imageUrl;
 
     @NotNull
     @Enumerated(EnumType.STRING)
+    @Column(name = "recycle_type")
     private TrashType type;
 
     @NotNull
-    @Column(name="process")
+    @Column(name="recycle_process", length = 99999)
     private String process;
 
     @NotNull
-    @Column(name="description")
+    @Column(name="descriptions", length = 99999)
     private String description;
 
     @NotNull
