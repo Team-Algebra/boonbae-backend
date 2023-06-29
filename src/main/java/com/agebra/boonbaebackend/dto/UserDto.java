@@ -8,7 +8,7 @@ public class UserDto {
     @NoArgsConstructor
     public static class RegisterRequest {
         private String id;
-        private String username;
+        private String username; //domain에서는 nickname임
         private String password;
         private String refferer_id;
     }
