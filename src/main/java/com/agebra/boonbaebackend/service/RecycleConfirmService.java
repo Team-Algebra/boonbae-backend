@@ -31,7 +31,14 @@ public class RecycleConfirmService {
       pageList = recycleConfirmRepository.findByStatus(status, pageable);
 
     int totalPages = pageList.getTotalPages();
+
     List<RecycleConfirm> list = pageList.getContent();
+    RecycleConfirmDto.Info info = convertToDto(totalPages, list);
+
+    return info;
+  }
+
+  public RecycleConfirmDto.Info convertToDto(int totalPages, List<RecycleConfirm> list) {
     List<RecycleConfirmDto.Info.Detail> detailList = new ArrayList<>();
 
     for (RecycleConfirm rc: list) {
@@ -43,8 +50,6 @@ public class RecycleConfirmService {
       detailList.add(detail);
     }
 
-    RecycleConfirmDto.Info info = new RecycleConfirmDto.Info(totalPages, detailList);
-
-    return info;
+    return new RecycleConfirmDto.Info(totalPages, detailList);
   }
 }

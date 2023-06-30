@@ -52,7 +52,6 @@ public class TreeController {
 
   @GetMapping("/{user_pk}")
   public ResponseEntity getUsersTreeInfo( @PathVariable("user_pk") Long userPk) {
-
     TreeDto.Info usersTreeInfo = treeService.getUsersTreeInfo(userPk);
 
     return ResponseEntity.ok(usersTreeInfo);
