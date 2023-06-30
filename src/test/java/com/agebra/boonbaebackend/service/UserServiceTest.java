@@ -30,7 +30,13 @@ class UserServiceTest {
   @Test
   @DisplayName("중복아이디 여부 확인 테스트")
   void isExistsId_Test() {
-    Users user1 = Users.makeUser("id1", "pass1", "nick1");
+//    Users user1 = Users.makeUser("id1", "pass1", "nick1");
+
+    Users user1 = Users.builder()
+        .id("id1")
+          .password("pass1")
+            .nickname("nick1")
+              .build();
 
     when(userRepository.findById("id1")).thenReturn(Optional.of(user1));
 

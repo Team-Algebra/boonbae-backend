@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.InputMismatchException;
+
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -14,5 +16,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   protected ResponseEntity handleUserInfoDuplicatedException(UserInfoDuplicatedException e) {
     log.info("UserInfoDuplicatedException = {}", e.getMessage());
     return ResponseEntity.status(HttpStatus.CONFLICT).build();
+  }
+
+  @ExceptionHandler({InputMismatchException.class})
+  protected ResponseEntity handleInputMismatchException(InputMismatchException e) {
+    log.info("InputMismatchException = {}", e.getMessage());
+    return ResponseEntity.status(HttpStatus.CONFLICT).build();
+  }
+
+  @ExceptionHandler({ForbiddenException.class})
+  protected ResponseEntity handleInputMismatchException(ForbiddenException e) {
+    log.info("ForbiddenException = {}", e.getMessage());
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
   }
 }
