@@ -1,10 +1,14 @@
 package com.agebra.boonbaebackend.dto;
 
+import com.agebra.boonbaebackend.domain.RecyclingInfo;
 import com.agebra.boonbaebackend.domain.TrashType;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
 
 public class RecyclingDto {
 
@@ -28,5 +32,23 @@ public class RecyclingDto {
     private String[] tags;
 
   }
+
+  @Getter
+  @AllArgsConstructor
+  @NoArgsConstructor
+  public static class Search {
+    private String name;
+  }
+
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class SearchResult {
+    private int count;
+    private List<RecyclingInfo> infoList;
+  }
+
+
 
 }

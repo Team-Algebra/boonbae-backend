@@ -35,4 +35,16 @@ public class RecyclingService {
 
     info.addTagList(tagList);
   }
+
+  // 분리배출 정보 검색
+  public RecyclingDto.SearchResult searchRecyclingInfo(String criteria) {
+    String keyword = criteria;
+
+    List<RecyclingInfo> infoList = recyclingRepository.findByKeyword(keyword); // 키워드를 이용한 검색 쿼리 실행
+
+    int count = infoList.size();
+
+    return new RecyclingDto.SearchResult(count, infoList);
+  }
+
 }
