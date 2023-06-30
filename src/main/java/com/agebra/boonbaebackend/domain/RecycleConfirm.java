@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -35,5 +36,5 @@ public class RecycleConfirm {
   @CreationTimestamp
   @Builder.Default
   @Column(name="create_date")
-  private LocalDate createDate = LocalDate.now();
+  private LocalDateTime createDate = LocalDateTime.now();
 }
