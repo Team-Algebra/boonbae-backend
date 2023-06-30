@@ -1,5 +1,6 @@
 package com.agebra.boonbaebackend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -20,6 +21,7 @@ public class RecyclingInfo {
     private Long pk;
 
     @OneToMany(mappedBy = "info")
+    @JsonIgnoreProperties("info")
     private List<Tag> tagList = new ArrayList<>();
 
     @NotNull

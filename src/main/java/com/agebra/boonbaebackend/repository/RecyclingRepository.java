@@ -8,7 +8,8 @@ import java.util.List;
 
 public interface RecyclingRepository extends JpaRepository<RecyclingInfo, Long> {
 
-    @Query("SELECT r FROM RecyclingInfo r WHERE r.name LIKE %:keyword% OR r.process LIKE %:keyword% OR r.description LIKE %:keyword%")
+    @Query("SELECT r FROM RecyclingInfo r WHERE r.name LIKE %:keyword%")
     List<RecyclingInfo> findByKeyword(String keyword);
+
 
 }

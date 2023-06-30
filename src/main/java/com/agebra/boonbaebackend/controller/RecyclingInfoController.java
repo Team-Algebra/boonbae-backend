@@ -18,7 +18,7 @@ public class RecyclingInfoController {
 
   private final RecyclingService recyclingService;
 
-  @PostMapping("/") //관리자용
+  @PostMapping("/") //관리자용. 분리배출 정보 등록
   public ResponseEntity write(@RequestBody @Valid RecyclingDto.Write dto) {
     recyclingService.write(dto);
 

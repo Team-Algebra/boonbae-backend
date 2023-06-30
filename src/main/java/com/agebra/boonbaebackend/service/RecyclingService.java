@@ -19,21 +19,26 @@ public class RecyclingService {
   private final RecyclingRepository recyclingRepository;
   private final TagRepository tagRepository;
 
+  // 분리배출 정보 등록
   public void write(RecyclingDto.Write dto) {
     RecyclingInfo info = RecyclingInfo.makeRecyclingInfo(
-      dto.getName(), dto.getType(), dto.getProcess(), dto.getDescription(), dto.getImage_url()
+            dto.getName(), dto.getType(), dto.getProcess(), dto.getDescription(), dto.getImage_url()
     );
 
     recyclingRepository.save(info);
 
     List<Tag> tagList = new ArrayList<>();
-    for (String tag: dto.getTags()) {
-      Tag newTag = Tag.makeTag(info, tag);
-      tagList.add(newTag);
-      tagRepository.save(newTag);
+
+    for (String tag : dto.getTags()) {
+      Tag existingTag = tagRepository.findByName(tag);
+      if (existingTag == null) {
+        existingTag = Tag.makeTag(info, tag);
+        tagList.add(existingTag);
+        tagRepository.save(existingTag);
+      }
+      info.addTagList(tagList);
     }
 
-    info.addTagList(tagList);
   }
 
   // 분리배출 정보 검색
