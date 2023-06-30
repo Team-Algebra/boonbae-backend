@@ -66,6 +66,10 @@ public class Users implements UserDetails {
         return user;
     }
 
+    public void changeIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
     //추천인 포인트
     public void addReferralPoint(int addPoint) {
         this.ecoPoint += addPoint;

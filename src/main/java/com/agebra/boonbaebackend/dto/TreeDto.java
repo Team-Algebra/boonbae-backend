@@ -33,6 +33,15 @@ public class TreeDto {
   @Getter
   @AllArgsConstructor
   @NoArgsConstructor
+  public static class Tier {
+    private Long all_cnt;
+    private Long rank;
+  }
+
+  @Builder
+  @Getter
+  @AllArgsConstructor
+  @NoArgsConstructor
   public static class Confirm {
     private String image_url;
 

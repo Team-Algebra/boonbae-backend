@@ -86,4 +86,24 @@ public class UserController {
 
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/introduction")
+    public ResponseEntity getIntroduction(@AuthenticationPrincipal Users user) {
+        String introduction = userService.getIntroduction(user);
+        Map<String, String> map = new HashMap<>();
+        map.put("introduction", introduction);
+
+        return ResponseEntity.ok(map);
+    }
+
+    @PatchMapping("/introduction")
+    public ResponseEntity modifyIntroduction(@AuthenticationPrincipal Users user, @RequestBody Map<String, String> map) throws InputMismatchException{
+        String introduction = map.get("introduction");
+        if (introduction == null)
+            throw new InputMismatchException("introduction이 비어있습니다");
+
+        userService.modifyIntroduction(user, introduction);
+
+        return ResponseEntity.ok().build();
+    }
 }

@@ -88,6 +88,26 @@ public class TreeService {
     return info;
   }
 
+  public TreeDto.Tier getTier(Users user) {
+    Users findUser = userRepository.findById(user.getPk())
+      .orElseGet(() -> null);
+
+    if (findUser == null)
+      throw new NoSuchUserException("해당하는 user가 없습니다");
+
+    Tree tree = findUser.getTree();
+    tree.init(); //날짜가 지났는지 확인 후 초기화
+
+    Long allUserCnt = userRepository.countBy();
+    Long myrank = treeRepository.findRankById(tree.getPk());
+
+    TreeDto.Tier tier = TreeDto.Tier.builder()
+      .all_cnt(allUserCnt)
+      .rank(myrank)
+      .build();
+
+    return tier;
+  }
 
 
 }

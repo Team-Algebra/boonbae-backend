@@ -57,5 +57,11 @@ public class TreeController {
     return ResponseEntity.ok(usersTreeInfo);
   }
 
+  @GetMapping("/tier")
+  public ResponseEntity getTier(@AuthenticationPrincipal Users user) {
+    TreeDto.Tier tierDto = treeService.getTier(user);
+
+    return ResponseEntity.ok(tierDto);
+  }
 
 }
