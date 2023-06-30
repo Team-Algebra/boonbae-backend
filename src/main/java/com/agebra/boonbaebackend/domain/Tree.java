@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDate;
 
 @Builder
+@Getter
 @RequiredArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -21,11 +22,18 @@ public class Tree {
 
   @NotNull
   @Builder.Default
+  @Column(name = "accumulated_exp")
+  private Long accumulatedExp = 0L;
+
+  @NotNull
+  @Builder.Default
   @Column(name = "recycle_cnt")
   private int recycleCnt = 0;
 
   @Builder.Default
-  private boolean ad = false; //광고봤는지 유무
+  @NotNull
+  @Column(name = "is_watching_ad")
+  private boolean watchingAd = false; //광고봤는지 유무
 
   @NotNull
   @CreationTimestamp
@@ -34,9 +42,16 @@ public class Tree {
   private LocalDate updateDate = LocalDate.now();
 
   @NotNull
-  @Column(name = "tonic_cnt")
   @Builder.Default
-  private int tonicCnt = 0;
+  @Column(name = "tonic_available")
+  private int tonicAvailable = 3;
 
+  public void init() {
+    LocalDate current = LocalDate.now();
 
+    if (current != updateDate) {
+      watchingAd = false;
+      tonicAvailable = 3;
+    }
+  }
 }
