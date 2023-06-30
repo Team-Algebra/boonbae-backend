@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional
@@ -51,5 +53,20 @@ public class RecycleConfirmService {
     }
 
     return new RecycleConfirmDto.Info(totalPages, detailList);
+  }
+
+  private void changeStatus(Long recyclingConfirmPk, RecycleConfirmStatus status) {
+    RecycleConfirm recycleConfirm = recycleConfirmRepository.findById(recyclingConfirmPk)
+      .orElseThrow(() -> new NoSuchElementException("해당하는 분리배출 인증사진이 없습니다"));
+
+    recycleConfirm.pass();
+  }
+
+  public void pass(Long recyclingConfirmPk) {
+    changeStatus(recyclingConfirmPk, RecycleConfirmStatus.PASS);
+  }
+
+  public void unpass(Long recyclingConfirmPk) {
+    changeStatus(recyclingConfirmPk, RecycleConfirmStatus.UNPASS);
   }
 }

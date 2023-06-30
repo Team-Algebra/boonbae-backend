@@ -3,6 +3,7 @@ package com.agebra.boonbaebackend.controller;
 
 import com.agebra.boonbaebackend.domain.RecycleConfirm;
 import com.agebra.boonbaebackend.domain.RecycleConfirmStatus;
+import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.RecycleConfirmDto;
 import com.agebra.boonbaebackend.service.RecycleConfirmService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,10 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @Slf4j
-@RequestMapping("/api/v1/recycling_confirm")
+@RequestMapping("/api/v1/recycling_confirm") //관리자 전용 url
 public class RecycleConfirmController {
 
   private final RecycleConfirmService recycleConfirmService;
@@ -39,7 +38,18 @@ public class RecycleConfirmController {
     return ResponseEntity.ok(list);
   }
 
+  @PatchMapping("/{recycling_confirm_pk}/pass") //관리자용
+  public ResponseEntity passRecycle(@RequestParam("recycling_confirm_pk") Long recyclingConfirmPk) {
+    recycleConfirmService.pass(recyclingConfirmPk);
 
+    return ResponseEntity.ok().build();
+  }
 
+  @PatchMapping("/{recycling_confirm_pk}/unpass") //관리자용
+  public ResponseEntity unpassRecycle(@RequestParam("recycling_confirm_pk") Long recyclingConfirmPk) {
+    recycleConfirmService.unpass(recyclingConfirmPk);
+
+    return ResponseEntity.ok().build();
+  }
 
 }

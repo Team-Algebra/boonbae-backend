@@ -21,7 +21,7 @@ public class Users implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pk;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name ="tree_pk", referencedColumnName = "pk")
     @Builder.Default
     private Tree tree = new Tree();

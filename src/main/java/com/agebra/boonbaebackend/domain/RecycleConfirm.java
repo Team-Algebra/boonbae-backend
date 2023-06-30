@@ -37,4 +37,12 @@ public class RecycleConfirm {
   @Builder.Default
   @Column(name="create_date")
   private LocalDateTime createDate = LocalDateTime.now();
+
+  public void pass() {
+    this.status = RecycleConfirmStatus.PASS;
+  }
+
+  public void unpass() {
+    this.status = RecycleConfirmStatus.UNPASS;
+  }
 }
