@@ -16,7 +16,7 @@ public class SecurityConfig {
 
     private String[] whiteList = {
       "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**",
-      "/api/v1/users/", "/api/v1/users/login",
+      "/api/v1/users/", "/api/v1/users/login", "/api/v1/comments/{comment_pk}/reports", "/api/v1/recycling/{recycling_pk}/comments",
       "/error"
     };
 
