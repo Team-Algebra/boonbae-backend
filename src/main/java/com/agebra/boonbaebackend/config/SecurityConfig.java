@@ -22,7 +22,7 @@ public class SecurityConfig {
     };
 
     private String[] adminList = {
-      "/api/v1/recycling_confirm/**"
+      "/api/v1/recycling_confirm/**","api/v1/qna/{qna_pk}/reply"
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
