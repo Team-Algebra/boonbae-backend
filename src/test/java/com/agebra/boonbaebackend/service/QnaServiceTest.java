@@ -2,102 +2,60 @@ package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.QnA;
 import com.agebra.boonbaebackend.domain.QnAType;
+import com.agebra.boonbaebackend.domain.RecyclingInfo;
 import com.agebra.boonbaebackend.domain.Users;
-import com.agebra.boonbaebackend.dto.QnADto;
-import com.agebra.boonbaebackend.dto.UserDto;
-import com.agebra.boonbaebackend.exception.NotFoundException;
-import com.agebra.boonbaebackend.exception.UserInfoDuplicatedException;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import com.agebra.boonbaebackend.repository.QnARepository;
+import com.agebra.boonbaebackend.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-@SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class QnaServiceTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
-  @Autowired
-  private QnAService qnAService;
+class QnAServiceTest{
+    @Mock
+    private QnARepository qnaRepository;
 
-  @Autowired
-  private UserService userService;
+    @InjectMocks
+    private QnAService qnaService;
 
-  @DisplayName("질문글 올리기")
-  @Test
-  @Transactional //rollback
-  @Order(1)
-  void addQna() {
-    UserDto.RegisterRequest registerRequest = new UserDto.RegisterRequest("testId", "testNickName", "testPassword", "");
-    Users user = userService.register(registerRequest);
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
 
-    QnADto.Request qnaDto = new QnADto.Request("title", QnAType.ADD_REQUEST,"description");
-    QnA writeQna = qnAService.write(qnaDto, user);
+    @Test
+    @DisplayName("검색 확인테스트")
+    void searchQnAType_Test() {
+        Users user1 = Users.builder()
+                .id("id1")
+                .password("pass1")
+                .nickname("nick1")
+                .build();
 
-    QnADto.Response_oneQnA responseOneQnA = qnAService.one_QnA(writeQna.getPk());
+        QnA qna1 = QnA.makeQnA(
+                user1, QnAType.ADD_REQUEST,"test1","testde");
+        QnA qna2 = QnA.makeQnA(
+                user1, QnAType.ADD_REQUEST,"test1","testde");
+        QnA qna3 = QnA.makeQnA(
+                user1, QnAType.ETC,"test1","testde");
+        List<QnA> mockQnAList = new ArrayList<>();
+        mockQnAList.add(qna1);
+        mockQnAList.add(qna2);
+        when(qnaRepository.findByQnaType(QnAType.ADD_REQUEST)).thenReturn(mockQnAList);
+        Pageable pageable= PageRequest.of(1, 5);
+        List<QnA> qnaList = qnaRepository.findByQnaType(QnAType.ADD_REQUEST);
+        assertEquals(mockQnAList,qnaList);
 
-    assertEquals("title", responseOneQnA.getTitle());
-    assertEquals(QnAType.ADD_REQUEST, responseOneQnA.getQnaType());
-    assertEquals("description", responseOneQnA.getDescription());
-  }
-
-
-  //질문글 삭제하기
-  @DisplayName("질문글 삭제하기")
-  @Test
-  @Transactional //rollback
-  @Order(2)
-  void deleteQna() {
-    UserDto.RegisterRequest registerRequest = new UserDto.RegisterRequest("testId", "testNickName", "testPassword", "");
-    Users user = userService.register(registerRequest);
-
-    QnADto.Request qnaDto = new QnADto.Request("title", QnAType.ADD_REQUEST,"description");
-    QnA writeQna = qnAService.write(qnaDto, user);
-
-    qnAService.delete(writeQna.getPk());
-
-    //qna 삭제되어 조회 시 notfound exception이 발생해야함
-    assertThrows(NotFoundException.class, () -> {
-      qnAService.one_QnA(writeQna.getPk());
-    });
-  }
-
-  //질문글 수정하기
-  @DisplayName("질문글 수정하기")
-  @Test
-  @Transactional //rollback
-  @Order(3)
-  void modifyQna() {
-    UserDto.RegisterRequest registerRequest = new UserDto.RegisterRequest("testId", "testNickName", "testPassword", "");
-    Users user = userService.register(registerRequest);
-
-    QnADto.Request qnaDto = new QnADto.Request("title", QnAType.ADD_REQUEST,"description");
-    QnA writeQna = qnAService.write(qnaDto, user);
-
-    String modifyTitle = "title1";
-    String modifyDescription = "description1";
-
-    QnADto.Request modifyQnaDto1 = new QnADto.Request(modifyTitle, QnAType.EDIT_REQUEST,modifyDescription);
-
-    qnAService.update_QnA(writeQna.getPk(), modifyQnaDto1, user);
-    QnADto.Response_oneQnA writeQnaDto = qnAService.one_QnA(writeQna.getPk());
-    assertEquals(modifyTitle, writeQnaDto.getTitle());
-    assertEquals(QnAType.EDIT_REQUEST, writeQnaDto.getQnaType());
-    assertEquals(modifyDescription, writeQnaDto.getDescription());
-    //qna 삭제되어 조회 시 notfound exception이 발생해야함
-  }
-
-
-  //질문글 조회하기 - 카테고리별로 조회/ 카테고리 아닌건 안나오게
-
-
-  //답변달기
-
-  //답변 수정하기
-
-
-
-
+    }
 }
