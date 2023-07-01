@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +58,13 @@ public class RecyclingService {
     return recyclingRepository.findById(recyclePk).orElse(null);
   }
 
+  public List<String> getRankFive() {
 
+    List<String> list = new ArrayList<>();
+    for (RecyclingInfo info: recyclingRepository.findTop5ByOrderByViewCntDesc()) {
+      list.add(info.getName());
+    }
 
+    return list;
+  }
 }

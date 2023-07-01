@@ -1,6 +1,8 @@
 package com.agebra.boonbaebackend.controller;
 
+import com.agebra.boonbaebackend.domain.RecyclingInfo;
 import com.agebra.boonbaebackend.domain.Users;
+import com.agebra.boonbaebackend.service.RecyclingService;
 import com.agebra.boonbaebackend.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Map;
 
 @Tag(name = "MiscController", description = "기타 기능, 동작을 처리하는 컨트롤러 입니다")
@@ -20,6 +24,7 @@ import java.util.Map;
 public class MiscController {
 
   private final UserService userService;
+  private final RecyclingService recyclingService;
 
   @PostMapping("/point")
   public ResponseEntity chargePoint(@AuthenticationPrincipal Users user, @RequestBody Map<String, Integer> map) {
@@ -31,6 +36,16 @@ public class MiscController {
     userService.chargePoint(user, amount);
 
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/search/ranking")
+  public ResponseEntity getSearchRanking() {
+
+    List<String> rankFive = recyclingService.getRankFive();
+    Map<String, List> map = new HashMap<>();
+    map.put("rank", rankFive);
+
+    return ResponseEntity.ok(map);
   }
 
 

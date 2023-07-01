@@ -17,4 +17,6 @@ public interface RecyclingRepository extends JpaRepository<RecyclingInfo, Long> 
     @Query("UPDATE RecyclingInfo r SET r.viewCnt = r.viewCnt + 1 WHERE r.pk = :pk")
     void updateViewCount(Long pk);
 
+    List<RecyclingInfo> findTop5ByOrderByViewCntDesc();
+
 }
