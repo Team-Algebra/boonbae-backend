@@ -132,4 +132,14 @@ public class UserService {
 
         findUser.changeIntroduction(introduction);
     }
+
+    public UserDto.Info getUserInfo(Users user) {
+
+        return UserDto.Info.builder()
+          .username(user.getUsername())
+          .id(user.getId())
+          .eco_point(user.getEcoPoint())
+          .build();
+
+    }
 }

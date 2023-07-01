@@ -34,7 +34,7 @@ public class TreeController {
     return ResponseEntity.ok(map);
   }
 
-  //인증사진 업로드하고 포인트받기
+  //인증사진 업로드
   @PostMapping("/")
   public ResponseEntity uploadRecycle(
     @AuthenticationPrincipal Users user, @RequestBody TreeDto.Confirm dto

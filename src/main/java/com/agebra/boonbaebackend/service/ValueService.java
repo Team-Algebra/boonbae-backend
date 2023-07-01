@@ -12,6 +12,4 @@ public class ValueService {
   private int recyclePoint = 50;
   private int recycleExp = 100;
 
-
-
 }

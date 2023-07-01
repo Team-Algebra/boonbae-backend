@@ -1,9 +1,12 @@
 package com.agebra.boonbaebackend.controller;
 
+import com.agebra.boonbaebackend.domain.QnAType;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.QnADto;
 import com.agebra.boonbaebackend.service.QnAService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +31,7 @@ public class QnAController {
     }
     @GetMapping("/") //QnA 페이지 
     public ResponseEntity<List<QnADto.Response_AllQnA>> findAllQnA(
-            @RequestParam(value = "category",required = false, defaultValue = "") String category,
+            @RequestParam(value = "category",required = false, defaultValue = "") QnAType category,
             @RequestParam(value = "size",required = false, defaultValue = "10") int size,
             @RequestParam(value = "page",required = false, defaultValue = "0") int page){
         Pageable pageable = PageRequest.of(page,size);
@@ -42,7 +45,7 @@ public class QnAController {
     }
 
     @PutMapping("/{qnaPk}") //QnA 수정
-    public ResponseEntity<Void> updateQnA(@PathVariable Long qnaPk, @RequestBody QnADto.Request dto, @AuthenticationPrincipal Users user){
+    public ResponseEntity<Void> updateQnA(@PathVariable Long qnaPk, @Valid @RequestBody QnADto.Request dto, @AuthenticationPrincipal Users user){
         qnaService.update_QnA(qnaPk,dto,user);
         return ResponseEntity.ok().build();
     }

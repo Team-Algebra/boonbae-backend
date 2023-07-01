@@ -87,6 +87,14 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/info/my")
+    public ResponseEntity getUserInfo(@AuthenticationPrincipal Users user) {
+
+        UserDto.Info userInfo = userService.getUserInfo(user);
+
+        return ResponseEntity.ok(userInfo);
+    }
+
     @GetMapping("/introduction")
     public ResponseEntity getIntroduction(@AuthenticationPrincipal Users user) {
         String introduction = userService.getIntroduction(user);

@@ -53,14 +53,10 @@ public class QnA {
         qna.descriptions = description;
         return qna;
     }
-    public void editQnA(Users user, QnAType qnaType, String title, String description){
-        if(this.user.getPk()==user.getPk()){
-            this.qnaType=qnaType;
-            this.title=title;
-            this.descriptions=description;
-        }else{
-            throw new ForbiddenException("QnA를 작성한 유저가 아닙니다.");
-        }
+    public void editQnA(QnAType qnaType, String title, String description){
+        this.qnaType=qnaType;
+        this.title=title;
+        this.descriptions=description;
     }
     public void makeReply(String replyText){
         this.replyText=replyText;
