@@ -17,6 +17,8 @@ public class TreeDto {
     private Long all_cnt;
     private Long rank;
     private int recycle_cnt;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private int upload_available;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer eco_point;

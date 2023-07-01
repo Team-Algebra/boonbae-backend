@@ -135,11 +135,14 @@ public class UserService {
     }
 
     public UserDto.Info getUserInfo(Users user) {
+        //이렇게 안하면 새로 반영이 안되는듯?
+        Users findUsers = userRepository.findById(user.getPk())
+          .orElseThrow(() -> new NotFoundException("없는 user입니다"));
 
         return UserDto.Info.builder()
-          .username(user.getUsername())
-          .id(user.getId())
-          .eco_point(user.getEcoPoint())
+          .username(findUsers.getNickname())
+          .id(findUsers.getId())
+          .eco_point(findUsers.getEcoPoint())
           .build();
 
     }

@@ -100,7 +100,7 @@ class TreeServiceTest {
     RecycleConfirm recycleConfirm2 = treeService.uploadRecycle(user, new TreeDto.Confirm("asdf"));
     recycleConfirmService.pass(recycleConfirm.getPk());
     recycleConfirmService.pass(recycleConfirm2.getPk());
-    
+
     RecycleConfirm recycleConfirm3 = treeService.uploadRecycle(user2, new TreeDto.Confirm("asdf"));
     recycleConfirmService.pass(recycleConfirm3.getPk());
 
