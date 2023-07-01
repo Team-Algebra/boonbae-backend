@@ -1,7 +1,5 @@
 package com.agebra.boonbaebackend.dto;
 
-import com.agebra.boonbaebackend.domain.RecyclingInfo;
-import com.agebra.boonbaebackend.domain.Tag;
 import com.agebra.boonbaebackend.domain.TrashType;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -35,19 +33,28 @@ public class RecyclingDto {
   }
 
   @Getter
-  @AllArgsConstructor
+  @Setter
   @NoArgsConstructor
-  public static class Search {
-    private String name;
+  @AllArgsConstructor
+  public static class SearchResult {
+    private int count;
+    private List<Search> infoList;
   }
 
   @Getter
   @Setter
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class SearchResult {
-    private int count;
-    private List<RecyclingInfo> infoList;
+  public static class Search {
+    private Long pk;
+    private String name;
+    private String process;
+    private String description;
+    private TrashType type;
+    private String imageUrl;
+    private String[] tags;
+    private int viewCnt;
+    private LocalDate createDate;
   }
 
   @Getter
@@ -60,7 +67,7 @@ public class RecyclingDto {
     private String description;
     private TrashType type;
     private String imageUrl;
-    private List<Tag> tags;
+    private String[] tags;
     private int viewCnt;
     private LocalDate createDate;
   }
