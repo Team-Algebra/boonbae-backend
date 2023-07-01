@@ -3,6 +3,7 @@ package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.RecycleConfirm;
 import com.agebra.boonbaebackend.domain.RecycleConfirmStatus;
+import com.agebra.boonbaebackend.domain.Tree;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.RecycleConfirmDto;
 import com.agebra.boonbaebackend.repository.RecycleConfirmRepository;
@@ -15,14 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class RecycleConfirmService {
   private final RecycleConfirmRepository recycleConfirmRepository;
-
+  private final ValueService valueService;
 
   public RecycleConfirmDto.Info findAll(RecycleConfirmStatus status, Pageable pageable) {
     Page<RecycleConfirm> pageList;
@@ -55,18 +55,27 @@ public class RecycleConfirmService {
     return new RecycleConfirmDto.Info(totalPages, detailList);
   }
 
-  private void changeStatus(Long recyclingConfirmPk, RecycleConfirmStatus status) {
+  public void pass(Long recyclingConfirmPk) {
     RecycleConfirm recycleConfirm = recycleConfirmRepository.findById(recyclingConfirmPk)
       .orElseThrow(() -> new NoSuchElementException("해당하는 분리배출 인증사진이 없습니다"));
 
+    //나무 경험치 지급
+    Tree tree = recycleConfirm.getUser().getTree();
+    tree.recyclePass(valueService.getRecycleExp());
+
+    //분리배출 인증완료 혜택지급
+    Users user = recycleConfirm.getUser();
+    user.addRecyclePoint(valueService.getRecyclePoint());
+
+    //분리배출 인증사진 인증완료 처리
     recycleConfirm.pass();
   }
 
-  public void pass(Long recyclingConfirmPk) {
-    changeStatus(recyclingConfirmPk, RecycleConfirmStatus.PASS);
-  }
-
   public void unpass(Long recyclingConfirmPk) {
-    changeStatus(recyclingConfirmPk, RecycleConfirmStatus.UNPASS);
+    RecycleConfirm recycleConfirm = recycleConfirmRepository.findById(recyclingConfirmPk)
+      .orElseThrow(() -> new NoSuchElementException("해당하는 분리배출 인증사진이 없습니다"));
+
+    //분리배출 인증사진 인증실패 처리
+    recycleConfirm.unpass();
   }
 }

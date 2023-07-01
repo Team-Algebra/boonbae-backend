@@ -75,6 +75,11 @@ public class Users implements UserDetails {
         this.ecoPoint += addPoint;
     }
 
+    //분리수거 인증 포인트
+    public void addRecyclePoint(int addPoint) {
+        this.ecoPoint += addPoint;
+    }
+
     //포인트 충전
     public void chargePoint(int amount) {
         this.ecoPoint = amount;

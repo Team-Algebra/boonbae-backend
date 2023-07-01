@@ -20,6 +20,7 @@ public class TreeService {
   private final UserRepository userRepository;
   private final TreeRepository treeRepository;
   private final RecycleConfirmRepository recycleConfirmRepository;
+  private final ValueService valueService;
 
   public Long getAllExp() {
     Long sum = treeRepository.getAllExp().orElseGet(() -> 0L);
@@ -27,16 +28,21 @@ public class TreeService {
     return sum;
   }
 
-  public void uploadRecycle(Users user, TreeDto.Confirm dto) {
+  public RecycleConfirm uploadRecycle(Users user, TreeDto.Confirm dto) {
     Users findUsers = userRepository.findById(user.getPk())
       .orElseThrow(() -> new RuntimeException());
+
+    Tree tree = user.getTree();
+    tree.recycleComplete();
 
     RecycleConfirm recycleConfirm = RecycleConfirm.builder()
       .user(findUsers)
       .imageUrl(dto.getImage_url())
       .build();
 
-    recycleConfirmRepository.save(recycleConfirm);
+    RecycleConfirm save = recycleConfirmRepository.save(recycleConfirm);
+
+    return save;
   }
 
   public TreeDto.Info getUsersTreeInfo(Long userPk) throws RuntimeException{

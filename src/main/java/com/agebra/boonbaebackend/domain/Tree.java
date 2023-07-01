@@ -46,12 +46,32 @@ public class Tree {
   @Column(name = "tonic_available")
   private int tonicAvailable = 3;
 
+  @NotNull
+  @Builder.Default
+  @Column(name = "upload_available")
+  private int uploadAvailable = 3;
+
   public void init() {
     LocalDate current = LocalDate.now();
 
-    if (current != updateDate) {
+    //업데이트 날짜보다 현재 날짜가 더 크면
+    if (current.isAfter(updateDate)) {
       watchingAd = false;
       tonicAvailable = 3;
+      uploadAvailable = 3;
+      updateDate = current;
     }
+  }
+
+  public void recycleComplete() {
+    init();
+    uploadAvailable -= 1;
+  }
+
+  //관리자전용 - 분리배출 인증완료
+  public void recyclePass(int perExp) {
+    exp += perExp;
+    accumulatedExp += perExp;
+    recycleCnt ++;
   }
 }
