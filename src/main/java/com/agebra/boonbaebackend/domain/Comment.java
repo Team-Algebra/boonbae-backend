@@ -6,6 +6,9 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder
 @Data
@@ -27,10 +30,6 @@ public class Comment {
     @JoinColumn(name = "info_pk", referencedColumnName = "pk")
     private RecyclingInfo info;
 
-    @NotNull
-    @Column(name = "like_cnt")
-    private int likeCnt = 0;
-
     @Lob
     @NotNull
     @Column(length = 999999999)
@@ -38,16 +37,14 @@ public class Comment {
 
     @NotNull
     @Column(name = "report_cnt") //신고누적횟수
-    private int reportCnt = 0;
+    @Builder.Default private int reportCnt = 0;
 
-    @NotNull
     @CreationTimestamp
-    @Column(name = "create_date")
-    private LocalDate createDate = LocalDate.now();
+    @Column(name = "create_at")
+    private LocalDateTime createAt;
 
-    public static Comment makeComment(String content) {
-        Comment comment = new Comment();
-        comment.content = content;
-        return comment;
-    }
+    // 양방향 매핑
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private Set<CommentLike> commentLikeList = new HashSet<>();
+
 }

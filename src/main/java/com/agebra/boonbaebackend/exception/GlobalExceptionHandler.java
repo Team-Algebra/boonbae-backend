@@ -29,4 +29,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     log.info("ForbiddenException = {}", e.getMessage());
     return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
   }
+
+  @ExceptionHandler({NotFoundException.class})
+  protected ResponseEntity handleInputMismatchException(NotFoundException e) {
+    log.info("NotFoundException = {}", e.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+  }
 }
