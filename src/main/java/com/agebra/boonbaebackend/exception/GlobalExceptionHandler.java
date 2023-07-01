@@ -30,8 +30,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
   }
 
+  @ExceptionHandler({UploadCntExceedException.class})
+  protected ResponseEntity handleUploadCntExceedException(UploadCntExceedException e) {
+    log.info("UploadCntExceedException = {}", e.getMessage());
+    return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+  }
+
   @ExceptionHandler({NotFoundException.class})
-  protected ResponseEntity handleInputMismatchException(NotFoundException e) {
+  protected ResponseEntity handleNotFoundException(NotFoundException e) {
     log.info("NotFoundException = {}", e.getMessage());
     return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
   }

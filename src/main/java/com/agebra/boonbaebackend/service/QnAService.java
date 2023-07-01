@@ -53,7 +53,7 @@ public class QnAService {
                 .replyText(qna.getReplyText())
                 .title(qna.getTitle())
                 .userName(qna.getUserName())
-                .create_date(qna.getCreateDate())
+                .create_date(qna.getCreateAt())
                 .description(qna.getDescriptions())
                 .build();
         return dto;
@@ -75,7 +75,7 @@ public class QnAService {
                     .status(status)
                     .title(qna.getTitle())
                     .userName(qna.getUserName())
-                    .create_date(qna.getCreateDate())
+                    .create_date(qna.getCreateAt())
                     .build();
             dtoList.add(dto);
         }

@@ -8,7 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 
 @Builder
 @Data
@@ -40,8 +39,8 @@ public class QnA {
 
     @NotNull
     @CreationTimestamp
-    @Column(name="create_data")
-    private LocalDateTime createDate=LocalDateTime.now();
+    @Column(name="create_at")
+    private LocalDateTime createAt =LocalDateTime.now();
 
     @Column(name="reply_text", length=999999999) //답변이 달리면 Null이 아님 -> 답변완료
     private String replyText=null;

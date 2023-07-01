@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,6 +83,26 @@ public class UserController {
             throw new InputMismatchException();
 
         userService.modifyUsername(user, userName);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/introduction")
+    public ResponseEntity getIntroduction(@AuthenticationPrincipal Users user) {
+        String introduction = userService.getIntroduction(user);
+        Map<String, String> map = new HashMap<>();
+        map.put("introduction", introduction);
+
+        return ResponseEntity.ok(map);
+    }
+
+    @PatchMapping("/introduction")
+    public ResponseEntity modifyIntroduction(@AuthenticationPrincipal Users user, @RequestBody Map<String, String> map) throws InputMismatchException{
+        String introduction = map.get("introduction");
+        if (introduction == null)
+            throw new InputMismatchException("introduction이 비어있습니다");
+
+        userService.modifyIntroduction(user, introduction);
 
         return ResponseEntity.ok().build();
     }

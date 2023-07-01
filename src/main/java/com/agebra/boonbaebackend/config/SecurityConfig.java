@@ -1,5 +1,6 @@
 package com.agebra.boonbaebackend.config;
 
+import com.agebra.boonbaebackend.domain.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,10 @@ public class SecurityConfig {
       "/error"
     };
 
+    private String[] adminList = {
+      "/api/v1/recycling_confirm/**"
+    };
+
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
@@ -29,8 +34,8 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers(whiteList)
-                .permitAll()
+                .requestMatchers(whiteList).permitAll()
+                .requestMatchers(adminList).hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
             .and()
