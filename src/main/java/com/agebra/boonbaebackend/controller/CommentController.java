@@ -1,13 +1,22 @@
 package com.agebra.boonbaebackend.controller;
+import com.agebra.boonbaebackend.domain.RecycleConfirmStatus;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.CommentDTO;
+import com.agebra.boonbaebackend.dto.QnADto;
+import com.agebra.boonbaebackend.dto.RecycleConfirmDto;
 import com.agebra.boonbaebackend.service.CommentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "CommentController", description = "분리배출 정보 게시글 댓글 서비스 관련 Controller 입니다.")
 @RequiredArgsConstructor
@@ -58,5 +67,17 @@ public class CommentController {
     public ResponseEntity addReportToComment(@PathVariable("comment_pk") Long commentPk) {
         commentService.addReportToComment(commentPk);
         return ResponseEntity.ok().build();
+    }
+
+    // 전체 댓글 조회 (Admin)
+    @GetMapping("/comments")
+    public ResponseEntity<List<CommentDTO.CommentAdminResponse>> getAllComments(
+            // recent, report
+            @RequestParam(value = "sort",required = false, defaultValue = "recent") String sort,
+            @RequestParam(value = "size",required = false, defaultValue = "10") int size,
+            @RequestParam(value = "page",required = false, defaultValue = "0") int page){
+        Pageable pageable = PageRequest.of(page, size);
+
+        return ResponseEntity.ok().body(commentService.getAllComments(pageable, sort));
     }
 }
