@@ -1,6 +1,5 @@
 package com.agebra.boonbaebackend.config;
 
-import com.agebra.boonbaebackend.domain.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,11 +17,11 @@ public class SecurityConfig {
     private String[] whiteList = {
       "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**",
       "/api/v1/users/", "/api/v1/users/login", "/api/v1/comments/{comment_pk}/reports", "/api/v1/recycling/{recycling_pk}/comments",
-      "/error"
+      "/error", "/api/v1/recycling/**"
     };
 
     private String[] adminList = {
-      "/api/v1/recycling_confirm/**"
+      "/api/v1/recycling_confirm/**", "/api/v1/recycling"
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
