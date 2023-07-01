@@ -103,4 +103,19 @@ public class UserServiceTest2 {
 
     assertEquals(nickName + 1, user.getNickname());
   }
+
+  @DisplayName("자기소개 변경")
+  @Test
+  @Transactional //rollback
+  @Order(4)
+  void modifyIntroduce() {
+    UserDto.RegisterRequest request = new UserDto.RegisterRequest(id, nickName, password, "");
+    Users user = userService.register(request);
+
+    userService.modifyIntroduction(user, "asdf");
+
+    String introduction = userService.getIntroduction(user);
+
+    assertEquals(introduction, "asdf");
+  }
 }

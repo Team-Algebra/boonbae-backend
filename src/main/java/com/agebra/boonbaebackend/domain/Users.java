@@ -21,7 +21,7 @@ public class Users implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pk;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name ="tree_pk", referencedColumnName = "pk")
     @Builder.Default
     private Tree tree = new Tree();
@@ -66,8 +66,17 @@ public class Users implements UserDetails {
         return user;
     }
 
+    public void changeIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
     //추천인 포인트
     public void addReferralPoint(int addPoint) {
+        this.ecoPoint += addPoint;
+    }
+
+    //분리수거 인증 포인트
+    public void addRecyclePoint(int addPoint) {
         this.ecoPoint += addPoint;
     }
 

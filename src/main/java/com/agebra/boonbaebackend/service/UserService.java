@@ -116,4 +116,20 @@ public class UserService {
         findUser.chargePoint(amount);
     }
 
+    public String getIntroduction(Users user) {
+        Users findUser = userRepository.findById(user.getPk())
+          .orElseThrow(() -> new NoSuchElementException());
+
+        if (user.getIntroduction() == null)
+            return "";
+        else
+            return findUser.getIntroduction();
+    }
+
+    public void modifyIntroduction(Users user, String introduction) {
+        Users findUser = userRepository.findById(user.getPk())
+          .orElseThrow(() -> new NoSuchElementException());
+
+        findUser.changeIntroduction(introduction);
+    }
 }
