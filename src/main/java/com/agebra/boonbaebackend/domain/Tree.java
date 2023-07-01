@@ -63,6 +63,10 @@ public class Tree {
     }
   }
 
+  public boolean isExceedUploadCnt() {
+    return (uploadAvailable == 0);
+  }
+
   public void recycleComplete() {
     init();
     uploadAvailable -= 1;

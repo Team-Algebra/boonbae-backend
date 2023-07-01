@@ -36,7 +36,9 @@ public class TreeController {
 
   //인증사진 업로드하고 포인트받기
   @PostMapping("/")
-  public ResponseEntity uploadRecycle(@AuthenticationPrincipal Users user, @RequestBody TreeDto.Confirm dto) {
+  public ResponseEntity uploadRecycle(
+    @AuthenticationPrincipal Users user, @RequestBody TreeDto.Confirm dto
+  ) throws RuntimeException {
     treeService.uploadRecycle(user, dto);
 
     return ResponseEntity.ok().build();

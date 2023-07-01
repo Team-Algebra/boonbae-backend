@@ -4,6 +4,7 @@ import com.agebra.boonbaebackend.domain.*;
 import com.agebra.boonbaebackend.dto.RecyclingDto;
 import com.agebra.boonbaebackend.dto.TreeDto;
 import com.agebra.boonbaebackend.exception.NoSuchUserException;
+import com.agebra.boonbaebackend.exception.UploadCntExceedException;
 import com.agebra.boonbaebackend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,11 +29,17 @@ public class TreeService {
     return sum;
   }
 
-  public RecycleConfirm uploadRecycle(Users user, TreeDto.Confirm dto) {
+  public RecycleConfirm uploadRecycle(Users user, TreeDto.Confirm dto) throws RuntimeException {
     Users findUsers = userRepository.findById(user.getPk())
       .orElseThrow(() -> new RuntimeException());
 
     Tree tree = user.getTree();
+    tree.init();
+
+    if (tree.isExceedUploadCnt()) {
+      throw new UploadCntExceedException("분리수거 인증가능 횟수를 초과하였습니다");
+    }
+
     tree.recycleComplete();
 
     RecycleConfirm recycleConfirm = RecycleConfirm.builder()
@@ -53,6 +60,7 @@ public class TreeService {
       throw new NoSuchUserException("해당하는 user가 없습니다");
 
     Tree tree = findUser.getTree();
+    tree.init();
     Long allUserCnt = userRepository.countBy();
     Long userRank = treeRepository.findRankById(tree.getPk());
 

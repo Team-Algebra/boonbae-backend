@@ -40,7 +40,7 @@ public class RecycleConfirmService {
     return info;
   }
 
-  public RecycleConfirmDto.Info convertToDto(int totalPages, List<RecycleConfirm> list) {
+  private RecycleConfirmDto.Info convertToDto(int totalPages, List<RecycleConfirm> list) {
     List<RecycleConfirmDto.Info.Detail> detailList = new ArrayList<>();
 
     for (RecycleConfirm rc: list) {
