@@ -1,6 +1,7 @@
 package com.agebra.boonbaebackend.domain;
 
 import com.agebra.boonbaebackend.exception.ForbiddenException;
+import com.agebra.boonbaebackend.exception.NotFoundException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -25,6 +26,7 @@ public class QnA {
     private Users user;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name="qna_type")  //분류
     private QnAType qnaType;
 
@@ -63,12 +65,11 @@ public class QnA {
     }
 
     public void editReply(String replyText) {
-        if (this.replyText == null) {
-            throw new ForbiddenException("답변을 먼저 작성해주세요");
-
-        } else {
             this.replyText = replyText;
-        }
+    }
+
+    public void deleteReply(){
+        this.replyText=null;
     }
     public String getUserName(){
         return this.user.getUsername();
