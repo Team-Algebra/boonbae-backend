@@ -1,5 +1,6 @@
 package com.agebra.boonbaebackend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -19,6 +20,7 @@ public class Tag {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "info_pk", referencedColumnName = "pk")
+    @JsonIgnore
     private RecyclingInfo info;
 
     @NotNull
