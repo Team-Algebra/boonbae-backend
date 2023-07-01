@@ -12,10 +12,16 @@ import com.agebra.boonbaebackend.repository.CommentRepository;
 import com.agebra.boonbaebackend.repository.RecyclingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.agebra.boonbaebackend.domain.UserRole.ADMIN;
 
 
 @RequiredArgsConstructor
@@ -43,6 +49,7 @@ public class CommentService {
 
             return CommentDTO.CommentResponse.builder()
                     .commentPk(comment.getPk())
+                    .recyclingPk(recyclingPk)
                     .username(comment.getUser().getUsername())
                     .content(comment.getContent())
                     .createAt(comment.getCreateAt())
@@ -68,8 +75,11 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentPk)
                 .orElseThrow(() -> new NotFoundException("Comment not found with PK: " + commentPk));
 
-        if (!comment.getUser().getPk().equals(user.getPk())) {
-            throw new ForbiddenException("Only the owner can delete the comment");
+        if (!user.getRole().equals(ADMIN)) {
+            // ADMIN은 통과, 회원이라면 댓글 확인
+            if (!comment.getUser().getPk().equals(user.getPk())) {
+                throw new ForbiddenException("Only the owner can delete the comment");
+            }
         }
 
         commentRepository.delete(comment);
@@ -107,5 +117,32 @@ public class CommentService {
 
         comment.setReportCnt(comment.getReportCnt() + 1);
         commentRepository.save(comment);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CommentDTO.CommentAdminResponse> getAllComments(Pageable pageable, String sort) {
+        Page<Comment> comments;
+
+        if (sort.equals("recent")) {
+            comments = commentRepository.findAllByOrderByCreateAtDesc(pageable);
+        } else if (sort.equals("report")) {
+            comments = commentRepository.findAllByOrderByReportCntDesc(pageable);
+        } else {
+            // 우선 이외의 속성이 들어오는 경우 기본값으로 최신 순
+            comments = commentRepository.findAll(pageable);
+        }
+
+        return comments.stream().map(comment -> {
+            int likeCnt = commentLikeRepository.countByComment(comment);
+            return CommentDTO.CommentAdminResponse.builder()
+                    .commentPk(comment.getPk())
+                    .recyclingPk(comment.getInfo().getPk())
+                    .username(comment.getUser().getUsername())
+                    .content(comment.getContent())
+                    .createAt(comment.getCreateAt())
+                    .likeCnt(likeCnt)
+                    .reportCnt(comment.getReportCnt())
+                    .build();
+        }).toList();
     }
 }
