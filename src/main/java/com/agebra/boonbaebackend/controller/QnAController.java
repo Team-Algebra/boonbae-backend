@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class QnAController {
     @PostMapping() //QnA 작성
     public ResponseEntity<Void> writeQnA(@RequestBody QnADto.Request dto, @AuthenticationPrincipal Users user){
         qnaService.write(dto,user);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @PutMapping("/{qna_pk}") //QnA 수정
     public ResponseEntity<Void> updateQnA(@PathVariable Long qna_pk, @RequestBody QnADto.Request dto, @AuthenticationPrincipal Users user){
@@ -50,6 +51,7 @@ public class QnAController {
     @GetMapping("/{qna_pk}") //QnA 상세정보
     public ResponseEntity<QnADto.Response_oneQnA> findOneQnA(@PathVariable Long qna_pk){
         QnADto.Response_oneQnA dto = qnaService.one_QnA(qna_pk);
+
         return ResponseEntity.ok().body(dto);
     }
 

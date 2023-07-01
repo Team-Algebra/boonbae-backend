@@ -52,15 +52,13 @@ public class TreeService {
     return save;
   }
 
-  public TreeDto.Info getUsersTreeInfo(Long userPk) throws RuntimeException{
+  public TreeDto.Info getUsersTreeInfo(Long userPk) throws RuntimeException {
     Users findUser = userRepository.findById(userPk)
-      .orElseGet(() -> null);
-
-    if (findUser == null)
-      throw new NoSuchUserException("해당하는 user가 없습니다");
+      .orElseThrow(() -> new NoSuchUserException("해당하는 user가 없습니다"));
 
     Tree tree = findUser.getTree();
     tree.init();
+
     Long allUserCnt = userRepository.countBy();
     Long userRank = treeRepository.findRankById(tree.getPk());
 
@@ -77,10 +75,7 @@ public class TreeService {
 
   public TreeDto.Info getMyTreeInfo(Users user) {
     Users findUser = userRepository.findById(user.getPk())
-      .orElseGet(() -> null);
-
-    if (findUser == null)
-      throw new NoSuchUserException("해당하는 user가 없습니다");
+      .orElseThrow(() -> new NoSuchUserException("해당하는 user가 없습니다"));
 
     Tree tree = findUser.getTree();
     tree.init(); //날짜가 지났는지 확인 후 초기화

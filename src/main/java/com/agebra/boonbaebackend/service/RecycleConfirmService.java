@@ -6,6 +6,7 @@ import com.agebra.boonbaebackend.domain.RecycleConfirmStatus;
 import com.agebra.boonbaebackend.domain.Tree;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.RecycleConfirmDto;
+import com.agebra.boonbaebackend.exception.NotFoundException;
 import com.agebra.boonbaebackend.repository.RecycleConfirmRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -57,7 +58,7 @@ public class RecycleConfirmService {
 
   public void pass(Long recyclingConfirmPk) {
     RecycleConfirm recycleConfirm = recycleConfirmRepository.findById(recyclingConfirmPk)
-      .orElseThrow(() -> new NoSuchElementException("해당하는 분리배출 인증사진이 없습니다"));
+      .orElseThrow(() -> new NotFoundException("해당하는 분리배출 인증사진이 없습니다"));
 
     //나무 경험치 지급
     Tree tree = recycleConfirm.getUser().getTree();
@@ -73,7 +74,7 @@ public class RecycleConfirmService {
 
   public void unpass(Long recyclingConfirmPk) {
     RecycleConfirm recycleConfirm = recycleConfirmRepository.findById(recyclingConfirmPk)
-      .orElseThrow(() -> new NoSuchElementException("해당하는 분리배출 인증사진이 없습니다"));
+      .orElseThrow(() -> new NotFoundException("해당하는 분리배출 인증사진이 없습니다"));
 
     //분리배출 인증사진 인증실패 처리
     recycleConfirm.unpass();

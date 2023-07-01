@@ -29,7 +29,7 @@ public class UserController {
     public ResponseEntity<UserDto.RegisterResponse> register (@RequestBody UserDto.RegisterRequest request) throws RuntimeException {
         userService.register(request);
 
-        return ResponseEntity.ok(
+        return ResponseEntity.status(HttpStatus.CREATED).body(
           UserDto.RegisterResponse
             .builder()
             .id(request.getId())
