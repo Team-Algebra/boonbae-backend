@@ -1,5 +1,6 @@
 package com.agebra.boonbaebackend.config;
 
+import com.agebra.boonbaebackend.domain.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +22,7 @@ public class SecurityConfig {
     };
 
     private String[] adminList = {
-      "/api/v1/recycling_confirm/**", "/api/v1/recycling"
+      "/api/v1/recycling_confirm/**","api/v1/qna/{qna_pk}/reply", "/api/v1/recycling"
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
