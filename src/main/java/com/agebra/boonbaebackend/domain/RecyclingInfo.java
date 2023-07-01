@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Builder
+@Data
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)

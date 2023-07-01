@@ -28,7 +28,7 @@ public class QnADto {
         private String replyText;
         private String title;
         private String userName;
-        private LocalDateTime create_date;
+        private LocalDateTime createAt;
         private String description;
     }
     @Getter
@@ -40,6 +40,6 @@ public class QnADto {
         private String status;
         private String title;
         private String userName;
-        private LocalDateTime create_date;
+        private LocalDateTime createAt;
     }
 }
