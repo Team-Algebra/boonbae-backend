@@ -1,13 +1,14 @@
 package com.agebra.boonbaebackend.dto;
 
 import com.agebra.boonbaebackend.domain.RecyclingInfo;
+import com.agebra.boonbaebackend.domain.Tag;
 import com.agebra.boonbaebackend.domain.TrashType;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import java.time.LocalDate;
 import java.util.List;
 
 public class RecyclingDto {
@@ -48,6 +49,22 @@ public class RecyclingDto {
     private int count;
     private List<RecyclingInfo> infoList;
   }
+
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class DetailResult {
+    private String name;
+    private String process;
+    private String description;
+    private TrashType type;
+    private String imageUrl;
+    private List<Tag> tags;
+    private int viewCnt;
+    private LocalDate createDate;
+  }
+
 
 
 

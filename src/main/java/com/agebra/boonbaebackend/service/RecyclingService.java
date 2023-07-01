@@ -42,8 +42,7 @@ public class RecyclingService {
   }
 
   // 분리배출 정보 검색
-  public RecyclingDto.SearchResult searchRecyclingInfo(String criteria) {
-    String keyword = criteria;
+  public RecyclingDto.SearchResult searchRecyclingInfo(String keyword) {
 
     List<RecyclingInfo> infoList = recyclingRepository.findByKeyword(keyword); // 키워드를 이용한 검색 쿼리 실행
 
@@ -51,5 +50,13 @@ public class RecyclingService {
 
     return new RecyclingDto.SearchResult(count, infoList);
   }
+
+  // 특정 쓰레기 분리배출 정보 가져오기
+  public RecyclingInfo getRecyclingInfoDetail(Long recyclePk) {
+    recyclingRepository.updateViewCount(recyclePk); // view_cnt 1증가
+    return recyclingRepository.findById(recyclePk).orElse(null);
+  }
+
+
 
 }
