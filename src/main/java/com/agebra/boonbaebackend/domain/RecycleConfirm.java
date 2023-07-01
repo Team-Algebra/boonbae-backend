@@ -34,8 +34,8 @@ public class RecycleConfirm {
   @NotNull
   @CreationTimestamp
   @Builder.Default
-  @Column(name="create_date")
-  private LocalDateTime createDate = LocalDateTime.now();
+  @Column(name="create_at")
+  private LocalDateTime createAt =LocalDateTime.now();
 
   public void pass() {
     this.status = RecycleConfirmStatus.PASS;

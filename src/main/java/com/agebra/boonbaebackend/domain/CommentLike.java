@@ -9,14 +9,12 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name="comments_like",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_pk", "comment_pk"})}) // user_pk와 comment_pk의 조합이 unique해야 함
+@Table(name="comments_like")
 public class CommentLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pk;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "user_pk", referencedColumnName = "pk")
     private Users user;
