@@ -32,6 +32,9 @@ public class CommentDTO {
         @JsonProperty("comment_pk")
         private Long commentPk;
 
+        @JsonProperty("recycling_pk")
+        private Long recyclingPk;
+
         @JsonProperty("username")
         private String username;
 
@@ -46,5 +49,31 @@ public class CommentDTO {
 
         @JsonProperty("like")
         private Boolean like;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    public static class CommentAdminResponse {
+        @JsonProperty("comment_pk")
+        private Long commentPk;
+
+        @JsonProperty("recycling_pk")
+        private Long recyclingPk;
+
+        @JsonProperty("username")
+        private String username;
+
+        @JsonProperty("content")
+        private String content;
+
+        @JsonProperty("create_date")
+        private LocalDateTime createAt;
+
+        @JsonProperty("like_cnt")
+        private Integer likeCnt;
+
+        @JsonProperty("report_cnt")
+        private Integer reportCnt;
     }
 }
