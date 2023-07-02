@@ -78,7 +78,7 @@ public class RecyclingService {
 
 
   // 특정 쓰레기 분리배출 정보 가져오기
-  @Transactional(readOnly = true)
+  @Transactional
   public RecyclingDto.DetailResult getRecyclingInfoDetail(Long recyclePk) {
     RecyclingInfo recyclingInfo = recyclingRepository.findById(recyclePk)
       .orElseThrow(() -> new NotFoundException("Recycling information not found with PK: " + recyclePk));
