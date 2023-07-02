@@ -58,6 +58,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          script: |
-            sudo fuser -k 8080/tcp
-            sudo nohup java -jar ~/cicd/*.jar & exit
+          script: ~/cicd/script.sh
+#          script: |
+#            sudo fuser -k 8080/tcp
+#            sudo nohup java -jar ~/cicd/*.jar &
