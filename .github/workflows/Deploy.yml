@@ -52,8 +52,8 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           rm: true
-          source: ${{ secrets.SOURCE_PATH }}
-          target: ./
+          source: '*.jar'
+          target: './'
           ## 작업에 사용했던 dist 디렉토리를 경로상에서 제거
           strip_components: 1
 
