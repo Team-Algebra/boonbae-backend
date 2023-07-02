@@ -74,7 +74,12 @@ public class QnAService {
     }
     @Transactional(readOnly = true)
     public List<QnADto.Response_AllQnA> all_QnA(Pageable pageable, QnAType category){
-        List<QnA> qnaList = qnaRepository.findByQnaType(category);
+        List<QnA> qnaList;
+        if (category == null)
+            qnaList = qnaRepository.findAll(pageable).getContent();
+        else
+            qnaList = qnaRepository.findByQnaType(category);
+
         List<QnADto.Response_AllQnA> dtoList = new ArrayList<>();
         String status;
         for(QnA qna : qnaList){
