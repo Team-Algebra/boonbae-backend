@@ -1,118 +1,170 @@
 package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.RecyclingInfo;
+import com.agebra.boonbaebackend.domain.Tag;
 import com.agebra.boonbaebackend.domain.TrashType;
 import com.agebra.boonbaebackend.dto.RecyclingDto;
+import com.agebra.boonbaebackend.exception.NotFoundException;
 import com.agebra.boonbaebackend.repository.RecyclingRepository;
 import com.agebra.boonbaebackend.repository.TagRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class RecyclingServiceTest {
-    @MockBean
+
+    @Mock
     private RecyclingRepository recyclingRepository;
 
-    @MockBean
+    @Mock
     private TagRepository tagRepository;
 
-
-    @InjectMocks
     private RecyclingService recyclingService;
 
     @BeforeEach
     void setup() {
-        recyclingRepository = Mockito.mock(RecyclingRepository.class);
-        tagRepository = Mockito.mock(TagRepository.class);
         MockitoAnnotations.openMocks(this);
-
+        recyclingService = new RecyclingService(recyclingRepository, tagRepository);
     }
 
 
+    @Test
+    @DisplayName("분리배출 정보 등록 테스트")
+    void write_Test() {
+        // given
+        RecyclingDto.Write writeDto = new RecyclingDto.Write(
+                "Paper",
+                "General",
+                "Recycle",
+                TrashType.PAPER,
+                "paper_image.jpg",
+                new String[]{"recycle", "paper"}
+        );
 
-//    @Test
-//    @DisplayName("분리배출 정보 검색 테스트")
-//    void searchRecyclingInfo_Test() {
-//        // 검색어와 일치하는 정보를 생성
-//        RecyclingInfo info1 = RecyclingInfo.makeRecyclingInfo("Paper Recycling", TrashType.PAPER, "Process 1", "Description 1", "image1.jpg");
-//        RecyclingInfo info2 = RecyclingInfo.makeRecyclingInfo("Plastic Recycling", TrashType.PLASTIC, "Process 2", "Description 2", "image2.jpg");
-//        List<RecyclingInfo> mockInfoList = new ArrayList<>();
-//        mockInfoList.add(info1);
-//        mockInfoList.add(info2);
-//
-//        // Mock repository의 동작 설정
-//        when(recyclingRepository.findByKeyword("Recycling")).thenReturn(mockInfoList);
-//
-//        // 검색어로 검색된 결과 확인
-//        RecyclingDto.SearchResult result = recyclingService.searchRecyclingInfo("Recycling");
-//
-//        // 기대값과 실제값 비교
-//        assertEquals(2, result.getCount());
-//        assertEquals(mockInfoList, result.getInfoList());
-//    }
+        Tag existingTag = Tag.makeTag(null, "recycle");
+
+        when(tagRepository.findByName("recycle")).thenReturn(existingTag);
+        when(recyclingRepository.save(any())).thenReturn(null);
+        when(tagRepository.save(any())).thenReturn(null);
+
+        // when
+        assertDoesNotThrow(() -> recyclingService.write(writeDto));
+
+        // then
+        verify(recyclingRepository, times(1)).save(any(RecyclingInfo.class));
+        verify(tagRepository, times(1)).save(any(Tag.class));
+    }
 
 
     @Test
     @DisplayName("분리배출 정보 검색 테스트")
-    void searchRecyclingInfo_Test() {
-//        // Given
-//        RecyclingService recyclingService = new RecyclingService(recyclingRepository, tagRepository);
-//        String keyword = "Recycling";
-//        List<RecyclingInfo> mockInfoList = new ArrayList<>();
-//
-//        RecyclingInfo info1 = RecyclingInfo.makeRecyclingInfo("Paper Recycling", TrashType.PAPER, "Process 1", "Description 1", "image1.jpg");
-//        RecyclingInfo info2 = RecyclingInfo.makeRecyclingInfo("Plastic Recycling", TrashType.PLASTIC, "Process 2", "Description 2", "image2.jpg");
-//        RecyclingInfo info3 = RecyclingInfo.makeRecyclingInfo("Glass Recycling", TrashType.GLASS, "Process 3", "Description 3", "image3.jpg");
-//
-//        mockInfoList.add(info1);
-//        mockInfoList.add(info2);
-//        mockInfoList.add(info3);
-//
-//        when(recyclingRepository.findByKeyword(keyword)).thenReturn(mockInfoList);
-//
-//        // When
-//        RecyclingDto.SearchResult result = recyclingService.searchRecyclingInfo(keyword);
-//
-//        // Then
-//        assertEquals(3, result.getCount()); // 개수가 3인 것을 기대합니다
-//        assertEquals(mockInfoList, result.getInfoList());
+    void searchResultDto_Test() {
+        // given
+        int count = 2;
+        List<RecyclingDto.Search> infoList = Arrays.asList(
+                new RecyclingDto.Search(1L, "Paper", "Recycle", "Recycle paper waste", TrashType.PAPER,
+                        "paper_image.jpg", new String[]{"recycle", "paper"}, 0, LocalDate.now()),
+                new RecyclingDto.Search(2L, "Plastic", "Recycle", "Recycle plastic waste", TrashType.PLASTIC,
+                        "plastic_image.jpg", new String[]{"recycle", "plastic"}, 0, LocalDate.now())
+        );
+
+        // when
+        RecyclingDto.SearchResult searchResultDto = new RecyclingDto.SearchResult(count, infoList);
+
+        // then
+        assertEquals(count, searchResultDto.getCount());
+        assertEquals(infoList, searchResultDto.getInfoList());
     }
+
 
     @Test
-    @DisplayName("특정 분리배출 정보 가져오기 테스트")
-
+    @DisplayName("RecyclingService.getRecyclingInfoDetail 테스트")
     void getRecyclingInfoDetail_Test() {
-        // Given
-//        Long recyclePk = 1L;
-//        RecyclingInfo expectedInfo = RecyclingInfo.builder().pk(recyclePk).build();
-//
-//        // Mocking the behavior of recyclingRepository
-//        when(recyclingRepository.findById(recyclePk)).thenReturn(Optional.of(expectedInfo));
-//
-//        // When
-//        RecyclingDto.DetailResult resultInfo = recyclingService.getRecyclingInfoDetail(recyclePk);
-//
-//        // Then
-//        assertEquals(expectedInfo, resultInfo);
-//
-//        // Verify that updateViewCount method is called once with the specified recyclePk
-//        verify(recyclingRepository, Mockito.times(1)).updateViewCount(recyclePk);
+        // given
+        Long recyclePk = 1L;
+        RecyclingInfo recyclingInfo = RecyclingInfo.builder()
+                .pk(recyclePk)
+                .name("Paper")
+                .process("Recycle")
+                .description("Recycle paper waste")
+                .type(TrashType.PAPER)
+                .imageUrl("paper_image.jpg")
+                .tagList(Arrays.asList(Tag.builder().name("recycle").build(), Tag.builder().name("paper").build()))
+                .viewCnt(0)
+                .createDate(LocalDate.now())
+                .build();
+
+        when(recyclingRepository.findById(recyclePk)).thenReturn(Optional.of(recyclingInfo));
+        when(recyclingRepository.save(recyclingInfo)).thenReturn(recyclingInfo);
+
+        // when
+        RecyclingDto.DetailResult detailResult = recyclingService.getRecyclingInfoDetail(recyclePk);
+
+        // then
+        assertEquals("Paper", detailResult.getName());
+        assertEquals("Recycle", detailResult.getProcess());
+        assertEquals("Recycle paper waste", detailResult.getDescription());
+        assertEquals(TrashType.PAPER, detailResult.getType());
+        assertEquals("paper_image.jpg", detailResult.getImageUrl());
+        assertArrayEquals(new String[]{"recycle", "paper"}, detailResult.getTags());
+        assertEquals(1, detailResult.getViewCnt());
+        assertNotNull(detailResult.getCreateDate());
+
+        verify(recyclingRepository, times(1)).save(recyclingInfo);
     }
 
 
+    @Test
+    @DisplayName("분리배출 정보 검색 테스트2")
+    void searchDto_Test() {
+        Long pk = 1L;
+        String name = "Paper";
+        String process = "Recycle";
+        String description = "Recycle paper waste";
+        TrashType type = TrashType.PAPER;
+        String imageUrl = "paper_image.jpg";
+        String[] tags = {"recycle", "paper"};
+        int viewCnt = 0;
+        LocalDate createDate = LocalDate.now();
+
+        // when
+        RecyclingDto.Search searchDto = new RecyclingDto.Search(pk, name, process, description, type,
+                imageUrl, tags, viewCnt, createDate);
+
+        // then
+        assertEquals(pk, searchDto.getPk());
+        assertEquals(name, searchDto.getName());
+        assertEquals(process, searchDto.getProcess());
+        assertEquals(description, searchDto.getDescription());
+        assertEquals(type, searchDto.getType());
+        assertEquals(imageUrl, searchDto.getImageUrl());
+        assertEquals(tags, searchDto.getTags());
+        assertEquals(viewCnt, searchDto.getViewCnt());
+        assertEquals(createDate, searchDto.getCreateDate());
+    }
 
 
+    @Test
+    @DisplayName("분리배출 정보 검색 테스트 - 분리배출 정보가 없을 때")
+    void testSearchRecyclingInfo_NotFound() {
+        String keyword = "이름";
+
+        when(recyclingRepository.findByKeyword(keyword)).thenReturn(Collections.emptyList());
+
+        assertThrows(NotFoundException.class, () -> recyclingService.searchRecyclingInfo(keyword));
+
+        verify(recyclingRepository, times(1)).findByKeyword(keyword);
+    }
 
 }

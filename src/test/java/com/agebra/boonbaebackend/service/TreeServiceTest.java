@@ -156,3 +156,33 @@
 //
 //
 //}
+=======
+
+  @DisplayName("분리배출 3번이상 불가능")
+  @Transactional //rollback
+  @Order(5)
+  @Test
+  void cantThreeTime() {
+
+
+
+  }
+
+  @DisplayName("다음날로 넘어갔을 때 초기화가 되는지")
+  @Transactional //rollback
+  @Order(6)
+  @Test
+  void initDayChanged() {
+
+  }
+
+  @Test
+  void getUsersTreeInfo() {
+
+
+
+
+  }
+
+
+}
