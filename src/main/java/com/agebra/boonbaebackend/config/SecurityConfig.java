@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -14,13 +15,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity(
+  securedEnabled = true,
+  jsr250Enabled = true)
 public class SecurityConfig {
 
     private String[] whiteList = {
       "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/error",
       "/api/v1/users/login", "/api/v1/users/id/*/exists", "/api/v1/users/username/*/exists", "/api/v1/users/referrers",
       "/api/v1/search/ranking",
-      "/api/v1/recycling/*",
+      "/api/v1/recycling/*", "/api/v1/tip/",
       "/api/v1/comments/*/reports",
       "/api/v1/recycling/*"
     };
