@@ -26,7 +26,7 @@ public class SecurityConfig {
     };
 
     private String[] adminList = {
-      "/api/v1/recycling_confirm/**","api/v1/qna/{qna_pk}/reply", "/api/v1/comments/"
+      "/api/v1/recycling_confirm/**","api/v1/qna/{qna_pk}/reply", "/api/v1/comments"
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers(whiteList).permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/recycling/*/comments/").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/recycling/*/comments").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/qna/").permitAll()
                 .requestMatchers(HttpMethod.GET,  "/api/v1/recycling/").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/trees/").permitAll()

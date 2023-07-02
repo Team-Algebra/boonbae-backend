@@ -41,7 +41,7 @@ public class QnAController {
 
     @GetMapping("/") //QnA 페이지
     public ResponseEntity<List<QnADto.Response_AllQnA>> findAllQnA(
-      @RequestParam(value = "category",required = false, defaultValue = "") QnAType category,
+      @RequestParam(value = "category",required = false) QnAType category,
       @RequestParam(value = "size",required = false, defaultValue = "10") int size,
       @RequestParam(value = "page",required = false, defaultValue = "0") int page){
         Pageable pageable = PageRequest.of(page,size);
