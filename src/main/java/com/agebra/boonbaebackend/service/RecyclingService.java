@@ -33,6 +33,7 @@ public class RecyclingService {
 
     List<Tag> tagList = new ArrayList<>();
 
+    //@TODO 중복되게 만들어야함: info가 사라지면 tag가 다 같이 사라져야함 - 같은 태그 중복해서 사용하면 태그겹치는 애들은 자기 tag를 잃게된다
     for (String tag : dto.getTags()) {
       Tag existingTag = tagRepository.findByName(tag);
       if (existingTag == null) {

@@ -60,6 +60,8 @@ public class QnAService {
             status = "answered";
             isReply=1;
         }
+
+        //@TODO user가 null이면 알수없음으로 표시되어야함! 걍 null을 반환해야한다!
         QnADto.Response_oneQnA dto = QnADto.Response_oneQnA.builder()
           .qnaType(qna.getQnaType())
           .status(status)
@@ -80,6 +82,7 @@ public class QnAService {
         else
             qnaList = qnaRepository.findByQnaType(category);
 
+        //@TODO user가 null이면 알수없음으로 표시되어야함! 걍 null을 반환해야한다!
         List<QnADto.Response_AllQnA> dtoList = new ArrayList<>();
         String status;
         for(QnA qna : qnaList){
