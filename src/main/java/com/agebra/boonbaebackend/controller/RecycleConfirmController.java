@@ -31,7 +31,7 @@ public class RecycleConfirmController {
   @GetMapping("/")
   public ResponseEntity getAllRecycle(
     @RequestParam @Nullable RecycleConfirmStatus status,
-    @PageableDefault(sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable
+    @PageableDefault(sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable
   ) {
     RecycleConfirmDto.Info list = recycleConfirmService.findAll(status, pageable);
 

@@ -4,6 +4,7 @@ import com.agebra.boonbaebackend.domain.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,13 +17,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private String[] whiteList = {
-      "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**",
-      "/api/v1/users/", "/api/v1/users/login", "/api/v1/comments/{comment_pk}/reports", "/api/v1/recycling/{recycling_pk}/comments",
-      "/error", "/api/v1/recycling/**"
+      "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/error",
+      "/api/v1/users/login", "/api/v1/users/id/*/exists", "/api/v1/users/username/*/exists", "/api/v1/users/referrers",
+      "/api/v1/search/ranking",
+      "/api/v1/recycling/*",
+      "/api/v1/comments/*/reports",
+      "/api/v1/recycling/*"
     };
 
     private String[] adminList = {
-      "/api/v1/recycling_confirm/**","api/v1/qna/{qna_pk}/reply", "/api/v1/recycling", "/api/v1/comments/"
+      "/api/v1/recycling_confirm/**","api/v1/qna/{qna_pk}/reply", "/api/v1/comments/"
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -35,6 +39,13 @@ public class SecurityConfig {
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers(whiteList).permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/recycling/*/comments/").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/qna/").permitAll()
+                .requestMatchers(HttpMethod.GET,  "/api/v1/recycling/").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/trees/").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/qna/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/users/").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/recycling/").hasAuthority("ADMIN")
                 .requestMatchers(adminList).hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()

@@ -1,6 +1,7 @@
 package com.agebra.boonbaebackend.dto;
 
 import com.agebra.boonbaebackend.domain.QnAType;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,8 +15,11 @@ public class QnADto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Request{
+        @NotNull
         private String title;
+        @NotNull
         private QnAType qnaType;
+        @NotNull
         private String description;
     }
     @Getter

@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface QnARepository extends JpaRepository<QnA,Long> {
-//    @Query("SELECT q FROM QnA q order by q.qnaType")
-    List<QnA> findByQnaType(QnAType qnaType);
+  //    @Query("SELECT q FROM QnA q order by q.qnaType")
+  List<QnA> findByQnaType(QnAType qnaType);
 }

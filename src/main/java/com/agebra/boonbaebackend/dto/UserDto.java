@@ -21,6 +21,15 @@ public class UserDto {
         private String username;
     }
 
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    public static class Info {
+        private String username;
+        private String id;
+        private int eco_point;
+    }
+
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor

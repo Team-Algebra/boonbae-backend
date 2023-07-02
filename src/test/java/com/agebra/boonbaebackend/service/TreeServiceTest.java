@@ -100,7 +100,7 @@ class TreeServiceTest {
     RecycleConfirm recycleConfirm2 = treeService.uploadRecycle(user, new TreeDto.Confirm("asdf"));
     recycleConfirmService.pass(recycleConfirm.getPk());
     recycleConfirmService.pass(recycleConfirm2.getPk());
-    
+
     RecycleConfirm recycleConfirm3 = treeService.uploadRecycle(user2, new TreeDto.Confirm("asdf"));
     recycleConfirmService.pass(recycleConfirm3.getPk());
 
@@ -138,14 +138,11 @@ class TreeServiceTest {
 
   }
 
-  //다음날로 넘어갔을 때 초기화가 되는지
-  @DisplayName("분리배출 인증 pass 했을 때 결과값(point, exp, accumulate exp 등)")
+  @DisplayName("다음날로 넘어갔을 때 초기화가 되는지")
   @Transactional //rollback
   @Order(6)
   @Test
   void initDayChanged() {
-
-
 
   }
 

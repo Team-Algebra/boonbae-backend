@@ -23,16 +23,17 @@ import java.util.List;
 @Transactional
 public class QnAService {
     private final QnARepository qnaRepository;
-    public void write(QnADto.Request dto, Users user){
+    public QnA write(QnADto.Request dto, Users user){
         QnA qna = QnA.makeQnA(
-                user,dto.getQnaType(),dto.getTitle(),dto.getDescription());
-        qnaRepository.save(qna);
+          user,dto.getQnaType(),dto.getTitle(),dto.getDescription());
+        QnA save = qnaRepository.save(qna);
+        return save;
     }
     public void update_QnA(Long QnA_pk,QnADto.Request dto, Users user){
         QnA qna = qnaRepository.findById(QnA_pk)
-                .orElseThrow(() -> new NotFoundException("일치하는 QnA가 없습니다"));
+          .orElseThrow(() -> new NotFoundException("일치하는 QnA가 없습니다"));
         if(qna.getUser().getPk() == user.getPk()) {
-                qna.editQnA(user, dto.getQnaType(), dto.getTitle(), dto.getDescription());
+            qna.editQnA(dto.getQnaType(), dto.getTitle(), dto.getDescription());
         }else{
             throw new NoSuchUserException("다른 유저가 작성한 글입니다 해당 유저 닉네임:"+qna.getUser().getNickname());
         }
@@ -40,7 +41,7 @@ public class QnAService {
 
     public void delete(Long QnA_pk){
         QnA qna = qnaRepository.findById(QnA_pk)
-                .orElseThrow(() -> new NotFoundException("일치하는 QnA가 없습니다"));
+          .orElseThrow(() -> new NotFoundException("일치하는 QnA가 없습니다"));
         qnaRepository.delete(qna);
     }
 
@@ -48,7 +49,8 @@ public class QnAService {
     @Transactional(readOnly = true)
     public QnADto.Response_oneQnA one_QnA(Long QnA_pk){
         QnA qna =qnaRepository.findById(QnA_pk)
-                .orElseThrow(() -> new NotFoundException("일치하는 QnA가 없습니다."));
+          .orElseThrow(() -> new NotFoundException("일치하는 QnA가 없습니다."));
+
         String status;
         int isReply;
         if(qna.getReplyText()==null) {
@@ -59,15 +61,15 @@ public class QnAService {
             isReply=1;
         }
         QnADto.Response_oneQnA dto = QnADto.Response_oneQnA.builder()
-                .qnaType(qna.getQnaType())
-                .status(status)
-                .isReply(isReply)
-                .replyText(qna.getReplyText())
-                .title(qna.getTitle())
-                .userName(qna.getUserName())
-                .createAt(qna.getCreateAt())
-                .description(qna.getDescriptions())
-                .build();
+          .qnaType(qna.getQnaType())
+          .status(status)
+          .isReply(isReply)
+          .replyText(qna.getReplyText())
+          .title(qna.getTitle())
+          .userName(qna.getUserName())
+          .createAt(qna.getCreateAt())
+          .description(qna.getDescriptions())
+          .build();
         return dto;
     }
     @Transactional(readOnly = true)
@@ -82,13 +84,13 @@ public class QnAService {
                 status = "answered";
             }
             QnADto.Response_AllQnA dto= QnADto.Response_AllQnA.builder()
-                    .qnaPk(qna.getPk())
-                    .qnaType(qna.getQnaType())
-                    .status(status)
-                    .title(qna.getTitle())
-                    .userName(qna.getUserName())
-                    .createAt(qna.getCreateAt())
-                    .build();
+              .qnaPk(qna.getPk())
+              .qnaType(qna.getQnaType())
+              .status(status)
+              .title(qna.getTitle())
+              .userName(qna.getUserName())
+              .createAt(qna.getCreateAt())
+              .build();
             dtoList.add(dto);
         }
         pageable= PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),Sort.by(Sort.Direction.DESC,"createAt"));
@@ -102,17 +104,17 @@ public class QnAService {
 
     public void reply_QnA(Long QnA_pk, String reply){
         qnaRepository.findById(QnA_pk)
-                .orElseThrow(() -> new NotFoundException("일치하는 QnA가 없습니다"))
-                .makeReply(reply);
+          .orElseThrow(() -> new NotFoundException("일치하는 QnA가 없습니다"))
+          .makeReply(reply);
     }
     public void update_Reply(Long QnA_pk, String reply){
         qnaRepository.findById(QnA_pk)
-                .orElseThrow(() -> new NotFoundException("일치하는 QnA가 없습니다"))
-                .editReply(reply);
+          .orElseThrow(() -> new NotFoundException("일치하는 QnA가 없습니다"))
+          .editReply(reply);
     }
     public void delete_Reply(Long QnA_pk){
         qnaRepository.findById(QnA_pk)
-                .orElseThrow(() -> new NotFoundException("일치하는 QnA가 없습니다"))
-                .deleteReply();
+          .orElseThrow(() -> new NotFoundException("일치하는 QnA가 없습니다"))
+          .deleteReply();
     }
 }

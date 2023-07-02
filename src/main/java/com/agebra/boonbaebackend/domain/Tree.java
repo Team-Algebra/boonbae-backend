@@ -51,7 +51,7 @@ public class Tree {
   @Column(name = "upload_available")
   private int uploadAvailable = 3;
 
-  public void init() {
+  public void initAll() {
     LocalDate current = LocalDate.now();
 
     //업데이트 날짜보다 현재 날짜가 더 크면
@@ -68,7 +68,7 @@ public class Tree {
   }
 
   public void recycleComplete() {
-    init();
+    initAll();
     uploadAvailable -= 1;
   }
 

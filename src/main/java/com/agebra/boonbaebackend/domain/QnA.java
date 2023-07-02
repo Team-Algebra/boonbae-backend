@@ -55,10 +55,10 @@ public class QnA {
         qna.descriptions = description;
         return qna;
     }
-    public void editQnA(Users user, QnAType qnaType, String title, String description){
-            this.qnaType=qnaType;
-            this.title=title;
-            this.descriptions=description;
+    public void editQnA(QnAType qnaType, String title, String description){
+        this.qnaType=qnaType;
+        this.title=title;
+        this.descriptions=description;
     }
     public void makeReply(String replyText){
         this.replyText=replyText;

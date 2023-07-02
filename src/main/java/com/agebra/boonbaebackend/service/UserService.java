@@ -3,6 +3,7 @@ package com.agebra.boonbaebackend.service;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.UserDto;
 import com.agebra.boonbaebackend.exception.ForbiddenException;
+import com.agebra.boonbaebackend.exception.NotFoundException;
 import com.agebra.boonbaebackend.exception.UserInfoDuplicatedException;
 import com.agebra.boonbaebackend.repository.UserRepository;
 
@@ -70,7 +71,7 @@ public class UserService {
         );
 
         Users user = userRepository.findById(dto.getId())
-          .orElseThrow(() -> new NoSuchElementException());
+          .orElseThrow(() -> new NotFoundException());
 
         String jwtToken = jwtService.generateToken(user);
         return new UserDto.LoginResponse(jwtToken, user.getId(), user.getNickname());
@@ -111,14 +112,14 @@ public class UserService {
 
     public void chargePoint(Users user, int amount) {
         Users findUser = userRepository.findById(user.getPk())
-          .orElseThrow(() -> new NoSuchElementException());
+          .orElseThrow(() -> new NotFoundException());
 
         findUser.chargePoint(amount);
     }
 
     public String getIntroduction(Users user) {
         Users findUser = userRepository.findById(user.getPk())
-          .orElseThrow(() -> new NoSuchElementException());
+          .orElseThrow(() -> new NotFoundException());
 
         if (user.getIntroduction() == null)
             return "";
@@ -128,8 +129,21 @@ public class UserService {
 
     public void modifyIntroduction(Users user, String introduction) {
         Users findUser = userRepository.findById(user.getPk())
-          .orElseThrow(() -> new NoSuchElementException());
+          .orElseThrow(() -> new NotFoundException());
 
         findUser.changeIntroduction(introduction);
+    }
+
+    public UserDto.Info getUserInfo(Users user) {
+        //이렇게 안하면 새로 반영이 안되는듯?
+        Users findUsers = userRepository.findById(user.getPk())
+          .orElseThrow(() -> new NotFoundException("없는 user입니다"));
+
+        return UserDto.Info.builder()
+          .username(findUsers.getNickname())
+          .id(findUsers.getId())
+          .eco_point(findUsers.getEcoPoint())
+          .build();
+
     }
 }

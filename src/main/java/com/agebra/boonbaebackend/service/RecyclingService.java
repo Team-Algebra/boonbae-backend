@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class RecyclingService {
   @Transactional
   public void write(RecyclingDto.Write dto) {
     RecyclingInfo info = RecyclingInfo.makeRecyclingInfo(
-            dto.getName(), dto.getType(), dto.getProcess(), dto.getDescription(), dto.getImage_url()
+      dto.getName(), dto.getType(), dto.getProcess(), dto.getDescription(), dto.getImage_url()
     );
 
     recyclingRepository.save(info);
@@ -54,19 +55,19 @@ public class RecyclingService {
 
     List<RecyclingDto.Search> searchResults = infoList.stream().map(recyclingInfo -> {
       String[] tagNames = recyclingInfo.getTagList().stream()
-              .map(Tag::getName)
-              .toArray(String[]::new);
+        .map(Tag::getName)
+        .toArray(String[]::new);
 
       return new RecyclingDto.Search(
-              recyclingInfo.getPk(),
-              recyclingInfo.getName(),
-              recyclingInfo.getProcess(),
-              recyclingInfo.getDescription(),
-              recyclingInfo.getType(),
-              recyclingInfo.getImageUrl(),
-              tagNames,
-              recyclingInfo.getViewCnt(),
-              recyclingInfo.getCreateDate()
+        recyclingInfo.getPk(),
+        recyclingInfo.getName(),
+        recyclingInfo.getProcess(),
+        recyclingInfo.getDescription(),
+        recyclingInfo.getType(),
+        recyclingInfo.getImageUrl(),
+        tagNames,
+        recyclingInfo.getViewCnt(),
+        recyclingInfo.getCreateDate()
       );
     }).collect(Collectors.toList());
 
@@ -80,28 +81,35 @@ public class RecyclingService {
   @Transactional(readOnly = true)
   public RecyclingDto.DetailResult getRecyclingInfoDetail(Long recyclePk) {
     RecyclingInfo recyclingInfo = recyclingRepository.findById(recyclePk)
-            .orElseThrow(() -> new NotFoundException("Recycling information not found with PK: " + recyclePk));
+      .orElseThrow(() -> new NotFoundException("Recycling information not found with PK: " + recyclePk));
 
     recyclingInfo.setViewCnt(recyclingInfo.getViewCnt() + 1); // view_cnt 1 증가
     recyclingRepository.save(recyclingInfo);
 
     String[] tagNames = recyclingInfo.getTagList().stream()
-            .map(Tag::getName)
-            .toArray(String[]::new);
+      .map(Tag::getName)
+      .toArray(String[]::new);
 
     return new RecyclingDto.DetailResult(
-            recyclingInfo.getName(),
-            recyclingInfo.getProcess(),
-            recyclingInfo.getDescription(),
-            recyclingInfo.getType(),
-            recyclingInfo.getImageUrl(),
-            tagNames,
-            recyclingInfo.getViewCnt(),
-            recyclingInfo.getCreateDate()
+      recyclingInfo.getName(),
+      recyclingInfo.getProcess(),
+      recyclingInfo.getDescription(),
+      recyclingInfo.getType(),
+      recyclingInfo.getImageUrl(),
+      tagNames,
+      recyclingInfo.getViewCnt(),
+      recyclingInfo.getCreateDate()
     );
   }
 
+  public List<String> getRankFive() {
 
+    List<String> list = new ArrayList<>();
+    for (RecyclingInfo info: recyclingRepository.findTop5ByOrderByViewCntDesc()) {
+      list.add(info.getName());
+    }
 
+    return list;
+  }
 
 }
