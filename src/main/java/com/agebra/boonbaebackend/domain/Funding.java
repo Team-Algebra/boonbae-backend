@@ -19,10 +19,10 @@ public class Funding {
     @Column(name="pk")  //기본키
     private Long pk;
 
-//    @NotNull
-//    @ManyToOne
-//    @JoinColumn(name="user_pk", referencedColumnName = "pk")   등록한 사용자
-//    private Users user;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name="user_pk", referencedColumnName = "pk")   // 등록한 사용자
+    private Users user;
 
     @NotNull
     @Column(name="title") //이름(제목)
@@ -73,6 +73,7 @@ public class Funding {
     @CreationTimestamp
     @Builder.Default
     private LocalDateTime createDate= LocalDateTime.now();
+
 
     public static Funding makeFunding(String title, String firstCategory, String secondCategory,String introduction, int targetAmount, int currentAmount, int supportingAmount,LocalDate closeDate,String mainImg){
         Funding funding = new Funding();
