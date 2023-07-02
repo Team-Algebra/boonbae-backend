@@ -43,6 +43,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/v1/qna/").permitAll()
                 .requestMatchers(HttpMethod.GET,  "/api/v1/recycling/").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/trees/").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/tip/").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/tip/").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/v1/qna/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/users/").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/recycling/").hasAuthority("ADMIN")

@@ -14,11 +14,8 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     Optional<Users> findById(String id);
     Optional<Users> findByNickname(String nickName);
 
-    @Query("SELECT u from Users u join u.tree")
+    @Query("SELECT u from Users u join u.tree where u.pk = :pk")
     Optional<Users> findByPkWithTree(Long pk);
-
-    @Query("SELECT u.tree from Users u join u.tree")
-    List<Tree> getTreeByPk(Long pk);
 
     Long countBy();
 }
