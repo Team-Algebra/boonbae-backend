@@ -45,7 +45,6 @@ public class QnAService {
         qnaRepository.delete(qna);
     }
 
-
     @Transactional(readOnly = true)
     public QnADto.Response_oneQnA one_QnA(Long QnA_pk){
         QnA qna =qnaRepository.findById(QnA_pk)
@@ -61,14 +60,19 @@ public class QnAService {
             isReply=1;
         }
 
-        //@TODO user가 null이면 알수없음으로 표시되어야함! 걍 null을 반환해야한다!
+        //user가 탈퇴하면 null로 표시
+        Users qnaUser = qna.getUser();
+        String username = null;
+        if (qnaUser != null)
+            username = qnaUser.getUsername();
+
         QnADto.Response_oneQnA dto = QnADto.Response_oneQnA.builder()
           .qnaType(qna.getQnaType())
           .status(status)
           .isReply(isReply)
           .replyText(qna.getReplyText())
           .title(qna.getTitle())
-          .userName(qna.getUserName())
+          .userName(username)
           .createAt(qna.getCreateAt())
           .description(qna.getDescriptions())
           .build();
@@ -77,26 +81,34 @@ public class QnAService {
     @Transactional(readOnly = true)
     public List<QnADto.Response_AllQnA> all_QnA(Pageable pageable, QnAType category){
         List<QnA> qnaList;
+
         if (category == null)
             qnaList = qnaRepository.findAll(pageable).getContent();
         else
-            qnaList = qnaRepository.findByQnaType(category);
+            qnaList = qnaRepository.findByQnaType(category, pageable).getContent();
 
-        //@TODO user가 null이면 알수없음으로 표시되어야함! 걍 null을 반환해야한다!
         List<QnADto.Response_AllQnA> dtoList = new ArrayList<>();
         String status;
+
         for(QnA qna : qnaList){
             if(qna.getReplyText()==null) {
                 status = "waiting";
             } else {
                 status = "answered";
             }
+
+            //user가 탈퇴하면 null로 표시
+            Users qnaUser = qna.getUser();
+            String username = null;
+            if (qnaUser != null)
+                username = qnaUser.getUsername();
+
             QnADto.Response_AllQnA dto= QnADto.Response_AllQnA.builder()
               .qnaPk(qna.getPk())
               .qnaType(qna.getQnaType())
               .status(status)
               .title(qna.getTitle())
-              .userName(qna.getUserName())
+              .userName(username)
               .createAt(qna.getCreateAt())
               .build();
             dtoList.add(dto);
