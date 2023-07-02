@@ -1,13 +1,11 @@
 package com.agebra.boonbaebackend.controller;
 
-import com.agebra.boonbaebackend.repository.TipRepository;
 import com.agebra.boonbaebackend.service.TipService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -33,6 +31,7 @@ public class TipController {
     return ResponseEntity.ok(map);
   }
 
+  @Secured("ADMIN") //관리자권한 필요
   @PostMapping("/")
   public ResponseEntity addTip(@RequestBody Map<String, String> map) {
     String tip = map.get("content");
@@ -44,13 +43,23 @@ public class TipController {
     return ResponseEntity.ok().build();
   }
 
-//  @DeleteMapping("/{tip_pk}") //관리자권한
-//  public ResponseEntity deleteTip(@PathVariable("tip_pk") Long pk) {
-//
-//  }
-//
-//  @PatchMapping("/")
-//  public ResponseEntity modifyTip() {
-//
-//  }
+  @Secured("ADMIN") //관리자권한 필요
+  @DeleteMapping("/{tip_pk}")
+  public ResponseEntity deleteTip(@PathVariable("tip_pk") Long pk) {
+    tipService.deleteTip(pk);
+
+    return ResponseEntity.ok().build();
+  }
+
+  @Secured("ADMIN") //관리자권한 필요
+  @PatchMapping("/{tip_pk}")
+  public ResponseEntity modifyTip(@PathVariable("tip_pk") Long pk, @RequestBody Map<String, String> map) {
+    String content = map.get("content");
+    if (content == null)
+      throw new InputMismatchException("content 값은 필수입니다");
+
+    tipService.modifyTip(pk, content);
+
+    return ResponseEntity.ok().build();
+  }
 }

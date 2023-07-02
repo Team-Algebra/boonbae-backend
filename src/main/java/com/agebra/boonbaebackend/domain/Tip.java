@@ -16,4 +16,8 @@ public class Tip {
 
   @Column(length = 1000)
   private String content;
+
+  public void modifyContent(String content) {
+    this.content = content;
+  }
 }

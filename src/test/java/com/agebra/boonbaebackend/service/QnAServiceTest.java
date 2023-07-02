@@ -23,39 +23,39 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class QnAServiceTest{
-    @Mock
-    private QnARepository qnaRepository;
+  @Mock
+  private QnARepository qnaRepository;
 
-    @InjectMocks
-    private QnAService qnaService;
+  @InjectMocks
+  private QnAService qnaService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
+  @BeforeEach
+  void setUp() {
+    MockitoAnnotations.initMocks(this);
+  }
 
-    @Test
-    @DisplayName("검색 확인테스트")
-    void searchQnAType_Test() {
-        Users user1 = Users.builder()
-                .id("id1")
-                .password("pass1")
-                .nickname("nick1")
-                .build();
+  @Test
+  @DisplayName("검색 확인테스트")
+  void searchQnAType_Test() {
+    Users user1 = Users.builder()
+      .id("id1")
+      .password("pass1")
+      .nickname("nick1")
+      .build();
 
-        QnA qna1 = QnA.makeQnA(
-                user1, QnAType.ADD_REQUEST,"test1","testde");
-        QnA qna2 = QnA.makeQnA(
-                user1, QnAType.ADD_REQUEST,"test1","testde");
-        QnA qna3 = QnA.makeQnA(
-                user1, QnAType.ETC,"test1","testde");
-        List<QnA> mockQnAList = new ArrayList<>();
-        mockQnAList.add(qna1);
-        mockQnAList.add(qna2);
-        when(qnaRepository.findByQnaType(QnAType.ADD_REQUEST)).thenReturn(mockQnAList);
-        Pageable pageable= PageRequest.of(1, 5);
-        List<QnA> qnaList = qnaRepository.findByQnaType(QnAType.ADD_REQUEST);
-        assertEquals(mockQnAList,qnaList);
+    QnA qna1 = QnA.makeQnA(
+      user1, QnAType.ADD_REQUEST,"test1","testde");
+    QnA qna2 = QnA.makeQnA(
+      user1, QnAType.ADD_REQUEST,"test1","testde");
+    QnA qna3 = QnA.makeQnA(
+      user1, QnAType.ETC,"test1","testde");
+    List<QnA> mockQnAList = new ArrayList<>();
+    mockQnAList.add(qna1);
+    mockQnAList.add(qna2);
+    when(qnaRepository.findByQnaType(QnAType.ADD_REQUEST)).thenReturn(mockQnAList);
+    Pageable pageable= PageRequest.of(1, 5);
+    List<QnA> qnaList = qnaRepository.findByQnaType(QnAType.ADD_REQUEST);
+    assertEquals(mockQnAList,qnaList);
 
-    }
+  }
 }

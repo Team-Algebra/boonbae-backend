@@ -1,6 +1,7 @@
 package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.Tip;
+import com.agebra.boonbaebackend.exception.NotFoundException;
 import com.agebra.boonbaebackend.repository.TipRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,20 @@ public class TipService {
       .build();
 
     tipRepository.save(newTIp);
+  }
+
+  public void deleteTip(Long pk) {
+    Tip findTip = tipRepository.findById(pk)
+      .orElseThrow(() -> new NotFoundException("해당하는 tip이 없습니다"));
+
+    tipRepository.delete(findTip);
+  }
+
+  public void modifyTip(Long pk, String content) {
+    Tip findTip = tipRepository.findById(pk)
+      .orElseThrow(() -> new NotFoundException("해당하는 tip이 없습니다"));
+
+    findTip.modifyContent(content);
   }
 
 }
