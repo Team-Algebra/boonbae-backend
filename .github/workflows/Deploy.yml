@@ -39,9 +39,25 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+
+#      - name: SCP transfer
+#        run: scp *.jar ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/cicd
+#
+      # SCP로 서버로 전송
       - name: SCP transfer
-        run: scp *.jar ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/cicd
+        uses: appleboy/scp-action@master
+        with:
+          username: ${{ secrets.SSH_USER }}
+          host: ${{ secrets.SERVER_IP }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          rm: true
+          source: ${{ secrets.SOURCE_PATH }}
+          target: ./
+          ## 작업에 사용했던 dist 디렉토리를 경로상에서 제거
+          strip_components: 1
+
       - name: Execute remote commands
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "sudo fuser -k 8080/tcp"
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "sudo nohup java -jar ~/cicd/*.jar &"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "sudo nohup java -jar ./*.jar &"
