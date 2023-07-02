@@ -32,16 +32,25 @@ public class QnAService {
     public void update_QnA(Long QnA_pk,QnADto.Request dto, Users user){
         QnA qna = qnaRepository.findById(QnA_pk)
           .orElseThrow(() -> new NotFoundException("일치하는 QnA가 없습니다"));
+
         if(qna.getUser().getPk() == user.getPk()) {
             qna.editQnA(dto.getQnaType(), dto.getTitle(), dto.getDescription());
         }else{
-            throw new NoSuchUserException("다른 유저가 작성한 글입니다 해당 유저 닉네임:"+qna.getUser().getNickname());
+            throw new ForbiddenException("다른 유저가 작성한 글입니다 해당 유저 닉네임:"+qna.getUser().getNickname());
         }
     }
 
-    public void delete(Long QnA_pk){
+    public void delete(Long QnA_pk, Users user) throws ForbiddenException {
         QnA qna = qnaRepository.findById(QnA_pk)
           .orElseThrow(() -> new NotFoundException("일치하는 QnA가 없습니다"));
+
+        Users qnaUser = qna.getUser();
+
+        //권한없는 user 처리
+        if (user.getRole() != UserRole.ADMIN && user.getPk() != qnaUser.getPk()) {
+            throw new ForbiddenException("권한이 없는 사용자입니다");
+        }
+
         qnaRepository.delete(qna);
     }
 

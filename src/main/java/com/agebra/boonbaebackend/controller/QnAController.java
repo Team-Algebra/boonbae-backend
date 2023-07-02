@@ -31,18 +31,18 @@ public class QnAController {
         qnaService.write(dto,user);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-    @PutMapping("/{qna_pk}") //QnA 수정
+    @PutMapping("/{qna_pk}") //QnA 수정 - 글 쓴사람 전용
     public ResponseEntity<Void> updateQnA(@PathVariable Long qna_pk, @RequestBody QnADto.Request dto, @AuthenticationPrincipal Users user){
         qnaService.update_QnA(qna_pk,dto,user);
+
         return ResponseEntity.ok().build();
     }
     @DeleteMapping("/{qna_pk}") // qna 삭제
-    public ResponseEntity<Void> deleteQnA(@PathVariable Long qna_pk){
-        qnaService.delete(qna_pk);
+    public ResponseEntity<Void> deleteQnA(@PathVariable Long qna_pk, @AuthenticationPrincipal Users user){
+        qnaService.delete(qna_pk, user);
         return ResponseEntity.ok().build();
     }
 
-    //@TODO 최신순정렬
     @GetMapping("/") //QnA 페이지
     public ResponseEntity<List<QnADto.Response_AllQnA>> findAllQnA(
       @RequestParam(value = "category",required = false) QnAType category,
