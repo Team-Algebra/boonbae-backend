@@ -9,12 +9,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "QnAController", description = "QnA 관련 컨트롤러입니다")
 @RequiredArgsConstructor
@@ -39,12 +42,16 @@ public class QnAController {
         return ResponseEntity.ok().build();
     }
 
+    //@TODO 최신순정렬
     @GetMapping("/") //QnA 페이지
     public ResponseEntity<List<QnADto.Response_AllQnA>> findAllQnA(
       @RequestParam(value = "category",required = false) QnAType category,
       @RequestParam(value = "size",required = false, defaultValue = "10") int size,
-      @RequestParam(value = "page",required = false, defaultValue = "0") int page){
-        Pageable pageable = PageRequest.of(page,size);
+      @RequestParam(value = "page",required = false, defaultValue = "0") int page
+    ){
+        //direction = Sort.Direction.DESC
+        Pageable pageable = PageRequest.of(page,size, Sort.Direction.DESC, "createAt");
+
         List<QnADto.Response_AllQnA> dto = qnaService.all_QnA(pageable,category);
         return ResponseEntity.ok().body(dto);
     }
@@ -56,13 +63,21 @@ public class QnAController {
     }
 
     @PostMapping("/{qna_pk}/reply") //답변 작성 - 관리자 전용
-    public ResponseEntity<Void> writeReply(@PathVariable Long qna_pk,@RequestBody String reply){
+    public ResponseEntity<Void> writeReply(@PathVariable Long qna_pk,@RequestBody Map<String, String> map){
+        String reply = map.get("content");
+        if (reply == null)
+            throw new InputMismatchException("content값은 필수입니다");
+
         qnaService.reply_QnA(qna_pk,reply);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{qna_pk}/reply") //답변 수정 - 관리자 전용
-    public ResponseEntity<Void> updateReply(@PathVariable Long qna_pk,@RequestBody String reply){
+    public ResponseEntity<Void> updateReply(@PathVariable Long qna_pk,@RequestBody Map<String, String> map){
+        String reply = map.get("content");
+        if (reply == null)
+            throw new InputMismatchException("content값은 필수입니다");
+
         qnaService.update_Reply(qna_pk,reply);
         return ResponseEntity.ok().build();
     }
