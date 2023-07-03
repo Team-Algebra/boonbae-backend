@@ -29,7 +29,6 @@ public class Funding {
     @Column(name="title") //이름(제목)
     private String title;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name="second_category", referencedColumnName = "pk") //2차 카테고리
     private SecondCategory category;
@@ -44,8 +43,9 @@ public class Funding {
     private Long targetAmount;
 
     @NotNull
+    @Builder.Default
     @Column(name="current_amount")  //현재금액
-    private Long currentAmount;
+    private Long currentAmount = 0L;
 
     @NotNull
     @Column(name="supporting_amount") //1회 후원금액
@@ -67,18 +67,22 @@ public class Funding {
     private String mainImg;
 
     @NotNull
+    @Builder.Default
+    @Column(name="is_approved")
+    private boolean isApproved = false;
+
+    @NotNull
     @Column(name="create_at")
     @CreationTimestamp
     @Builder.Default
     private LocalDateTime createAt = LocalDateTime.now();
 
-    public static Funding makeFunding(String title, SecondCategory category, String content, Long targetAmount, Long currentAmount, Long supportingAmount,LocalDate closeDate,String mainImg){
+    public static Funding makeFunding(String title, SecondCategory category, String content, Long targetAmount, Long supportingAmount,LocalDate closeDate,String mainImg){
         Funding funding = new Funding();
         funding.title=title;
         funding.category = category;
         funding.content=content;
         funding.targetAmount=targetAmount;
-        funding.currentAmount=currentAmount;
         funding.supportingAmount=supportingAmount;
         funding.closeDate=closeDate;
         funding.mainImg=mainImg;

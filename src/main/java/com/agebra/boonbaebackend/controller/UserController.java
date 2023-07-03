@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "UserController", description = "User관련한 컨트롤러 입니다")
 @RequiredArgsConstructor
 @RestController
@@ -26,6 +27,7 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/") //회원가입
     public ResponseEntity<UserDto.RegisterResponse> register (@RequestBody UserDto.RegisterRequest request) throws RuntimeException {
         userService.register(request);

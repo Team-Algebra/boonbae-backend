@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "RecycleConfirmController", description = "분리배출 인증사진 관련한 컨트롤러 입니다")
 @RequiredArgsConstructor
 @RestController

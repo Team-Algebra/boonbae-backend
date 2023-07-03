@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "RecyclingInfoController", description = "분리배출정보 컨트롤러 입니다")
 @RequiredArgsConstructor
 @RestController

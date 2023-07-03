@@ -1,5 +1,6 @@
 package com.agebra.boonbaebackend.domain.funding;
 
+import com.agebra.boonbaebackend.domain.Tag;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,4 +16,11 @@ public class FirstCategory {
 
   @Column(name = "category_name")
   private String name;
+
+  public static FirstCategory makeFirstCategory(String name)
+  {
+    FirstCategory firstCategory = new FirstCategory();
+    firstCategory.name=name;
+    return firstCategory;
+  }
 }
