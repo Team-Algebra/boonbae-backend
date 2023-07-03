@@ -28,7 +28,7 @@ public class FundingController {
   private final CategoryService categoryService;
 
   @PostMapping("/")
-  public ResponseEntity addFunding(@RequestBody FundingDto.Add dto, @AuthenticationPrincipal Users user) {
+  public ResponseEntity addFunding(@RequestBody FundingDto.AddFunding dto, @AuthenticationPrincipal Users user) {
     fundingService.addFunding(dto, user);
 
     return ResponseEntity.ok().build();
