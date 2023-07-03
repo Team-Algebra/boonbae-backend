@@ -61,3 +61,13 @@ jobs:
 #          script: |
 #            sudo fuser -k 8080/tcp
 #            sudo nohup java -jar ~/cicd/*.jar &
+
+      - uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          description: ${{ job.status == 'success' ? '배포가 성공적으로 완료됨' : ' ' }}
+          url: "https://github.com/Team-Algebra/boonbae-backend/actions"
+          color: ${{ job.status == 'failure' ? '0xff0000' : job.status == 'success' ? '0x72db58' : '0x808080' }}
+          username: 배포 안내
