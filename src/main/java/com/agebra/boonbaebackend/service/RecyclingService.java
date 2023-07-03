@@ -1,9 +1,11 @@
 package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.RecyclingInfo;
+import com.agebra.boonbaebackend.domain.RecyclingInfoTag;
 import com.agebra.boonbaebackend.domain.Tag;
 import com.agebra.boonbaebackend.dto.RecyclingDto;
 import com.agebra.boonbaebackend.exception.NotFoundException;
+import com.agebra.boonbaebackend.repository.RecyclingInfoTagRepository;
 import com.agebra.boonbaebackend.repository.RecyclingRepository;
 import com.agebra.boonbaebackend.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class RecyclingService {
   private final RecyclingRepository recyclingRepository;
   private final TagRepository tagRepository;
+  private final RecyclingInfoTagRepository recyclingInfoTagRepository;
 
   // 분리배출 정보 등록
   @Transactional
@@ -29,21 +32,26 @@ public class RecyclingService {
       dto.getName(), dto.getType(), dto.getProcess(), dto.getDescription(), dto.getImage_url()
     );
 
-    recyclingRepository.save(info);
+    RecyclingInfo saveInfo = recyclingRepository.save(info);
 
-    List<Tag> tagList = new ArrayList<>();
-
-    //@TODO 중복되게 만들어야함: info가 사라지면 tag가 다 같이 사라져야함 - 같은 태그 중복해서 사용하면 태그겹치는 애들은 자기 tag를 잃게된다
     for (String tag : dto.getTags()) {
       Tag existingTag = tagRepository.findByName(tag);
-      if (existingTag == null) {
-        existingTag = Tag.makeTag(info, tag);
-        tagList.add(existingTag);
-        tagRepository.save(existingTag);
-      }
-      info.addTagList(tagList);
-    }
 
+      if (existingTag == null) {
+        Tag newTag = Tag.builder()
+          .name(tag)
+          .build();
+
+        Tag saveTag = tagRepository.save(newTag);
+
+        RecyclingInfoTag recyclingInfoTag = RecyclingInfoTag.builder()
+          .recyclingInfo(saveInfo)
+          .tag(saveTag)
+          .build();
+
+        recyclingInfoTagRepository.save(recyclingInfoTag);
+      }
+    }
   }
 
   // 분리배출 정보 검색
@@ -55,7 +63,9 @@ public class RecyclingService {
     }
 
     List<RecyclingDto.Search> searchResults = infoList.stream().map(recyclingInfo -> {
-      String[] tagNames = recyclingInfo.getTagList().stream()
+
+      String[] tagNames = recyclingInfo.getRecycleTagList().stream()
+        .map(RecyclingInfoTag::getTag)
         .map(Tag::getName)
         .toArray(String[]::new);
 
@@ -76,8 +86,6 @@ public class RecyclingService {
   }
 
 
-
-
   // 특정 쓰레기 분리배출 정보 가져오기
   @Transactional
   public RecyclingDto.DetailResult getRecyclingInfoDetail(Long recyclePk) {
@@ -87,7 +95,8 @@ public class RecyclingService {
     recyclingInfo.setViewCnt(recyclingInfo.getViewCnt() + 1); // view_cnt 1 증가
     recyclingRepository.save(recyclingInfo);
 
-    String[] tagNames = recyclingInfo.getTagList().stream()
+    String[] tagNames = recyclingInfo.getRecycleTagList().stream()
+      .map(RecyclingInfoTag::getTag)
       .map(Tag::getName)
       .toArray(String[]::new);
 

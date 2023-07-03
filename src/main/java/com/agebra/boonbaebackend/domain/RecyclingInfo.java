@@ -21,9 +21,9 @@ public class RecyclingInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pk;
 
-    @OneToMany(mappedBy = "info")
-    @JsonIgnoreProperties("info")
-    private List<Tag> tagList = new ArrayList<>();
+    @OneToMany(mappedBy = "recyclingInfo")
+//    @JsonIgnoreProperties("recyclingInfo")
+    private List<RecyclingInfoTag> RecycleTagList = new ArrayList<>();
 
     @NotNull
     @Column(name = "info_name")
@@ -65,8 +65,8 @@ public class RecyclingInfo {
         return recyclingInfo;
     }
 
-    public void addTagList(List<Tag> tagList) {
-        this.tagList = tagList;
-    }
+//    public void addTagList(List<Tag> tagList) {
+//        this.tagList = tagList;
+//    }
 
 }
