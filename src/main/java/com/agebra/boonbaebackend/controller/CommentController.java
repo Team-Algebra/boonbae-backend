@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "CommentController", description = "분리배출 정보 게시글 댓글 서비스 관련 Controller 입니다.")
 @RequiredArgsConstructor
 @RestController

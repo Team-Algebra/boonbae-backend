@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "TipController", description = "오늘의 꿀팁 컨트롤러 입니다")
 @RequiredArgsConstructor
 @RestController

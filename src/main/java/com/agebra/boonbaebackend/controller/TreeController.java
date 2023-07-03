@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+
 
 @Tag(name = "TreeController", description = "Tree관련한 컨트롤러 입니다")
 @RequiredArgsConstructor

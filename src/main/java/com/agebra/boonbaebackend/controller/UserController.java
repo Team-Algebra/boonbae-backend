@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "UserController", description = "User관련한 컨트롤러 입니다")
 @RequiredArgsConstructor
 @RestController

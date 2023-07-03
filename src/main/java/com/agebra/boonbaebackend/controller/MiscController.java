@@ -16,6 +16,7 @@
 //import java.util.List;
 //import java.util.Map;
 //
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 //@Tag(name = "MiscController", description = "기타 기능, 동작을 처리하는 컨트롤러 입니다")
 //@RequiredArgsConstructor
 //@RestController
