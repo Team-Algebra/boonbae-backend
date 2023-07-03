@@ -48,4 +48,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     log.info("NotFoundException = {}", e.getMessage());
     return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
   }
+
+  @ExceptionHandler({CategoryDuplicateException.class})
+  protected ResponseEntity handleCategoryDuplicateException(CategoryDuplicateException e) {
+    log.info("CategoryDuplicateException = {}", e.getMessage());
+    return ResponseEntity.status(HttpStatus.CONFLICT).build();
+  }
 }
