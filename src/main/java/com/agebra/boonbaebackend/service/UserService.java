@@ -38,18 +38,13 @@ public class UserService {
         if (isExistNickname(dto.getUsername()))
             throw new UserInfoDuplicatedException("user의 닉네임이 중복됩니다");
 
-        Users referrerUser = userRepository.findById(dto.getRefferer_id())
-          .orElseGet(() -> null);
+        if (dto.getRefferer_id() != null) {
+            Users referrerUser = userRepository.findById(dto.getRefferer_id())
+              .orElseGet(() -> null);
 
-        if (referrerUser != null) { //추천인이 존재하면 해당 유저에게 포인트 지급
-            referrerUser.addReferralPoint(valueService.getReferralPoint());
+            if (referrerUser != null)  //추천인이 존재하면 해당 유저에게 포인트 지급
+                referrerUser.addReferralPoint(valueService.getReferralPoint());
         }
-
-//        Users user = Users.makeUser(
-//          dto.getId(),
-//          passwordEncoder.encode(dto.getPassword()),
-//          dto.getUsername()
-//        );
 
         Users user = Users.builder()
             .id(dto.getId())
