@@ -67,7 +67,7 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
-          description: ${{ job.status == 'success' ? '배포가 성공적으로 완료됨' : ' ' }}
+          description: ${{ job.status == 'success' ? '배포가 성공적으로 완료됨' : '배포가 진행되지 않음' }}
           url: "https://github.com/Team-Algebra/boonbae-backend/actions"
           color: ${{ job.status == 'failure' ? '0xff0000' : job.status == 'success' ? '0x72db58' : '0x808080' }}
           username: 배포 안내
