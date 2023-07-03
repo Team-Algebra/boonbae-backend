@@ -20,7 +20,6 @@ public class FundingDonateList {
     @JoinColumn(name = "funding_pk", referencedColumnName = "pk")
     private Funding funding;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "user_pk", referencedColumnName = "pk")
     private Users user;

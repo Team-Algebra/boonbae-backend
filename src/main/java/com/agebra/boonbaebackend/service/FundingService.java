@@ -1,10 +1,10 @@
 package com.agebra.boonbaebackend.service;
 
-import com.agebra.boonbaebackend.domain.Funding;
-import com.agebra.boonbaebackend.domain.Users;
+import com.agebra.boonbaebackend.domain.*;
 import com.agebra.boonbaebackend.domain.funding.SecondCategory;
 import com.agebra.boonbaebackend.dto.FundingDto;
 import com.agebra.boonbaebackend.exception.NotFoundException;
+import com.agebra.boonbaebackend.repository.FundingLikeRepository;
 import com.agebra.boonbaebackend.repository.SecondCategoryRepository;
 import com.agebra.boonbaebackend.repository.FundingRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class FundingService {
   private final FundingRepository fundingRepository;
   private final SecondCategoryRepository secondCategoryRepository;
+  private final FundingLikeRepository fundingLikeRepository;
 
   public void addFunding(FundingDto.AddFunding dto, Users user) throws RuntimeException {
     //카테고리 올바른지 확인
@@ -40,4 +41,30 @@ public class FundingService {
 
       fundingRepository.save(funding);
   }
+
+  @Transactional
+  public void addLikeToFunding(Users user, Long fundingPk) {
+    Funding funding = fundingRepository.findById(fundingPk)
+            .orElseThrow(() -> new NotFoundException("Funding not found with PK: " + fundingPk));
+
+    // 이미 좋아요를 눌렀는지 확인
+    boolean hasLiked = fundingLikeRepository.existsByUserAndFunding(user, funding);
+
+    if (!hasLiked) {
+      fundingLikeRepository.save(FundingLike.builder().user(user).funding(funding).build());
+    }
+  }
+
+
+  @Transactional
+  public void removeLikeFromFunding(Users user, Long fundingPk) {
+    Funding funding = fundingRepository.findById(fundingPk)
+            .orElseThrow(() -> new NotFoundException("Funding not found with PK: " + fundingPk));
+
+    FundingLike like = fundingLikeRepository.findByUserAndFunding(user, funding)
+            .orElseThrow(() -> new NotFoundException("Like not found for the given user and funding"));
+
+    fundingLikeRepository.delete(like);
+  }
+
 }
