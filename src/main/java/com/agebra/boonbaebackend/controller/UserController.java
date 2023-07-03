@@ -5,6 +5,7 @@ import com.agebra.boonbaebackend.dto.UserDto;
 import com.agebra.boonbaebackend.exception.UserInfoDuplicatedException;
 import com.agebra.boonbaebackend.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class UserController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/") //회원가입
-    public ResponseEntity<UserDto.RegisterResponse> register (@RequestBody UserDto.RegisterRequest request) throws RuntimeException {
+    public ResponseEntity<UserDto.RegisterResponse> register (@RequestBody @Valid UserDto.RegisterRequest request) throws RuntimeException {
         userService.register(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -43,7 +44,7 @@ public class UserController {
 
     @PostMapping("/login") //로그인
     public ResponseEntity<UserDto.LoginResponse> authenticate(
-      @RequestBody UserDto.Login request
+      @RequestBody @Valid UserDto.Login request
     ) {
         return ResponseEntity.ok(userService.authenticate(request));
     }

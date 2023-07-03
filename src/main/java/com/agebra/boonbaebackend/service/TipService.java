@@ -1,11 +1,14 @@
 package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.Tip;
+import com.agebra.boonbaebackend.dto.TipDto;
 import com.agebra.boonbaebackend.exception.NotFoundException;
 import com.agebra.boonbaebackend.repository.TipRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Transactional
@@ -18,6 +21,21 @@ public class TipService {
   public String getTip() {
     return tipRepository.getTipRandom()
       .orElseGet(() -> "");
+  }
+
+  @Transactional(readOnly = true)
+  public List<TipDto.List> getAll() {
+
+    List<Tip> all = tipRepository.findAll();
+
+    List<TipDto.List> dtoList = all.stream().map(tip -> {
+      return TipDto.List.builder()
+        .tip_pk(tip.getPk())
+        .name(tip.getContent())
+        .build();
+    }).toList();
+
+    return dtoList;
   }
 
   public void addTip(String tip) {

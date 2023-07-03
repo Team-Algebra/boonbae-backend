@@ -1,5 +1,6 @@
 package com.agebra.boonbaebackend.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 public class UserDto {
@@ -7,8 +8,11 @@ public class UserDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class RegisterRequest {
+        @NotNull
         private String id;
+        @NotNull
         private String username; //domain에서는 nickname임
+        @NotNull
         private String password;
         private String refferer_id;
     }
@@ -34,7 +38,9 @@ public class UserDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Login {
+        @NotNull
         private String id;
+        @NotNull
         private String password;
     }
 
