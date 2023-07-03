@@ -19,4 +19,12 @@ public class SecondCategory {
 
   @Column(name = "category_name")
   private String name;
+
+  public static SecondCategory makeSecondCategory(FirstCategory firstCategory,String name)
+  {
+    SecondCategory secondCategory = new SecondCategory();
+    secondCategory.firstCategory=firstCategory;
+    secondCategory.name=name;
+    return secondCategory;
+  }
 }
