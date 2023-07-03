@@ -19,6 +19,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "QnAController", description = "QnA 관련 컨트롤러입니다")
 @RequiredArgsConstructor
 @RestController
