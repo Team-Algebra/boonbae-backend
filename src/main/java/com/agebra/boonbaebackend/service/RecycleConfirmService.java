@@ -60,13 +60,16 @@ public class RecycleConfirmService {
     RecycleConfirm recycleConfirm = recycleConfirmRepository.findById(recyclingConfirmPk)
       .orElseThrow(() -> new NotFoundException("해당하는 분리배출 인증사진이 없습니다"));
 
-    //나무 경험치 지급
-    Tree tree = recycleConfirm.getUser().getTree();
-    tree.recyclePass(valueService.getRecycleExp());
-
-    //분리배출 인증완료 혜택지급
     Users user = recycleConfirm.getUser();
-    user.addRecyclePoint(valueService.getRecyclePoint());
+
+    if (user != null) {
+      //분리배출 인증완료 혜택지급
+      user.addRecyclePoint(valueService.getRecyclePoint());
+
+      //나무 경험치 지급
+      Tree tree = user.getTree();
+      tree.recyclePass(valueService.getRecycleExp());
+    }
 
     //분리배출 인증사진 인증완료 처리
     recycleConfirm.pass();

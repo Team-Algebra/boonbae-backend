@@ -1,5 +1,7 @@
 package com.agebra.boonbaebackend.domain;
 
+import com.agebra.boonbaebackend.domain.funding.FirstCategory;
+import com.agebra.boonbaebackend.domain.funding.SecondCategory;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -19,7 +21,6 @@ public class Funding {
     @Column(name="pk")  //기본키
     private Long pk;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name="user_pk", referencedColumnName = "pk")   // 등록한 사용자
     private Users user;
@@ -29,29 +30,26 @@ public class Funding {
     private String title;
 
     @NotNull
-    @Column(name="first_category") //1차 카테고리
-    private String firstCategory;
-
-    @NotNull
-    @Column(name="second_category") //2차 카테고리
-    private String secondCategory;
+    @ManyToOne
+    @JoinColumn(name="second_category", referencedColumnName = "pk") //2차 카테고리
+    private SecondCategory category;
 
     @Lob
     @NotNull
-    @Column(name="introduction",length = 999999999) //소개
-    private String introduction;
+    @Column(name="content",length = 999999999) //펀딩아이템 소개
+    private String content;
 
     @NotNull
     @Column(name="target_amount") //목표금액
-    private int targetAmount;
+    private Long targetAmount;
 
     @NotNull
     @Column(name="current_amount")  //현재금액
-    private int currentAmount;
+    private Long currentAmount;
 
     @NotNull
-    @Column(name="supporting_amount")
-    private int supportingAmount;
+    @Column(name="supporting_amount") //1회 후원금액
+    private Long supportingAmount;
 
     @NotNull
     @Column(name="open_date")
@@ -69,18 +67,16 @@ public class Funding {
     private String mainImg;
 
     @NotNull
-    @Column(name="create_date")
+    @Column(name="create_at")
     @CreationTimestamp
     @Builder.Default
-    private LocalDateTime createDate= LocalDateTime.now();
+    private LocalDateTime createAt = LocalDateTime.now();
 
-
-    public static Funding makeFunding(String title, String firstCategory, String secondCategory,String introduction, int targetAmount, int currentAmount, int supportingAmount,LocalDate closeDate,String mainImg){
+    public static Funding makeFunding(String title, SecondCategory category, String content, Long targetAmount, Long currentAmount, Long supportingAmount,LocalDate closeDate,String mainImg){
         Funding funding = new Funding();
         funding.title=title;
-        funding.firstCategory=firstCategory;
-        funding.secondCategory=secondCategory;
-        funding.introduction=introduction;
+        funding.category = category;
+        funding.content=content;
         funding.targetAmount=targetAmount;
         funding.currentAmount=currentAmount;
         funding.supportingAmount=supportingAmount;
@@ -88,6 +84,4 @@ public class Funding {
         funding.mainImg=mainImg;
         return funding;
     }
-
-
 }

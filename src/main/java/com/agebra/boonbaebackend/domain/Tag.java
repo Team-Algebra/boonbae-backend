@@ -18,19 +18,12 @@ public class Tag {
     private Long pk;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "info_pk", referencedColumnName = "pk")
-    @JsonIgnore
-    private RecyclingInfo info;
-
-    @NotNull
     @Column(name = "tag_name")
     private String name;
 
-    public static Tag makeTag(RecyclingInfo info, String name)
+    public static Tag makeTag(String name)
     {
         Tag tag = new Tag();
-        tag.info = info;
         tag.name = name;
         return tag;
     }

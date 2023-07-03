@@ -9,8 +9,8 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name="funding_like_list")
-public class FundingLikeList {
+@Table(name="funding_like")
+public class FundingLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pk;

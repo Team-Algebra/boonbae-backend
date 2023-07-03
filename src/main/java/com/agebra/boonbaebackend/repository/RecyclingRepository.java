@@ -10,7 +10,7 @@ import java.util.List;
 public interface RecyclingRepository extends JpaRepository<RecyclingInfo, Long> {
 
     // 이름, 태그, type으로 분리배출 정보 검색
-    @Query("SELECT r FROM RecyclingInfo r LEFT JOIN r.tagList t WHERE r.name LIKE %:keyword% OR t.name LIKE %:keyword% OR CAST(r.type AS string) " +
+    @Query("SELECT r FROM RecyclingInfo r join RecyclingInfoTag rit join rit.tag t WHERE r.name LIKE %:keyword% OR t.name LIKE %:keyword% OR CAST(r.type AS string) " +
       "LIKE %:keyword% OR (:keyword LIKE '%종이%' AND (r.type = 'PAPER' OR r.type = 'PAPERPACK')) "
       + "OR (:keyword LIKE '%페트%' AND r.type = 'PET') "
       + "OR (:keyword LIKE '%플라스틱%' AND r.type = 'PLASTIC') "

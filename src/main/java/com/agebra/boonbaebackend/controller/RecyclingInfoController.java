@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "RecyclingInfoController", description = "분리배출정보 컨트롤러 입니다")
@@ -20,9 +21,11 @@ public class RecyclingInfoController {
 
   private final RecyclingService recyclingService;
 
-  @PostMapping //관리자용. 분리배출 정보 등록
+  @Secured("ADMIN") //관리자권한 필요
+  @PostMapping //분리배출 정보 등록
   public ResponseEntity write(@RequestBody @Valid RecyclingDto.Write dto) {
     recyclingService.write(dto);
+
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
@@ -32,7 +35,7 @@ public class RecyclingInfoController {
     RecyclingDto.SearchResult dto = recyclingService.searchRecyclingInfo(keyword);
     return ResponseEntity.ok(dto);
   }
-  
+
   // 특정 쓰레기 분리배출 정보 가져오기
   @GetMapping("/{recycle_pk}")
   public ResponseEntity<RecyclingDto.DetailResult> getRecyclingInfoDetail(@PathVariable("recycle_pk") Long recyclePk) {

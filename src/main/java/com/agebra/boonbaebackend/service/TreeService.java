@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Transactional
 @Service
@@ -28,7 +30,7 @@ public class TreeService {
     Users findUser = userRepository.findByPkWithTree(user.getPk())
       .orElseThrow(() -> new RuntimeException());
 
-    Tree tree = userRepository.getTreeByPk(findUser.getPk()).get(0);
+    Tree tree = findUser.getTree();
     tree.initAll();
 
     if (tree.isExceedUploadCnt()) {
@@ -51,8 +53,7 @@ public class TreeService {
     Users findUser = userRepository.findByPkWithTree(userPk)
       .orElseThrow(() -> new NoSuchUserException("해당하는 user가 없습니다"));
 
-//    Tree tree = findUser.getTree();
-    Tree tree = userRepository.getTreeByPk(findUser.getPk()).get(0);
+    Tree tree = findUser.getTree();
     tree.initAll();
 
     Long allUserCnt = userRepository.countBy();
@@ -73,8 +74,7 @@ public class TreeService {
     Users findUser = userRepository.findByPkWithTree(user.getPk())
       .orElseThrow(() -> new NoSuchUserException("해당하는 user가 없습니다"));
 
-//    Tree tree = findUser.getTree();
-    Tree tree = userRepository.getTreeByPk(findUser.getPk()).get(0);
+    Tree tree = findUser.getTree();
     tree.initAll(); //날짜가 지났는지 확인 후 초기화
 
     Long allUserCnt = userRepository.countBy();
@@ -103,7 +103,7 @@ public class TreeService {
       throw new NoSuchUserException("해당하는 user가 없습니다");
 
 //    Tree tree = findUser.getTree();
-    Tree tree = userRepository.getTreeByPk(findUser.getPk()).get(0);
+    Tree tree = findUser.getTree();
     tree.initAll(); //날짜가 지났는지 확인 후 초기화
 
     Long allUserCnt = userRepository.countBy();
