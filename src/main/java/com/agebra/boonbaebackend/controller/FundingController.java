@@ -60,7 +60,19 @@ public class FundingController {
 //    return ResponseEntity.ok().build();
 //  }
 
+  // 펀딩 좋아요 추가 (Only User)
+  @PostMapping("/{funding_pk}/likes")
+  public ResponseEntity addLikeToFunding(@AuthenticationPrincipal Users user, @PathVariable("funding_pk") Long fundingPk) {
+    fundingService.addLikeToFunding(user, fundingPk);
+    return ResponseEntity.ok().build();
+  }
 
+  // 펀딩 좋아요 제거 (Only User)
+  @DeleteMapping("/{funding_pk}/likes")
+  public ResponseEntity removeLikeFromComment(@AuthenticationPrincipal Users user, @PathVariable("funding_pk") Long fundingPk) {
+    fundingService.removeLikeFromFunding(user, fundingPk);
+    return ResponseEntity.ok().build();
+  }
 
 
 }
