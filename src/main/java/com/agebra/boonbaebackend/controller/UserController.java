@@ -27,6 +27,7 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
 
+    @CrossOrigin(origins="*")
     @PostMapping("/") //회원가입
     public ResponseEntity<UserDto.RegisterResponse> register (@RequestBody UserDto.RegisterRequest request) throws RuntimeException {
         userService.register(request);
