@@ -1,8 +1,6 @@
 package com.agebra.boonbaebackend.dto;
 
 
-import com.agebra.boonbaebackend.domain.funding.FirstCategory;
-import com.agebra.boonbaebackend.domain.funding.SecondCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +12,7 @@ public class FundingDto {
   @Getter
   @AllArgsConstructor
   @NoArgsConstructor
-  public static class Add {
+  public static class AddFunding {
     private String title;
     private Long target_amount;
     private Long supporting_amount;

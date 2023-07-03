@@ -2,7 +2,6 @@ package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.Funding;
 import com.agebra.boonbaebackend.domain.Users;
-import com.agebra.boonbaebackend.domain.funding.FirstCategory;
 import com.agebra.boonbaebackend.domain.funding.SecondCategory;
 import com.agebra.boonbaebackend.dto.FundingDto;
 import com.agebra.boonbaebackend.exception.NotFoundException;
@@ -13,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.InputMismatchException;
-
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -23,7 +20,7 @@ public class FundingService {
   private final FundingRepository fundingRepository;
   private final SecondCategoryRepository secondCategoryRepository;
 
-  public void addFunding(FundingDto.Add dto, Users user) throws RuntimeException {
+  public void addFunding(FundingDto.AddFunding dto, Users user) throws RuntimeException {
     //카테고리 올바른지 확인
     SecondCategory secondCategory = secondCategoryRepository.findById(dto.getSecond_category_pk())
       .orElseThrow(() -> new NotFoundException("해당하는 두 번째 카테고리가 존재하지 않음"));
