@@ -67,7 +67,6 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
-          content: "Hey <@316911818725392384>"
           description: "배포 진행 상황 보고"
           url: "https://github.com/Team-Algebra/boonbae-backend/actions"
           color: 0x72db58
