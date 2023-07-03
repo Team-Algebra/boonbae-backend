@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
                 .requestMatchers(whiteList).permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/recycling/*/comments").permitAll()
 //                .requestMatchers(HttpMethod.GET, "/api/v1/qna/").permitAll()
