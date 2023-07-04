@@ -70,6 +70,14 @@ public class Users implements UserDetails {
         this.introduction = introduction;
     }
 
+    public void changeNickname(String newName) {
+        this.nickname = newName;
+    }
+
+    public void changePassword(String password) {
+        this.password= password;
+    }
+
     //추천인 포인트
     public void addReferralPoint(int addPoint) {
         this.ecoPoint += addPoint;
@@ -85,9 +93,6 @@ public class Users implements UserDetails {
         this.ecoPoint = amount;
     }
 
-    public void changeNickname(String newName) {
-        this.nickname = newName;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
