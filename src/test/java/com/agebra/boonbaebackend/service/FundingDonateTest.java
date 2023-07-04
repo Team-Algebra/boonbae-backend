@@ -2,6 +2,7 @@ package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.Funding;
 import com.agebra.boonbaebackend.domain.FundingDonate;
+import com.agebra.boonbaebackend.domain.UserRole;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.domain.funding.FirstCategory;
 import com.agebra.boonbaebackend.domain.funding.SecondCategory;
@@ -37,7 +38,7 @@ class FundingDonateTest{
 
     @Test
     @DisplayName("유저 후원 펀딩 확인")
-    void isExistsId_Test() {
+    void UserFundingDonate_Test() {
 
         Users user1 = Users.builder()
                 .id("id1")
@@ -88,3 +89,4 @@ class FundingDonateTest{
         assertEquals(fundingDonates,fundingDonateList);
     }
 }
+
