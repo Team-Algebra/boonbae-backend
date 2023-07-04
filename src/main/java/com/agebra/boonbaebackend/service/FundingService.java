@@ -116,7 +116,6 @@ public class FundingService {
     )).toList();
 
     return new FundingDto.MyFundingLikeResult(myFundingLikeList.size(), myFundingLikeList);
-
     
   }
 
