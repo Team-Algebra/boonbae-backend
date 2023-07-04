@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -26,24 +27,32 @@ public class RecyclingService {
   // 분리배출 정보 등록
   @Transactional
   public void write(RecyclingDto.Write dto) {
+    //버리는법 리스트 -> String통으로 변경
+    String processString = String.join("\t\t\t", dto.getProcess());
+
+    //상세설명 리스트 -> String통으로 변경
+    String discriptionString = String.join("\t\t\t", dto.getDescription());
+
     RecyclingInfo info = RecyclingInfo.makeRecyclingInfo(
-      dto.getName(), dto.getProcess(), dto.getDescription(), dto.getImage_url()
+      dto.getName(), processString, discriptionString, dto.getImage_url()
     );
 
     // 게시글 저장
     RecyclingInfo saveInfo = recyclingRepository.save(info);
 
     // type 매핑 -> 일치 type 없을 시 404
-    for (String recyclingType  : dto.getTypes()) {
-      RecyclingType existingRecyclingType = recyclingTypeRepository.findByName(recyclingType)
-              .orElseThrow(() -> new NotFoundException("RecyclingType not found with name: " + recyclingType));
+    if (dto.getTypes() != null) {
+      for (String recyclingType  : dto.getTypes()) {
+        RecyclingType existingRecyclingType = recyclingTypeRepository.findByName(recyclingType)
+          .orElseThrow(() -> new NotFoundException("RecyclingType not found with name: " + recyclingType));
 
-      RecyclingInfoType recyclingInfoType = RecyclingInfoType.builder()
-              .recyclingInfo(saveInfo)
-              .type(existingRecyclingType)
-              .build();
+        RecyclingInfoType recyclingInfoType = RecyclingInfoType.builder()
+          .recyclingInfo(saveInfo)
+          .type(existingRecyclingType)
+          .build();
 
-      recyclingInfoTypeRepository.save(recyclingInfoType);
+        recyclingInfoTypeRepository.save(recyclingInfoType);
+      }
     }
 
     // tag 매핑 -> 일치 tag 없을 시 생성 후 저장
@@ -93,8 +102,8 @@ public class RecyclingService {
       return new RecyclingDto.Search(
         recyclingInfo.getPk(),
         recyclingInfo.getName(),
-        recyclingInfo.getProcess(),
-        recyclingInfo.getDescription(),
+        recyclingInfo.getProcess().split("\t\t\t"),
+        recyclingInfo.getDescription().split("\t\t\t"),
         typeNames,
         recyclingInfo.getImageUrl(),
         tagNames,

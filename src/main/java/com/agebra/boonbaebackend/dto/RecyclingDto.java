@@ -18,10 +18,10 @@ public class RecyclingDto {
     private String name;
 
     @NotNull(message = "분리배출 정보 버리는방법이 null이면 안됩니다")
-    private String process; //domain에서는 nickname임
+    private String[] process; //domain에서는 nickname임
 
     @NotNull(message = "분리배출 정보 설명이 null이면 안됩니다")
-    private String description;
+    private String[] description;
 
     @NotNull(message = "분리배출 정보 타입이 null이면 안됩니다")
     private String[] types;
@@ -47,8 +47,8 @@ public class RecyclingDto {
   public static class Search {
     private Long pk;
     private String name;
-    private String process;
-    private String description;
+    private String[] process;
+    private String[] description;
     private String[] types;
     private String imageUrl;
     private String[] tags;
