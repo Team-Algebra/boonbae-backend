@@ -38,7 +38,7 @@ public class FundingController {
 
     return ResponseEntity.ok().build();
   }
-  +  @GetMapping("/")  //펀딩 전체 리스트 (관리자가 승인 안한것은 출력 x)
+  @GetMapping("/")  //펀딩 전체 리스트 (관리자가 승인 안한것은 출력 x)
   public ResponseEntity<Map<String, List>> findAllFunding(){
     List<FundingDto.MyFunding> dto = fundingService.List_Funding();
     Map<String, List> map = new HashMap<>();
