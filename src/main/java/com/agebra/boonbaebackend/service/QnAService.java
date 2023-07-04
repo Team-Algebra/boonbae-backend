@@ -6,12 +6,10 @@ import com.agebra.boonbaebackend.domain.UserRole;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.QnADto;
 import com.agebra.boonbaebackend.exception.ForbiddenException;
-import com.agebra.boonbaebackend.exception.NoSuchUserException;
 import com.agebra.boonbaebackend.exception.NotFoundException;
 import com.agebra.boonbaebackend.repository.QnARepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,7 +86,7 @@ public class QnAService {
         return dto;
     }
     @Transactional(readOnly = true)
-    public List<QnADto.Response_AllQnA> all_QnA(Pageable pageable, QnAType category){
+    public List<QnADto.Response_AllQnA> page_QnA(Pageable pageable, QnAType category){
         List<QnA> qnaList;
 
         if (category == null)
@@ -129,6 +127,49 @@ public class QnAService {
         List<QnADto.Response_AllQnA> qnaPage = qnaAll.getContent();
         return qnaPage;
     }
+
+    @Transactional(readOnly = true)
+    public List<QnADto.Response_AllQnA> all_QnA(QnAType category){
+        List<QnA> qnaList;
+
+        //카테고리 안넣으면 전부 다 불러옴
+        if (category == null)
+            qnaList = qnaRepository.findAll();
+        else
+            qnaList = qnaRepository.findByQnaType(category);
+
+        List<QnADto.Response_AllQnA> dtoList = new ArrayList<>();
+
+        for(QnA qna : qnaList){
+            String status;
+
+            if(qna.getReplyText()==null) {
+                status = "waiting";
+            } else {
+                status = "answered";
+            }
+
+            //user가 탈퇴하면 null로 표시
+            Users qnaUser = qna.getUser();
+            String username = null;
+            if (qnaUser != null)
+                username = qnaUser.getUsername();
+
+            QnADto.Response_AllQnA dto= QnADto.Response_AllQnA.builder()
+              .qnaPk(qna.getPk())
+              .qnaType(qna.getQnaType())
+              .status(status)
+              .title(qna.getTitle())
+              .userName(username)
+              .createAt(qna.getCreateAt())
+              .build();
+
+            dtoList.add(dto);
+        }
+
+        return dtoList;
+    }
+
 
 
     public void reply_QnA(Long QnA_pk, String reply){

@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
@@ -44,18 +45,31 @@ public class QnAController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/") //QnA 페이지
-    public ResponseEntity<List<QnADto.Response_AllQnA>> findAllQnA(
-      @RequestParam(value = "category",required = false) QnAType category,
-      @RequestParam(value = "size",required = false, defaultValue = "10") int size,
-      @RequestParam(value = "page",required = false, defaultValue = "0") int page
+    @GetMapping("/") //QnA 페이지 - 전체 다 불러오게 해달라고 하셨음
+    public ResponseEntity<Map<String, List>> findAllQnA(
+      @RequestParam(value = "category",required = false) QnAType category
     ){
-        //direction = Sort.Direction.DESC
-        Pageable pageable = PageRequest.of(page,size, Sort.Direction.DESC, "createAt");
+        List<QnADto.Response_AllQnA> dto = qnaService.all_QnA(category);
 
-        List<QnADto.Response_AllQnA> dto = qnaService.all_QnA(pageable,category);
-        return ResponseEntity.ok().body(dto);
+        Map<String, List> map = new HashMap<>();
+        map.put("list", dto);
+
+        return ResponseEntity.ok(map);
     }
+
+//    @GetMapping("/") //QnA 페이지
+//    public ResponseEntity<List<QnADto.Response_AllQnA>> findAllQnA(
+//      @RequestParam(value = "category",required = false) QnAType category,
+//      @RequestParam(value = "size",required = false, defaultValue = "10") int size,
+//      @RequestParam(value = "page",required = false, defaultValue = "0") int page
+//    ){
+//        //direction = Sort.Direction.DESC
+//        Pageable pageable = PageRequest.of(page,size, Sort.Direction.DESC, "createAt");
+//
+//        List<QnADto.Response_AllQnA> dto = qnaService.page_QnA(pageable,category);
+//        return ResponseEntity.ok().body(dto);
+//    }
+
     @GetMapping("/{qna_pk}") //QnA 상세정보
     public ResponseEntity<QnADto.Response_oneQnA> findOneQnA(@PathVariable Long qna_pk){
         QnADto.Response_oneQnA dto = qnaService.one_QnA(qna_pk);

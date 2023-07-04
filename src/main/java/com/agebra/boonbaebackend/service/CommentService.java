@@ -29,7 +29,6 @@ import static com.agebra.boonbaebackend.domain.UserRole.ADMIN;
 @Transactional
 @Slf4j
 public class CommentService {
-
     private final RecyclingRepository recyclingRepository;
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
