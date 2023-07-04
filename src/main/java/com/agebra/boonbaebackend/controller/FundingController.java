@@ -102,8 +102,13 @@ public class FundingController {
     return ResponseEntity.ok().build();
   }
   @GetMapping("/donate")
-  public ResponseEntity<FundingDto.MyFundingResult> MyFundingList(@AuthenticationPrincipal Users user){
+  public ResponseEntity<FundingDto.MyFundingResult> findAllFundingDonateByUser(@AuthenticationPrincipal Users user){
      FundingDto.MyFundingResult fundingDonateList = fundingService.findAllDonateByUser(user);
      return ResponseEntity.ok().body(fundingDonateList);
+  }
+  @GetMapping("/my")
+  public ResponseEntity<FundingDto.MyFundingResult> findAllFundingMakeByUser(@AuthenticationPrincipal Users user){
+    FundingDto.MyFundingResult fundingMakeList = fundingService.findAllMakeUser(user);
+    return ResponseEntity.ok().body(fundingMakeList);
   }
 }
