@@ -2,8 +2,10 @@ package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.*;
 import com.agebra.boonbaebackend.domain.funding.SecondCategory;
+import com.agebra.boonbaebackend.dto.FundingDonateDto;
 import com.agebra.boonbaebackend.dto.FundingDto;
 import com.agebra.boonbaebackend.exception.NotFoundException;
+import com.agebra.boonbaebackend.repository.FundingDonateRepository;
 import com.agebra.boonbaebackend.repository.FundingLikeRepository;
 import com.agebra.boonbaebackend.repository.SecondCategoryRepository;
 import com.agebra.boonbaebackend.repository.FundingRepository;
@@ -11,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -20,7 +25,7 @@ public class FundingService {
   private final FundingRepository fundingRepository;
   private final SecondCategoryRepository secondCategoryRepository;
   private final FundingLikeRepository fundingLikeRepository;
-
+  private final FundingDonateRepository fundingDonateRepository;
   public void addFunding(FundingDto.AddFunding dto, Users user) throws RuntimeException {
     //카테고리 올바른지 확인
     SecondCategory secondCategory = secondCategoryRepository.findById(dto.getSecond_category_pk())
@@ -65,6 +70,57 @@ public class FundingService {
             .orElseThrow(() -> new NotFoundException("Like not found for the given user and funding"));
 
     fundingLikeRepository.delete(like);
+  }
+
+  public boolean paymentCheck(FundingDonateDto.Request_All requestDto, PaymentMethod paymentMethod){ //결제 확인(미완)
+    return true;
+  }
+
+
+  @Transactional
+  public void addDonateToFunding(Users user, Long fundingPk){   //펀딩 후원
+    Funding funding = fundingRepository.findById(fundingPk)
+            .orElseThrow(() -> new NotFoundException("해당하는 펀딩이 존재하지 않습니다"));
+    Boolean checkDonate = fundingDonateRepository.existsByUserAndFunding(user,funding);
+
+    if(!checkDonate){
+      funding.addCurrentAmount();
+      FundingDonateList fundingDonateList = FundingDonateList.builder()
+              .funding(funding)
+              .user(user)
+              .build();
+      fundingDonateRepository.save(fundingDonateList);
+    }
+  }
+
+  public List<FundingDto.MyFundingResponse> findAllDonateByUser(Users user){  //유저가 후원한 펀딩 전체 출력
+    List<FundingDonateList> fundingDonateList = fundingDonateRepository.findByUser(user);
+    if(fundingDonateList.isEmpty()){
+      throw new NotFoundException("해당 유저의 펀딩이 없습니다");
+    }
+    List<FundingDto.MyFundingResponse> fundingList = new ArrayList<>();
+    for(FundingDonateList donate : fundingDonateList){
+      Funding funding = donate.getFunding();
+      List<SecondCategory> secondCategoryList = secondCategoryRepository.findAllByFirstCategory(funding.getCategory().getFirstCategory());
+      List<String> secondCategoryNameList = new ArrayList<>();
+      for(SecondCategory name : secondCategoryList){
+        secondCategoryNameList.add(name.getName());
+      }
+      FundingDto.MyFundingResponse myFunding = FundingDto.MyFundingResponse.builder()
+              .funding_pk(funding.getPk())
+              .title(funding.getTitle())
+              .first_category_name(funding.getCategory().getFirstCategory().getName())
+              .second_category_name(secondCategoryNameList)
+              .owner_user_name(funding.getUser().getNickname())
+              .description(funding.getContent())
+              .current_amount(funding.getCurrentAmount())
+              .target_amount(funding.getTargetAmount())
+              .main_img(funding.getMainImg())
+              .DDay(funding.getDDay())
+              .build();
+      fundingList.add(myFunding);
+    }
+    return fundingList;
   }
 
 }

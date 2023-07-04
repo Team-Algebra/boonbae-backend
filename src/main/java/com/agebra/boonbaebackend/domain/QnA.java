@@ -72,7 +72,7 @@ public class QnA {
         this.replyText=null;
     }
     public String getUserName(){
-        return this.user.getUsername();
+        return this.user.getNickname();
     }
 
 
