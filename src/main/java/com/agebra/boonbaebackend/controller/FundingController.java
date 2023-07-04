@@ -84,6 +84,9 @@ public class FundingController {
                                           @AuthenticationPrincipal Users user,
                                           @PathVariable("funding_pk") Long fundingPk,
                                           @RequestBody FundingDonateDto.Request_All dto){
+    if(dto==null){
+      throw new NotFoundException("올바르지 않은 값이 입력되었습니다");
+    }
     Boolean checkPayment = fundingService.paymentCheck(dto,paymentMethod);
     if(!checkPayment){
       throw new NotFoundException("결제에 실패하였습니다 잘못된 정보가 없는지 확인해주세요");
