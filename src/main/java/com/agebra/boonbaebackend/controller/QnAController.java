@@ -1,16 +1,12 @@
 package com.agebra.boonbaebackend.controller;
 
 import com.agebra.boonbaebackend.domain.QnARequestType;
-import com.agebra.boonbaebackend.domain.QnAType;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.QnADto;
 import com.agebra.boonbaebackend.service.QnAService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

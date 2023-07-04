@@ -1,16 +1,17 @@
 package com.agebra.boonbaebackend.service;
 
-import com.agebra.boonbaebackend.domain.*;
+import com.agebra.boonbaebackend.domain.RecycleConfirm;
+import com.agebra.boonbaebackend.domain.Tree;
+import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.TreeDto;
-import com.agebra.boonbaebackend.exception.NoSuchUserException;
 import com.agebra.boonbaebackend.exception.NotFoundException;
 import com.agebra.boonbaebackend.exception.UploadCntExceedException;
-import com.agebra.boonbaebackend.repository.*;
+import com.agebra.boonbaebackend.repository.RecycleConfirmRepository;
+import com.agebra.boonbaebackend.repository.TreeRepository;
+import com.agebra.boonbaebackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Transactional

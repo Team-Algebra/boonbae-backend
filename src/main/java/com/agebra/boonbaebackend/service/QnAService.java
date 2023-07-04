@@ -132,7 +132,7 @@ public class QnAService {
         if (category == null)
             qnaList = qnaRepository.findAll();
         else if(category == QnARequestType.RECENT)
-            qnaList= qnaRepository.findAll(Sort.by(Sort.Direction.DESC,"createAt"));
+            qnaList= qnaRepository.findAllByOrderByCreateAt();
         else if(category==QnARequestType.ANSWERED){
             qnaList=qnaRepository.findAllByReplyTextIsNotNull();
         }else {
