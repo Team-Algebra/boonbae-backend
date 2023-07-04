@@ -29,22 +29,22 @@ public class FundingService {
   public void addFunding(FundingDto.AddFunding dto, Users user) throws RuntimeException {
     //카테고리 올바른지 확인
     SecondCategory secondCategory = secondCategoryRepository.findById(dto.getSecond_category_pk())
-      .orElseThrow(() -> new NotFoundException("해당하는 두 번째 카테고리가 존재하지 않음"));
+            .orElseThrow(() -> new NotFoundException("해당하는 두 번째 카테고리가 존재하지 않음"));
 
     //펀딩 새로만들기
     Funding funding = Funding.builder()
-      .user(user)
-      .title(dto.getTitle())
-      .category(secondCategory)
-      .content(dto.getIntroduction())
-      .targetAmount(dto.getTarget_amount())
-      .supportingAmount(dto.getSupporting_amount())
-      .openDate(dto.getOpen_date())
-      .closeDate(dto.getClose_date())
-      .mainImg(dto.getMain_image())
-      .build();
+            .user(user)
+            .title(dto.getTitle())
+            .category(secondCategory)
+            .content(dto.getIntroduction())
+            .targetAmount(dto.getTarget_amount())
+            .supportingAmount(dto.getSupporting_amount())
+            .openDate(dto.getOpen_date())
+            .closeDate(dto.getClose_date())
+            .mainImg(dto.getMain_image())
+            .build();
 
-      fundingRepository.save(funding);
+    fundingRepository.save(funding);
   }
 
   @Transactional
@@ -72,18 +72,18 @@ public class FundingService {
     fundingLikeRepository.delete(like);
   }
 
-  public boolean paymentCheck(FundingDonateDto.Request_All requestDto, PaymentMethod paymentMethod){ //결제 확인(미완)
+  public boolean paymentCheck(FundingDonateDto.Request_All requestDto, PaymentMethod paymentMethod) { //결제 확인(미완)
     return true;
   }
 
 
   @Transactional
-  public void addDonateToFunding(Users user, Long fundingPk){   //펀딩 후원
+  public void addDonateToFunding(Users user, Long fundingPk) {   //펀딩 후원
     Funding funding = fundingRepository.findById(fundingPk)
             .orElseThrow(() -> new NotFoundException("해당하는 펀딩이 존재하지 않습니다"));
-    Boolean checkDonate = fundingDonateRepository.existsByUserAndFunding(user,funding);
+    Boolean checkDonate = fundingDonateRepository.existsByUserAndFunding(user, funding);
 
-    if(!checkDonate){
+    if (!checkDonate) {
       funding.addCurrentAmount();
       FundingDonate fundingDonateList = FundingDonate.builder()
               .funding(funding)
@@ -96,18 +96,18 @@ public class FundingService {
 
   // 유저가 좋아요한 펀딩 전체 조회
   @Transactional(readOnly = true)
-  public FundingDto.MyFundingLikeResult findAllFundingLikeByUser(Users user){
+  public FundingDto.MyFundingResult findAllFundingLikeByUser(Users user) {
     List<FundingLike> fundingLikeList = fundingLikeRepository.findByUser(user);
-    if(fundingLikeList.isEmpty()){
+    if (fundingLikeList.isEmpty()) {
       throw new NotFoundException("해당 유저가 좋아요한 펀딩이 없습니다");
     }
 
-    List<FundingDto.MyFundingLike> myFundingLikeList = fundingLikeList.stream().map(fundingLike -> new FundingDto.MyFundingLike(
+    List<FundingDto.MyFunding> myFundingLikeList = fundingLikeList.stream().map(fundingLike -> new FundingDto.MyFunding(
             fundingLike.getFunding().getPk(),
             fundingLike.getFunding().getTitle(),
             fundingLike.getFunding().getCategory().getFirstCategory().getName(),
             fundingLike.getFunding().getCategory().getName(),
-            fundingLike.getUser().getNickname(),
+            fundingLike.getFunding().getUser().getNickname(),
             fundingLike.getFunding().getContent(),
             fundingLike.getFunding().getCurrentAmount(),
             fundingLike.getFunding().getTargetAmount(),
@@ -115,36 +115,55 @@ public class FundingService {
             fundingLike.getFunding().getDDay()
     )).toList();
 
-    return new FundingDto.MyFundingLikeResult(myFundingLikeList.size(), myFundingLikeList);
-    
+    return new FundingDto.MyFundingResult(myFundingLikeList.size(), myFundingLikeList);
+
   }
 
-  public List<FundingDto.MyFundingResponse> findAllDonateByUser(Users user){  //유저가 후원한 펀딩 전체 출력
+  @Transactional(readOnly = true)
+  public FundingDto.MyFundingResult findAllDonateByUser(Users user) {  //유저가 후원한 펀딩 전체 출력
     List<FundingDonate> fundingDonateList = fundingDonateRepository.findByUser(user);
-    if(fundingDonateList.isEmpty()){
-      throw new NotFoundException("해당 유저의 펀딩이 없습니다");
+    if (fundingDonateList.isEmpty()) {
+      throw new NotFoundException("해당 유저가 좋아요한 펀딩이 없습니다");
     }
 
-    List<FundingDto.MyFundingResponse> fundingList = new ArrayList<>();
-    for(FundingDonate donate : fundingDonateList){
-      Funding funding = donate.getFunding();
-      FundingDto.MyFundingResponse myFunding = FundingDto.MyFundingResponse.builder()
-                .funding_pk(funding.getPk())
-                .title(funding.getTitle())
-                .first_category_name(funding.getCategory().getFirstCategory().getName())
-                .second_category_name(funding.getCategory().getName())
-                .owner_user_name(funding.getUser().getNickname())
-                .description(funding.getContent())
-                .current_amount(funding.getCurrentAmount())
-                .target_amount(funding.getTargetAmount())
-                .main_img(funding.getMainImg())
-                .DDay(funding.getDDay())
-                .build();
-                fundingList.add(myFunding);
-    }
-    return fundingList;
+    List<FundingDto.MyFunding> myFundingDonateList = fundingDonateList.stream().map(fundingDonate -> new FundingDto.MyFunding(
+            fundingDonate.getFunding().getPk(),
+            fundingDonate.getFunding().getTitle(),
+            fundingDonate.getFunding().getCategory().getFirstCategory().getName(),
+            fundingDonate.getFunding().getCategory().getName(),
+            fundingDonate.getFunding().getUser().getNickname(),
+            fundingDonate.getFunding().getContent(),
+            fundingDonate.getFunding().getCurrentAmount(),
+            fundingDonate.getFunding().getTargetAmount(),
+            fundingDonate.getFunding().getMainImg(),
+            fundingDonate.getFunding().getDDay()
+    )).toList();
+
+    return new FundingDto.MyFundingResult(myFundingDonateList.size(), myFundingDonateList);
   }
 
+  @Transactional(readOnly = true)
+  public FundingDto.MyFundingResult findAllMakeUser(Users user) {  //유저가 후원한 펀딩 전체 출력
+    List<Funding> fundingMakeList = fundingRepository.findByUser(user);
+    if (fundingMakeList.isEmpty()) {
+      throw new NotFoundException("해당 유저가 좋아요한 펀딩이 없습니다");
+    }
+
+    List<FundingDto.MyFunding> myFundingMakeList = fundingMakeList.stream().map(funding -> new FundingDto.MyFunding(
+            funding.getPk(),
+            funding.getTitle(),
+            funding.getCategory().getFirstCategory().getName(),
+            funding.getCategory().getName(),
+            funding.getUser().getNickname(),
+            funding.getContent(),
+            funding.getCurrentAmount(),
+            funding.getTargetAmount(),
+            funding.getMainImg(),
+            funding.getDDay()
+    )).toList();
+
+    return new FundingDto.MyFundingResult(myFundingMakeList.size(), myFundingMakeList);
+  }
   // 나의 진행중인 펀딩 조회(최신순)
   @Transactional(readOnly = true)
   public FundingDto.MyFundingResponseResult findOngoingFundingByUser(Users user){

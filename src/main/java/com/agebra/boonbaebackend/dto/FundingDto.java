@@ -22,26 +22,11 @@ public class FundingDto {
     private String main_image;
   }
 
-  @Getter
-  @Builder
-  @AllArgsConstructor
-  public static class MyFundingResponse {
-    private Long funding_pk;
-    private String title;
-    private String first_category_name;
-    private String second_category_name;
-    private String owner_user_name;
-    private String description;
-    private Long current_amount;
-    private Long target_amount;
-    private String main_img;
-    private Long DDay;
-  }
 
   @Getter
   @Builder
   @AllArgsConstructor
-  public static class MyFundingLike {
+  public static class MyFunding{
     private Long funding_pk;
     private String title;
     private String first_category_name;
@@ -58,10 +43,11 @@ public class FundingDto {
   @Setter
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class MyFundingLikeResult {
+  public static class MyFundingResult {
     private int count;
-    private List<FundingDto.MyFundingLike> likeList;
+    private List<FundingDto.MyFunding> fundingList;
   }
+
 
   @Getter
   @Setter
