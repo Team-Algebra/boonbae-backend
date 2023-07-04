@@ -90,7 +90,7 @@ public class FundingService {
   }*/
 
   @Transactional(readOnly = true)
-  public List<FundingDto.MyFunding> List_Funding() {
+  public FundingDto.MyFundingResult List_Funding() {
     List<Funding> fundingList;
     fundingList = fundingRepository.findByApproved(true,Sort.by(Sort.Direction.DESC,"createAt"));
     if (fundingList.isEmpty()) {
@@ -108,7 +108,8 @@ public class FundingService {
             funding.getMainImg(),
             funding.getDDay()
     )).toList();
-    return allFundingList;
+    FundingDto.MyFundingResult dto = new FundingDto.MyFundingResult(allFundingList.size(),allFundingList);
+    return dto;
   }
   @Transactional(readOnly = true)
   public FundingDto.MyFunding one_funding(Long fundingPk){
@@ -144,7 +145,7 @@ public class FundingService {
   }
 
   @Transactional(readOnly = true) // 괸리자용 -> 승인안된 funding 확인
-  public List<FundingDto.MyFunding> List_Funding_DeAccess() {
+  public FundingDto.MyFundingResult List_Funding_DeAccess() {
     List<Funding> fundingList;
     fundingList = fundingRepository.findByApproved(false,Sort.by(Sort.Direction.DESC,"createAt"));
     if (fundingList.isEmpty()) {
@@ -162,7 +163,8 @@ public class FundingService {
             funding.getMainImg(),
             funding.getDDay()
     )).toList();
-    return allFundingList;
+    FundingDto.MyFundingResult dto = new FundingDto.MyFundingResult(allFundingList.size(),allFundingList);
+    return dto;
   }
   
   @Transactional
