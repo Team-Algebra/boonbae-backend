@@ -1,13 +1,9 @@
 package com.agebra.boonbaebackend.service;
 
-import com.agebra.boonbaebackend.domain.RecyclingInfo;
-import com.agebra.boonbaebackend.domain.RecyclingInfoTag;
-import com.agebra.boonbaebackend.domain.Tag;
+import com.agebra.boonbaebackend.domain.*;
 import com.agebra.boonbaebackend.dto.RecyclingDto;
 import com.agebra.boonbaebackend.exception.NotFoundException;
-import com.agebra.boonbaebackend.repository.RecyclingInfoTagRepository;
-import com.agebra.boonbaebackend.repository.RecyclingRepository;
-import com.agebra.boonbaebackend.repository.TagRepository;
+import com.agebra.boonbaebackend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +18,8 @@ import java.util.stream.Collectors;
 @Service
 public class RecyclingService {
   private final RecyclingRepository recyclingRepository;
+  private final RecyclingTypeRepository recyclingTypeRepository;
+  private final RecyclingInfoTypeRepository recyclingInfoTypeRepository;
   private final TagRepository tagRepository;
   private final RecyclingInfoTagRepository recyclingInfoTagRepository;
 
@@ -29,11 +27,26 @@ public class RecyclingService {
   @Transactional
   public void write(RecyclingDto.Write dto) {
     RecyclingInfo info = RecyclingInfo.makeRecyclingInfo(
-      dto.getName(), dto.getType(), dto.getProcess(), dto.getDescription(), dto.getImage_url()
+      dto.getName(), dto.getProcess(), dto.getDescription(), dto.getImage_url()
     );
 
+    // 게시글 저장
     RecyclingInfo saveInfo = recyclingRepository.save(info);
 
+    // type 매핑 -> 일치 type 없을 시 404
+    for (String recyclingType  : dto.getTypes()) {
+      RecyclingType existingRecyclingType = recyclingTypeRepository.findByName(recyclingType)
+              .orElseThrow(() -> new NotFoundException("RecyclingType not found with name: " + recyclingType));
+
+      RecyclingInfoType recyclingInfoType = RecyclingInfoType.builder()
+              .recyclingInfo(saveInfo)
+              .type(existingRecyclingType)
+              .build();
+
+      recyclingInfoTypeRepository.save(recyclingInfoType);
+    }
+
+    // tag 매핑 -> 일치 tag 없을 시 생성 후 저장
     for (String tag : dto.getTags()) {
       Tag existingTag = tagRepository.findByName(tag);
 
@@ -42,15 +55,15 @@ public class RecyclingService {
           .name(tag)
           .build();
 
-        Tag saveTag = tagRepository.save(newTag);
-
-        RecyclingInfoTag recyclingInfoTag = RecyclingInfoTag.builder()
-          .recyclingInfo(saveInfo)
-          .tag(saveTag)
-          .build();
-
-        recyclingInfoTagRepository.save(recyclingInfoTag);
+        existingTag = tagRepository.save(newTag);
       }
+
+      RecyclingInfoTag recyclingInfoTag = RecyclingInfoTag.builder()
+              .recyclingInfo(saveInfo)
+              .tag(existingTag)
+              .build();
+
+      recyclingInfoTagRepository.save(recyclingInfoTag);
     }
   }
 
@@ -58,15 +71,23 @@ public class RecyclingService {
   @Transactional(readOnly = true)
   public RecyclingDto.SearchResult searchRecyclingInfo(String keyword) {
     List<RecyclingInfo> infoList = recyclingRepository.findByKeyword(keyword);
-    if (infoList.isEmpty()) {
-      throw new NotFoundException("No recycling information found for the keyword: " + keyword);
-    }
+
+//    if (infoList.isEmpty()) {
+//      throw new NotFoundException("No recycling information found for the keyword: " + keyword);
+//    }
 
     List<RecyclingDto.Search> searchResults = infoList.stream().map(recyclingInfo -> {
 
+      // tag 추합
       String[] tagNames = recyclingInfo.getRecycleTagList().stream()
         .map(RecyclingInfoTag::getTag)
         .map(Tag::getName)
+        .toArray(String[]::new);
+
+      // type 추합
+      String[] typeNames = recyclingInfo.getRecycleTypeList().stream()
+        .map(RecyclingInfoType::getType)
+        .map(RecyclingType::getName)
         .toArray(String[]::new);
 
       return new RecyclingDto.Search(
@@ -74,13 +95,13 @@ public class RecyclingService {
         recyclingInfo.getName(),
         recyclingInfo.getProcess(),
         recyclingInfo.getDescription(),
-        recyclingInfo.getType(),
+        typeNames,
         recyclingInfo.getImageUrl(),
         tagNames,
         recyclingInfo.getViewCnt(),
         recyclingInfo.getCreateDate()
       );
-    }).collect(Collectors.toList());
+    }).toList();
 
     return new RecyclingDto.SearchResult(searchResults.size(), searchResults);
   }
@@ -95,16 +116,23 @@ public class RecyclingService {
     recyclingInfo.setViewCnt(recyclingInfo.getViewCnt() + 1); // view_cnt 1 증가
     recyclingRepository.save(recyclingInfo);
 
+    // tag 추합
     String[] tagNames = recyclingInfo.getRecycleTagList().stream()
       .map(RecyclingInfoTag::getTag)
       .map(Tag::getName)
+      .toArray(String[]::new);
+
+    // type 추합
+    String[] typeNames = recyclingInfo.getRecycleTypeList().stream()
+      .map(RecyclingInfoType::getType)
+      .map(RecyclingType::getName)
       .toArray(String[]::new);
 
     return new RecyclingDto.DetailResult(
       recyclingInfo.getName(),
       recyclingInfo.getProcess(),
       recyclingInfo.getDescription(),
-      recyclingInfo.getType(),
+      typeNames,
       recyclingInfo.getImageUrl(),
       tagNames,
       recyclingInfo.getViewCnt(),

@@ -1,6 +1,5 @@
 package com.agebra.boonbaebackend.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -32,10 +31,8 @@ public class RecyclingInfo {
     @Column(name = "image_url", length = 99999)
     private String imageUrl;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "recycle_type")
-    private TrashType type;
+    @OneToMany(mappedBy = "recyclingInfo")
+    private List<RecyclingInfoType> RecycleTypeList = new ArrayList<>();
 
     @NotNull
     @Column(name="recycle_process", length = 99999)
@@ -54,11 +51,10 @@ public class RecyclingInfo {
     @Column(name="create_date")
     private LocalDate createDate = LocalDate.now();
 
-    public static RecyclingInfo makeRecyclingInfo(String name, TrashType type, String process, String description, String imageUrl)
+    public static RecyclingInfo makeRecyclingInfo(String name, String process, String description, String imageUrl)
     {
         RecyclingInfo recyclingInfo = new RecyclingInfo();
         recyclingInfo.name = name;
-        recyclingInfo.type = type;
         recyclingInfo.process = process;
         recyclingInfo.description = description;
         recyclingInfo.imageUrl = imageUrl;

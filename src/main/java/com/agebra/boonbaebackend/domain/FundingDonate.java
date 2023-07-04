@@ -9,8 +9,8 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name="funding_donate_list")
-public class FundingDonateList {
+@Table(name="funding_donate")
+public class FundingDonate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pk;
