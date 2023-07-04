@@ -141,4 +141,12 @@ public class UserService {
           .build();
 
     }
+
+    public void modifyPassword(Users user,UserDto.modifyPassword dto){
+        Users findUsers = userRepository.findById(user.getPk())
+                .orElseThrow(() -> new NotFoundException("없는 user입니다"));
+        if(findUsers.getPassword()==dto.getNowPassword()){
+            findUsers.changePassword(dto.getChangePassword());
+        }
+    }
 }
