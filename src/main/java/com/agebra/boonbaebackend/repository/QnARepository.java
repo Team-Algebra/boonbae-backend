@@ -11,4 +11,5 @@ import java.util.List;
 public interface QnARepository extends JpaRepository<QnA,Long> {
   //    @Query("SELECT q FROM QnA q order by q.qnaType")
   Page<QnA> findByQnaType(QnAType qnaType, Pageable pageable);
+  List<QnA> findByQnaType(QnAType qnaType);
 }

@@ -1,5 +1,6 @@
 package com.agebra.boonbaebackend.controller;
 
+import com.agebra.boonbaebackend.dto.TipDto;
 import com.agebra.boonbaebackend.service.TipService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -30,6 +32,14 @@ public class TipController {
     map.put("content", tipRandom);
 
     return ResponseEntity.ok(map);
+  }
+
+  @Secured("ADMIN") //관리자권한 필요
+  @GetMapping("/all")
+  public ResponseEntity getAllTip() {
+    List<TipDto.List> tipList = tipService.getAll();
+
+    return ResponseEntity.ok(tipList);
   }
 
   @Secured("ADMIN") //관리자권한 필요
