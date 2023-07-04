@@ -2,10 +2,12 @@ package com.agebra.boonbaebackend.dto;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class FundingDto {
 
@@ -21,6 +23,22 @@ public class FundingDto {
     private LocalDate open_date;
     private LocalDate close_date;
     private String main_image;
+  }
+
+  @Getter
+  @Builder
+  @AllArgsConstructor
+  public static class MyFundingResponse {
+    private Long funding_pk;
+    private String title;
+    private String first_category_name;
+    private List<String> second_category_name;
+    private String owner_user_name;
+    private String description;
+    private Long current_amount;
+    private Long target_amount;
+    private String main_img;
+    private Long DDay;
   }
 
 }
