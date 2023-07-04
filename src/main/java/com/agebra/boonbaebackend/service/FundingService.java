@@ -8,15 +8,13 @@ import com.agebra.boonbaebackend.exception.ForbiddenException;
 import com.agebra.boonbaebackend.exception.NotFoundException;
 import com.agebra.boonbaebackend.repository.FundingDonateRepository;
 import com.agebra.boonbaebackend.repository.FundingLikeRepository;
-import com.agebra.boonbaebackend.repository.SecondCategoryRepository;
 import com.agebra.boonbaebackend.repository.FundingRepository;
+import com.agebra.boonbaebackend.repository.SecondCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -92,7 +90,7 @@ public class FundingService {
   @Transactional(readOnly = true)
   public FundingDto.MyFundingResult List_Funding() {
     List<Funding> fundingList;
-    fundingList = fundingRepository.findByApproved(true,Sort.by(Sort.Direction.DESC,"createAt"));
+    fundingList = fundingRepository.findByApproved(true);
     if (fundingList.isEmpty()) {
       throw new NotFoundException("등록된 펀딩이 없습니다");
     }
@@ -147,7 +145,7 @@ public class FundingService {
   @Transactional(readOnly = true) // 괸리자용 -> 승인안된 funding 확인
   public FundingDto.MyFundingResult List_Funding_DeAccess() {
     List<Funding> fundingList;
-    fundingList = fundingRepository.findByApproved(false,Sort.by(Sort.Direction.DESC,"createAt"));
+    fundingList = fundingRepository.findByApproved(false);
     if (fundingList.isEmpty()) {
       throw new NotFoundException("등록된 펀딩이 없습니다");
     }
