@@ -17,6 +17,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +32,29 @@ public class FundingController {
   private final FundingService fundingService;
   private final CategoryService categoryService;
 
-  @PostMapping("/")
+  @PostMapping("/") //펀딩 추가
   public ResponseEntity addFunding(@RequestBody FundingDto.AddFunding dto, @AuthenticationPrincipal Users user) {
     fundingService.addFunding(dto, user);
 
+    return ResponseEntity.ok().build();
+  }
+  +  @GetMapping("/")  //펀딩 전체 리스트 (관리자가 승인 안한것은 출력 x)
+  public ResponseEntity<Map<String, List>> findAllFunding(){
+    List<FundingDto.MyFunding> dto = fundingService.List_Funding();
+    Map<String, List> map = new HashMap<>();
+    map.put("list", dto);
+
+    return ResponseEntity.ok(map);
+  }
+  @GetMapping("/{funding_pk}") //펀딩 상세정보 페이지
+  public ResponseEntity<FundingDto.MyFunding> findOneFunding(@PathVariable("funding_pk") Long fundingPk){
+    FundingDto.MyFunding dto = fundingService.one_funding(fundingPk);
+    return ResponseEntity.ok().body(dto);
+  }
+
+  @DeleteMapping("/{funding_pk}") //펀딩 삭제
+  public ResponseEntity<Void> deleteFunding(@AuthenticationPrincipal Users user ,@PathVariable("funding_pk") Long fundingPk){
+    fundingService.deleteFunding(fundingPk,user);
     return ResponseEntity.ok().build();
   }
 
@@ -85,7 +105,7 @@ public class FundingController {
     return ResponseEntity.ok(myFundingLikeResult);
   }
 
-  @PostMapping("/{funding_pk}/sponsor")
+  @PostMapping("/{funding_pk}/sponsor") //펀딩 후원(결제기능 미구현)
   public ResponseEntity addFundingDoanate(@RequestParam(value = "PaymentMethod",required = true)PaymentMethod paymentMethod,
                                           @AuthenticationPrincipal Users user,
                                           @PathVariable("funding_pk") Long fundingPk,
@@ -100,12 +120,12 @@ public class FundingController {
     fundingService.addDonateToFunding(user, fundingPk);
     return ResponseEntity.ok().build();
   }
-  @GetMapping("/donate")
+  @GetMapping("/donate") //사용자 후원 리스트 확인
   public ResponseEntity<FundingDto.MyFundingResult> findAllFundingDonateByUser(@AuthenticationPrincipal Users user){
      FundingDto.MyFundingResult fundingDonateList = fundingService.findAllDonateByUser(user);
      return ResponseEntity.ok().body(fundingDonateList);
   }
-  @GetMapping("/my")
+  @GetMapping("/my") // 사용자 만든 펀딩 리스트 확인
   public ResponseEntity<FundingDto.MyFundingResult> findAllFundingMakeByUser(@AuthenticationPrincipal Users user){
     FundingDto.MyFundingResult fundingMakeList = fundingService.findAllMakeUser(user);
     return ResponseEntity.ok().body(fundingMakeList);
@@ -116,6 +136,21 @@ public class FundingController {
   public ResponseEntity<FundingDto.MyFundingResult> MyOngoingFundingList(@AuthenticationPrincipal Users user){
     FundingDto.MyFundingResult userFundingList = fundingService.findOngoingFundingByUser(user);
     return ResponseEntity.ok().body(userFundingList);
+  }
+  @Secured("ADMIN")
+  @PostMapping("/access") //승인안된 funding 리스트 전체출력 (관리자 전용)
+  public ResponseEntity<Void> AccessFunding(@RequestBody List<Long> fundingPk){
+    fundingService.fundingAccess(fundingPk);
+    return ResponseEntity.ok().build();
+  }
+
+  @Secured("ADMIN")
+  @GetMapping("/access") // 승인안된 funding 리스트 전체출력(관리자 전용)
+  public ResponseEntity<Map<String, List>> findAllDeAccess(){
+    List<FundingDto.MyFunding> dto = fundingService.List_Funding_DeAccess();
+    Map<String, List> map = new HashMap<>();
+    map.put("list", dto);
+    return ResponseEntity.ok(map);
   }
 
 }

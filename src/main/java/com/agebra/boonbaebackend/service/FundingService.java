@@ -4,6 +4,7 @@ import com.agebra.boonbaebackend.domain.*;
 import com.agebra.boonbaebackend.domain.funding.SecondCategory;
 import com.agebra.boonbaebackend.dto.FundingDonateDto;
 import com.agebra.boonbaebackend.dto.FundingDto;
+import com.agebra.boonbaebackend.exception.ForbiddenException;
 import com.agebra.boonbaebackend.exception.NotFoundException;
 import com.agebra.boonbaebackend.repository.FundingDonateRepository;
 import com.agebra.boonbaebackend.repository.FundingLikeRepository;
@@ -45,6 +46,118 @@ public class FundingService {
     fundingRepository.save(funding);
   }
 
+  @Transactional
+  public void deleteFunding(Long fundingPk, Users user){
+    Funding funding = fundingRepository.findById(fundingPk)
+            .orElseThrow(() -> new NotFoundException("해당하는 펀딩이 존재하지 않음"));
+    Users fundingUser = funding.getUser();
+
+    //권한없는 user 처리
+    if (user.getRole() != UserRole.ADMIN && user.getPk() != funding.getPk()) {
+      throw new ForbiddenException("권한이 없는 사용자입니다");
+    }
+    fundingRepository.delete(funding);
+  }
+  /*@Transactional(readOnly = true)
+  public FundingDto.MyFundingResult page_Funding(Pageable pageable) {
+    List<Funding> fundingList;
+    fundingList = fundingRepository.findByApprovedOrderByCreateAt(pageable, true).getContent();
+    if (fundingList.isEmpty()) {
+      throw new NotFoundException("등록된 펀딩이 없습니다");
+    }
+    List<FundingDto.MyFunding> allFundingList = fundingList.stream().map(funding -> new FundingDto.MyFunding(
+            funding.getPk(),
+            funding.getTitle(),
+            funding.getCategory().getFirstCategory().getName(),
+            funding.getCategory().getName(),
+            funding.getUser().getNickname(),
+            funding.getContent(),
+            funding.getCurrentAmount(),
+            funding.getTargetAmount(),
+            funding.getMainImg(),
+            funding.getDDay()
+    )).toList();
+
+    //pageable= PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),Sort.by(Sort.Direction.DESC,"createAt"));
+    int start = (int) pageable.getOffset();
+    int end=Math.min((start + pageable.getPageSize()),allFundingList.size());
+    Page<FundingDto.MyFunding> fundingAll= new PageImpl<>(allFundingList.subList(start,end),pageable,allFundingList.size());
+    List<FundingDto.MyFunding> fundingPageToList = fundingAll.getContent();
+    FundingDto.MyFundingResult fundingAllList = new FundingDto.MyFundingResult(fundingPageToList.size(),fundingPageToList);
+    return fundingAllList;
+  }*/
+
+  @Transactional(readOnly = true)
+  public List<FundingDto.MyFunding> List_Funding() {
+    List<Funding> fundingList;
+    fundingList = fundingRepository.findByApprovedOrderByCreateAt(true);
+    if (fundingList.isEmpty()) {
+      throw new NotFoundException("등록된 펀딩이 없습니다");
+    }
+    List<FundingDto.MyFunding> allFundingList = fundingList.stream().map(funding -> new FundingDto.MyFunding(
+            funding.getPk(),
+            funding.getTitle(),
+            funding.getCategory().getFirstCategory().getName(),
+            funding.getCategory().getName(),
+            funding.getUser().getNickname(),
+            funding.getContent(),
+            funding.getCurrentAmount(),
+            funding.getTargetAmount(),
+            funding.getMainImg(),
+            funding.getDDay()
+    )).toList();
+    return allFundingList;
+  }
+  @Transactional(readOnly = true)
+  public FundingDto.MyFunding one_funding(Long fundingPk){
+    Funding funding = fundingRepository.findById(fundingPk)
+            .orElseThrow(() -> new NotFoundException("펀딩을 찾을 수 없습니다"));
+    FundingDto.MyFunding fundingDto = FundingDto.MyFunding.builder()
+            .funding_pk(funding.getPk())
+            .title(funding.getTitle())
+            .first_category_name(funding.getCategory().getFirstCategory().getName())
+            .second_category_name(funding.getCategory().getName())
+            .owner_user_name(funding.getUser().getNickname())
+            .description(funding.getContent())
+            .current_amount(funding.getCurrentAmount())
+            .target_amount(funding.getTargetAmount())
+            .main_img(funding.getMainImg())
+            .DDay(funding.getDDay())
+            .build();
+    return fundingDto;
+  }
+
+  public void fundingAccess(List<Long> fundingPk){  // 관리자용 -> 승인안된 funding 일괄수락
+    for(Long pk : fundingPk){
+      Funding funding = fundingRepository.findById(pk)
+              .orElseThrow(() -> new NotFoundException("펀딩을 찾을 수 없습니다"));
+      funding.accessFunding();
+    }
+
+  }
+
+  @Transactional(readOnly = true) // 괸리자용 -> 승인안된 funding 확인
+  public List<FundingDto.MyFunding> List_Funding_DeAccess() {
+    List<Funding> fundingList;
+    fundingList = fundingRepository.findByApprovedOrderByCreateAt(false);
+    if (fundingList.isEmpty()) {
+      throw new NotFoundException("등록된 펀딩이 없습니다");
+    }
+    List<FundingDto.MyFunding> allFundingList = fundingList.stream().map(funding -> new FundingDto.MyFunding(
+            funding.getPk(),
+            funding.getTitle(),
+            funding.getCategory().getFirstCategory().getName(),
+            funding.getCategory().getName(),
+            funding.getUser().getNickname(),
+            funding.getContent(),
+            funding.getCurrentAmount(),
+            funding.getTargetAmount(),
+            funding.getMainImg(),
+            funding.getDDay()
+    )).toList();
+    return allFundingList;
+  }
+  
   @Transactional
   public void addLikeToFunding(Users user, Long fundingPk) {
     Funding funding = fundingRepository.findById(fundingPk)
