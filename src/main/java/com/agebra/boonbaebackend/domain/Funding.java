@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 
 @Builder
 @Getter
@@ -95,7 +96,10 @@ public class Funding {
         this.currentAmount+=supportingAmount;
     }
     public Long getDDay(){
-        Long betweenDays = (Long) Duration.between(this.openDate, this.closeDate).toDays();
+        LocalDateTime date1 = this.getOpenDate().atStartOfDay();
+        LocalDateTime date2 = this.getCloseDate().atStartOfDay();
+        int dday = (int) Duration.between(date1,date2).toDays();
+        Long betweenDays=Long.valueOf(dday);
         return betweenDays;
     }
 }
