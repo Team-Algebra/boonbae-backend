@@ -98,27 +98,23 @@ public class FundingService {
     if(fundingDonateList.isEmpty()){
       throw new NotFoundException("해당 유저의 펀딩이 없습니다");
     }
+
     List<FundingDto.MyFundingResponse> fundingList = new ArrayList<>();
     for(FundingDonate donate : fundingDonateList){
       Funding funding = donate.getFunding();
-      List<SecondCategory> secondCategoryList = secondCategoryRepository.findAllByFirstCategory(funding.getCategory().getFirstCategory());
-      List<String> secondCategoryNameList = new ArrayList<>();
-      for(SecondCategory name : secondCategoryList){
-        secondCategoryNameList.add(name.getName());
-      }
       FundingDto.MyFundingResponse myFunding = FundingDto.MyFundingResponse.builder()
-              .funding_pk(funding.getPk())
-              .title(funding.getTitle())
-              .first_category_name(funding.getCategory().getFirstCategory().getName())
-              .second_category_name(secondCategoryNameList)
-              .owner_user_name(funding.getUser().getNickname())
-              .description(funding.getContent())
-              .current_amount(funding.getCurrentAmount())
-              .target_amount(funding.getTargetAmount())
-              .main_img(funding.getMainImg())
-              .DDay(funding.getDDay())
-              .build();
-      fundingList.add(myFunding);
+                .funding_pk(funding.getPk())
+                .title(funding.getTitle())
+                .first_category_name(funding.getCategory().getFirstCategory().getName())
+                .second_category_name(funding.getCategory().getName())
+                .owner_user_name(funding.getUser().getNickname())
+                .description(funding.getContent())
+                .current_amount(funding.getCurrentAmount())
+                .target_amount(funding.getTargetAmount())
+                .main_img(funding.getMainImg())
+                .DDay(funding.getDDay())
+                .build();
+                fundingList.add(myFunding);
     }
     return fundingList;
   }
