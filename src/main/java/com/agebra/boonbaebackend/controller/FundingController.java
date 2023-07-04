@@ -1,8 +1,12 @@
 package com.agebra.boonbaebackend.controller;
 
+import com.agebra.boonbaebackend.domain.PaymentMethod;
+import com.agebra.boonbaebackend.domain.QnAType;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.CategoryDto;
+import com.agebra.boonbaebackend.dto.FundingDonateDto;
 import com.agebra.boonbaebackend.dto.FundingDto;
+import com.agebra.boonbaebackend.exception.NotFoundException;
 import com.agebra.boonbaebackend.service.CategoryService;
 import com.agebra.boonbaebackend.service.FundingService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -74,5 +79,21 @@ public class FundingController {
     return ResponseEntity.ok().build();
   }
 
-
+  @PostMapping("/{funding_pk}/sponsor/CARD")
+  public ResponseEntity addFundingDoanate(@RequestParam(value = "PaymentMethod",required = true)PaymentMethod paymentMethod,
+                                          @AuthenticationPrincipal Users user,
+                                          @PathVariable("funding_pk") Long fundingPk,
+                                          @RequestBody FundingDonateDto.Request_All dto){
+    Boolean checkPayment = fundingService.paymentCheck(dto,paymentMethod);
+    if(!checkPayment){
+      throw new NotFoundException("결제에 실패하였습니다 잘못된 정보가 없는지 확인해주세요");
+    }
+    fundingService.addDonateToFunding(user, fundingPk);
+    return ResponseEntity.ok().build();
+  }
+  @GetMapping("/my")
+  public ResponseEntity<List<FundingDto.MyFundingResponse>> MyFundingList(@AuthenticationPrincipal Users user){
+     List<FundingDto.MyFundingResponse> userFundingList = fundingService.findAllDonateByUser(user);
+     return ResponseEntity.ok().body(userFundingList);
+  }
 }
