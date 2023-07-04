@@ -75,10 +75,14 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedOrigin("http://localhost");
+        configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app");
+        configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app/");
+        configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app:443");
 //        configuration.addAllowedOrigin("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
+
         //configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
