@@ -145,4 +145,29 @@ public class FundingService {
     return fundingList;
   }
 
+  // 나의 진행중인 펀딩 조회(최신순)
+  @Transactional(readOnly = true)
+  public FundingDto.MyFundingResponseResult findOngoingFundingByUser(Users user){
+    List<Funding> ongoingFundingList = fundingRepository.findOngoingFundingByUser(user);
+    if(ongoingFundingList.isEmpty()){
+      throw new NotFoundException("해당 유저가 진행중인 펀딩이 없습니다");
+    }
+
+    List<FundingDto.MyFundingResponse> myFundingList = ongoingFundingList.stream().map(funding -> new FundingDto.MyFundingResponse(
+            funding.getPk(),
+            funding.getTitle(),
+            funding.getCategory().getFirstCategory().getName(),
+            funding.getCategory().getName(),
+            funding.getUser().getNickname(),
+            funding.getContent(),
+            funding.getCurrentAmount(),
+            funding.getTargetAmount(),
+            funding.getMainImg(),
+            funding.getDDay()
+    )).toList();
+
+    return new FundingDto.MyFundingResponseResult(myFundingList.size(), myFundingList);
+  }
+
+
 }

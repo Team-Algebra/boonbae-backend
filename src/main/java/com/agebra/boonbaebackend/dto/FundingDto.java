@@ -63,4 +63,13 @@ public class FundingDto {
     private List<FundingDto.MyFundingLike> likeList;
   }
 
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class MyFundingResponseResult {
+    private int count;
+    private List<FundingDto.MyFundingResponse> responseList;
+  }
+
 }

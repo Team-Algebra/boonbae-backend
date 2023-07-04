@@ -1,7 +1,6 @@
 package com.agebra.boonbaebackend.controller;
 
 import com.agebra.boonbaebackend.domain.PaymentMethod;
-import com.agebra.boonbaebackend.domain.QnAType;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.CategoryDto;
 import com.agebra.boonbaebackend.dto.FundingDonateDto;
@@ -106,4 +105,12 @@ public class FundingController {
      List<FundingDto.MyFundingResponse> userFundingList = fundingService.findAllDonateByUser(user);
      return ResponseEntity.ok().body(userFundingList);
   }
+
+  // 나의 진행중인 펀딩 조회(최신순)
+  @GetMapping("/my/ongoing")
+  public ResponseEntity<FundingDto.MyFundingResponseResult> MyOngoingFundingList(@AuthenticationPrincipal Users user){
+    FundingDto.MyFundingResponseResult userFundingList = fundingService.findOngoingFundingByUser(user);
+    return ResponseEntity.ok().body(userFundingList);
+  }
+
 }
