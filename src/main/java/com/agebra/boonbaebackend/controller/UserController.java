@@ -119,4 +119,11 @@ public class UserController {
 
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping("/password")
+    public ResponseEntity modifyPassword(@AuthenticationPrincipal Users user, @RequestBody @Valid UserDto.modifyPassword dto) throws InputMismatchException{
+        userService.modifyPassword(user,dto);
+
+        return ResponseEntity.ok().build();
+    }
 }
