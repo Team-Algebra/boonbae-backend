@@ -81,8 +81,8 @@ public class FundingController {
 
   // 내가 좋아요한 펀딩 조회
   @GetMapping("/like")
-  public ResponseEntity<FundingDto.MyFundingLikeResult> findAllFundingLikeByUser(@AuthenticationPrincipal Users user){
-    FundingDto.MyFundingLikeResult myFundingLikeResult = fundingService.findAllFundingLikeByUser(user);
+  public ResponseEntity<FundingDto.MyFundingResult> findAllFundingLikeByUser(@AuthenticationPrincipal Users user){
+    FundingDto.MyFundingResult myFundingLikeResult = fundingService.findAllFundingLikeByUser(user);
     return ResponseEntity.ok(myFundingLikeResult);
   }
 
@@ -101,9 +101,9 @@ public class FundingController {
     fundingService.addDonateToFunding(user, fundingPk);
     return ResponseEntity.ok().build();
   }
-  @GetMapping("/my")
-  public ResponseEntity<List<FundingDto.MyFundingResponse>> MyFundingList(@AuthenticationPrincipal Users user){
-     List<FundingDto.MyFundingResponse> userFundingList = fundingService.findAllDonateByUser(user);
-     return ResponseEntity.ok().body(userFundingList);
+  @GetMapping("/donate")
+  public ResponseEntity<FundingDto.MyFundingResult> MyFundingList(@AuthenticationPrincipal Users user){
+     FundingDto.MyFundingResult fundingDonateList = fundingService.findAllDonateByUser(user);
+     return ResponseEntity.ok().body(fundingDonateList);
   }
 }
