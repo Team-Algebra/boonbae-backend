@@ -49,13 +49,4 @@ public class FundingDto {
   }
 
 
-  @Getter
-  @Setter
-  @NoArgsConstructor
-  @AllArgsConstructor
-  public static class MyFundingResponseResult {
-    private int count;
-    private List<FundingDto.MyFundingResponse> responseList;
-  }
-
 }

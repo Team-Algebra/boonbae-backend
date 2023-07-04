@@ -13,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -123,7 +121,7 @@ public class FundingService {
   public FundingDto.MyFundingResult findAllDonateByUser(Users user) {  //유저가 후원한 펀딩 전체 출력
     List<FundingDonate> fundingDonateList = fundingDonateRepository.findByUser(user);
     if (fundingDonateList.isEmpty()) {
-      throw new NotFoundException("해당 유저가 좋아요한 펀딩이 없습니다");
+      throw new NotFoundException("해당 유저가 후원한 펀딩이 없습니다");
     }
 
     List<FundingDto.MyFunding> myFundingDonateList = fundingDonateList.stream().map(fundingDonate -> new FundingDto.MyFunding(
@@ -143,10 +141,10 @@ public class FundingService {
   }
 
   @Transactional(readOnly = true)
-  public FundingDto.MyFundingResult findAllMakeUser(Users user) {  //유저가 후원한 펀딩 전체 출력
+  public FundingDto.MyFundingResult findAllMakeUser(Users user) {  //유저가 등록한 펀딩 전체 출력
     List<Funding> fundingMakeList = fundingRepository.findByUser(user);
     if (fundingMakeList.isEmpty()) {
-      throw new NotFoundException("해당 유저가 좋아요한 펀딩이 없습니다");
+      throw new NotFoundException("해당 유저가 등록한 펀딩이 없습니다");
     }
 
     List<FundingDto.MyFunding> myFundingMakeList = fundingMakeList.stream().map(funding -> new FundingDto.MyFunding(
@@ -166,13 +164,13 @@ public class FundingService {
   }
   // 나의 진행중인 펀딩 조회(최신순)
   @Transactional(readOnly = true)
-  public FundingDto.MyFundingResponseResult findOngoingFundingByUser(Users user){
+  public FundingDto.MyFundingResult findOngoingFundingByUser(Users user){
     List<Funding> ongoingFundingList = fundingRepository.findOngoingFundingByUser(user);
     if(ongoingFundingList.isEmpty()){
       throw new NotFoundException("해당 유저가 진행중인 펀딩이 없습니다");
     }
 
-    List<FundingDto.MyFundingResponse> myFundingList = ongoingFundingList.stream().map(funding -> new FundingDto.MyFundingResponse(
+    List<FundingDto.MyFunding> myFundingList = ongoingFundingList.stream().map(funding -> new FundingDto.MyFunding(
             funding.getPk(),
             funding.getTitle(),
             funding.getCategory().getFirstCategory().getName(),
@@ -185,7 +183,7 @@ public class FundingService {
             funding.getDDay()
     )).toList();
 
-    return new FundingDto.MyFundingResponseResult(myFundingList.size(), myFundingList);
+    return new FundingDto.MyFundingResult(myFundingList.size(), myFundingList);
   }
 
 

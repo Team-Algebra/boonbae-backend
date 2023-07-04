@@ -113,8 +113,8 @@ public class FundingController {
 
   // 나의 진행중인 펀딩 조회(최신순)
   @GetMapping("/my/ongoing")
-  public ResponseEntity<FundingDto.MyFundingResponseResult> MyOngoingFundingList(@AuthenticationPrincipal Users user){
-    FundingDto.MyFundingResponseResult userFundingList = fundingService.findOngoingFundingByUser(user);
+  public ResponseEntity<FundingDto.MyFundingResult> MyOngoingFundingList(@AuthenticationPrincipal Users user){
+    FundingDto.MyFundingResult userFundingList = fundingService.findOngoingFundingByUser(user);
     return ResponseEntity.ok().body(userFundingList);
   }
 

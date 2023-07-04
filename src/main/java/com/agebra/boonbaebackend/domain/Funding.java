@@ -1,6 +1,5 @@
 package com.agebra.boonbaebackend.domain;
 
-import com.agebra.boonbaebackend.domain.funding.FirstCategory;
 import com.agebra.boonbaebackend.domain.funding.SecondCategory;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 
 @Builder
 @Getter
