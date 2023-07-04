@@ -15,7 +15,7 @@ public interface QnARepository extends JpaRepository<QnA,Long> {
   Page<QnA> findByQnaType(QnAType qnaType, Pageable pageable);
   List<QnA> findByQnaType(QnAType qnaType);
   List<QnA> findAll(Sort sort);
-  @Query(value = "SELECT p FROM QnA p WHERE p.replyText != :null")
+  @Query(value = "SELECT p FROM QnA p WHERE p.replyText IS NOT NULL")
   List<QnA> findAllByReplyTextIsNotNull();
 
 }
