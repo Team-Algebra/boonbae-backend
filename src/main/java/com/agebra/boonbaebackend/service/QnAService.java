@@ -1,9 +1,6 @@
 package com.agebra.boonbaebackend.service;
 
-import com.agebra.boonbaebackend.domain.QnA;
-import com.agebra.boonbaebackend.domain.QnAType;
-import com.agebra.boonbaebackend.domain.UserRole;
-import com.agebra.boonbaebackend.domain.Users;
+import com.agebra.boonbaebackend.domain.*;
 import com.agebra.boonbaebackend.dto.QnADto;
 import com.agebra.boonbaebackend.exception.ForbiddenException;
 import com.agebra.boonbaebackend.exception.NotFoundException;
@@ -12,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,7 +81,7 @@ public class QnAService {
           .build();
         return dto;
     }
-    @Transactional(readOnly = true)
+   /* @Transactional(readOnly = true)
     public List<QnADto.Response_AllQnA> page_QnA(Pageable pageable, QnAType category){
         List<QnA> qnaList;
 
@@ -126,17 +122,23 @@ public class QnAService {
         Page<QnADto.Response_AllQnA> qnaAll= new PageImpl<>(dtoList.subList(start,end),pageable,dtoList.size());
         List<QnADto.Response_AllQnA> qnaPage = qnaAll.getContent();
         return qnaPage;
-    }
+    }*/
 
     @Transactional(readOnly = true)
-    public List<QnADto.Response_AllQnA> all_QnA(QnAType category){
+    public List<QnADto.Response_AllQnA> all_QnA(QnARequestType category){
         List<QnA> qnaList;
 
         //카테고리 안넣으면 전부 다 불러옴
         if (category == null)
             qnaList = qnaRepository.findAll();
-        else
-            qnaList = qnaRepository.findByQnaType(category);
+        else if(category == QnARequestType.RECENT)
+            qnaList= qnaRepository.findAll(Sort.by(Sort.Direction.DESC,"createAt"));
+        else if(category==QnARequestType.ANSWERED){
+            qnaList=qnaRepository.findAllByReplyTextIsNotNull();
+        }else {
+            QnAType qnaType = QnAType.valueOf(category.toString());
+            qnaList = qnaRepository.findByQnaType(qnaType);
+        }
 
         List<QnADto.Response_AllQnA> dtoList = new ArrayList<>();
 

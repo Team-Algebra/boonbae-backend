@@ -1,5 +1,6 @@
 package com.agebra.boonbaebackend.controller;
 
+import com.agebra.boonbaebackend.domain.QnARequestType;
 import com.agebra.boonbaebackend.domain.QnAType;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.QnADto;
@@ -47,8 +48,7 @@ public class QnAController {
 
     @GetMapping("/") //QnA 페이지 - 전체 다 불러오게 해달라고 하셨음
     public ResponseEntity<Map<String, List>> findAllQnA(
-      @RequestParam(value = "category",required = false) QnAType category
-    ){
+            @RequestParam(value = "category",required = false) QnARequestType category){
         List<QnADto.Response_AllQnA> dto = qnaService.all_QnA(category);
 
         Map<String, List> map = new HashMap<>();
