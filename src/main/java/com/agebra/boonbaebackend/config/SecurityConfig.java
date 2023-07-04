@@ -1,6 +1,5 @@
 package com.agebra.boonbaebackend.config;
 
-import com.agebra.boonbaebackend.domain.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

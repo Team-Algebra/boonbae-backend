@@ -2,12 +2,10 @@ package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.Funding;
 import com.agebra.boonbaebackend.domain.FundingDonate;
-import com.agebra.boonbaebackend.domain.UserRole;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.domain.funding.FirstCategory;
 import com.agebra.boonbaebackend.domain.funding.SecondCategory;
 import com.agebra.boonbaebackend.repository.FundingDonateRepository;
-import com.agebra.boonbaebackend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,10 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 @SpringBootTest
 class FundingDonateTest{
     @Mock

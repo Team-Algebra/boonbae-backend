@@ -1,9 +1,7 @@
 package com.agebra.boonbaebackend.controller;
 
 
-import com.agebra.boonbaebackend.domain.RecycleConfirm;
 import com.agebra.boonbaebackend.domain.RecycleConfirmStatus;
-import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.RecycleConfirmDto;
 import com.agebra.boonbaebackend.service.RecycleConfirmService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,10 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "RecycleConfirmController", description = "분리배출 인증사진 관련한 컨트롤러 입니다")

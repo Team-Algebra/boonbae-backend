@@ -1,15 +1,11 @@
 package com.agebra.boonbaebackend.dto;
 
 import com.agebra.boonbaebackend.domain.PaymentBank;
-import com.agebra.boonbaebackend.domain.QnAType;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 public class FundingDonateDto {
     @Getter

@@ -1,12 +1,9 @@
 package com.agebra.boonbaebackend.domain;
 
-import com.agebra.boonbaebackend.exception.ForbiddenException;
-import com.agebra.boonbaebackend.exception.NotFoundException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-
 
 import java.time.LocalDateTime;
 
