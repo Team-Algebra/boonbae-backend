@@ -31,7 +31,7 @@ public class RecyclingInfoController {
   }
 
   // 분리배출 정보 검색
-  @GetMapping("/")
+  @GetMapping("/search")
   public ResponseEntity<RecyclingDto.SearchResult> searchRecyclingInfo(@RequestParam("q") String keyword) {
     RecyclingDto.SearchResult dto = recyclingService.searchRecyclingInfo(keyword);
     return ResponseEntity.ok(dto);
