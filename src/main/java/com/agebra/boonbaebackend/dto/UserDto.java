@@ -43,6 +43,16 @@ public class UserDto {
         @NotNull
         private String password;
     }
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class modifyPassword {
+        @NotNull
+        private String nowPassword;
+        @NotNull
+        private String changePassword;
+
+    }
 
     @Getter
     @Builder
