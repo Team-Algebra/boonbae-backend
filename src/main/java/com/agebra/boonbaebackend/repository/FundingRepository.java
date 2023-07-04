@@ -4,6 +4,7 @@ import com.agebra.boonbaebackend.domain.Funding;
 import com.agebra.boonbaebackend.domain.Users;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,9 +16,9 @@ public interface FundingRepository extends JpaRepository<Funding, Long> {
     List<Funding> findOngoingFundingByUser(Users users);
     List<Funding> findByUser(Users user);
 
-    @Query("SELECT p FROM Funding p order by p.isApproved desc")
-    Page<Funding> findByApprovedOrderByCreateAt(Pageable pageable, boolean check);
+    @Query(value = "SELECT p FROM Funding p WHERE p.isApproved= :check")
+    Page<Funding> findByApproved(Pageable pageable, boolean check);
 
-    @Query("SELECT p FROM Funding p order by p.isApproved desc")
-    List<Funding> findByApprovedOrderByCreateAt(boolean check);
+    @Query(value = "SELECT p FROM Funding p WHERE p.isApproved= :check")
+    List<Funding> findByApproved(boolean check, Sort sort);
 }
