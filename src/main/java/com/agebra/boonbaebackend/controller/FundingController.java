@@ -39,12 +39,9 @@ public class FundingController {
     return ResponseEntity.ok().build();
   }
   @GetMapping("/")  //펀딩 전체 리스트 (관리자가 승인 안한것은 출력 x)
-  public ResponseEntity<Map<String, List>> findAllFunding(){
-    List<FundingDto.MyFunding> dto = fundingService.List_Funding();
-    Map<String, List> map = new HashMap<>();
-    map.put("list", dto);
-
-    return ResponseEntity.ok(map);
+  public ResponseEntity<FundingDto.MyFundingResult> findAllFunding(){
+    FundingDto.MyFundingResult dto = fundingService.List_Funding();
+    return ResponseEntity.ok().body(dto);
   }
   @GetMapping("/{funding_pk}") //펀딩 상세정보 페이지
   public ResponseEntity<FundingDto.MyFunding> findOneFunding(@PathVariable("funding_pk") Long fundingPk){
@@ -146,11 +143,9 @@ public class FundingController {
 
   @Secured("ADMIN")
   @GetMapping("/access") // 승인안된 funding 리스트 전체출력(관리자 전용)
-  public ResponseEntity<Map<String, List>> findAllDeAccess(){
-    List<FundingDto.MyFunding> dto = fundingService.List_Funding_DeAccess();
-    Map<String, List> map = new HashMap<>();
-    map.put("list", dto);
-    return ResponseEntity.ok(map);
+  public ResponseEntity<FundingDto.MyFundingResult> findAllDeAccess(){
+    FundingDto.MyFundingResult dto = fundingService.List_Funding_DeAccess();
+    return ResponseEntity.ok().body(dto);
   }
 
 }
