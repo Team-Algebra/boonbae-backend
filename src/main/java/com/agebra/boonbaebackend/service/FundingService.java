@@ -12,8 +12,11 @@ import com.agebra.boonbaebackend.repository.SecondCategoryRepository;
 import com.agebra.boonbaebackend.repository.FundingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -61,6 +64,7 @@ public class FundingService {
   /*@Transactional(readOnly = true)
   public FundingDto.MyFundingResult page_Funding(Pageable pageable) {
     List<Funding> fundingList;
+    pageable= PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),Sort.by(Sort.Direction.DESC,"createAt"));
     fundingList = fundingRepository.findByApprovedOrderByCreateAt(pageable, true).getContent();
     if (fundingList.isEmpty()) {
       throw new NotFoundException("등록된 펀딩이 없습니다");
@@ -77,8 +81,6 @@ public class FundingService {
             funding.getMainImg(),
             funding.getDDay()
     )).toList();
-
-    //pageable= PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),Sort.by(Sort.Direction.DESC,"createAt"));
     int start = (int) pageable.getOffset();
     int end=Math.min((start + pageable.getPageSize()),allFundingList.size());
     Page<FundingDto.MyFunding> fundingAll= new PageImpl<>(allFundingList.subList(start,end),pageable,allFundingList.size());
@@ -90,7 +92,7 @@ public class FundingService {
   @Transactional(readOnly = true)
   public List<FundingDto.MyFunding> List_Funding() {
     List<Funding> fundingList;
-    fundingList = fundingRepository.findByApprovedOrderByCreateAt(true);
+    fundingList = fundingRepository.findByApproved(true,Sort.by(Sort.Direction.DESC,"createAt"));
     if (fundingList.isEmpty()) {
       throw new NotFoundException("등록된 펀딩이 없습니다");
     }
@@ -135,11 +137,16 @@ public class FundingService {
     }
 
   }
+  public void fundingAccessTest(Long fundingPk){  // 관리자용 -> 승인안된 funding 일괄수락
+    Funding funding = fundingRepository.findById(fundingPk)
+            .orElseThrow(() -> new NotFoundException("해당하는 펀딩이 존재하지 않음"));
+      funding.accessFunding();
+  }
 
   @Transactional(readOnly = true) // 괸리자용 -> 승인안된 funding 확인
   public List<FundingDto.MyFunding> List_Funding_DeAccess() {
     List<Funding> fundingList;
-    fundingList = fundingRepository.findByApprovedOrderByCreateAt(false);
+    fundingList = fundingRepository.findByApproved(false,Sort.by(Sort.Direction.DESC,"createAt"));
     if (fundingList.isEmpty()) {
       throw new NotFoundException("등록된 펀딩이 없습니다");
     }
