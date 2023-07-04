@@ -18,7 +18,7 @@ import java.util.Map;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 
 
-@Tag(name = "TreeController", description = "Tree관련한 컨트롤러 입니다")
+@Tag(name = "TreeController", description = "Tree 관련 컨트롤러 입니다")
 @RequiredArgsConstructor
 @RestController
 @Slf4j
@@ -62,6 +62,7 @@ public class TreeController {
     return ResponseEntity.ok(usersTreeInfo);
   }
 
+  // TODO: 구현 일부 수정필요
   @GetMapping("/tier")
   public ResponseEntity getTier(@AuthenticationPrincipal Users user) {
     TreeDto.Tier tierDto = treeService.getTier(user);
@@ -69,4 +70,18 @@ public class TreeController {
     return ResponseEntity.ok(tierDto);
   }
 
+  @PostMapping("/advertisement/view")
+  public ResponseEntity<TreeDto.CommonResponseDTO> confirmAdvertisementView(@AuthenticationPrincipal Users user) {
+    TreeDto.CommonResponseDTO confirmAdvertisementViewResponse = treeService.confirmAdvertisementView(user);
+
+
+    return ResponseEntity.status(HttpStatus.OK).body(confirmAdvertisementViewResponse);
+  }
+
+  @PostMapping("/tonic")
+  public ResponseEntity<TreeDto.CommonResponseDTO> useTonic(@AuthenticationPrincipal Users user, @RequestBody Map<String, Integer> request) {
+    TreeDto.CommonResponseDTO useTonicResponse = treeService.useTonic(user, request.get("amount"));
+
+    return ResponseEntity.status(HttpStatus.OK).body(useTonicResponse);
+  }
 }

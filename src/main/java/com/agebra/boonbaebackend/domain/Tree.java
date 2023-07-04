@@ -64,12 +64,36 @@ public class Tree {
   }
 
   public boolean isExceedUploadCnt() {
-    return (uploadAvailable == 0);
+    return (uploadAvailable <= 0);
   }
+
+  public boolean isExceedTonicCnt(int expectedDecrement) {
+    return (tonicAvailable - expectedDecrement < 0);
+  }
+
+  public boolean isExceedWatchingAd() {
+    return (watchingAd);
+  }
+
 
   public void recycleComplete() {
     initAll();
     uploadAvailable -= 1;
+  }
+
+  public void useTonic(int amount, int perExp) {
+    initAll();
+    tonicAvailable -= amount;
+    exp += perExp;
+    accumulatedExp += perExp;
+
+  }
+
+  public void watchAd(int perExp) {
+    initAll();
+    watchingAd = true;
+    exp += perExp;
+    accumulatedExp += perExp;
   }
 
   //관리자전용 - 분리배출 인증완료

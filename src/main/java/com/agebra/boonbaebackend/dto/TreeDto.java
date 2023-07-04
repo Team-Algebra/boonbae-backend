@@ -13,7 +13,7 @@ public class TreeDto {
   @NoArgsConstructor
   public static class Info {
     private int current_exp;
-    private Long accumulated_exp;
+//    private Long accumulated_exp;
     private Long all_cnt;
     private Long rank;
     private int recycle_cnt;
@@ -47,5 +47,14 @@ public class TreeDto {
   public static class Confirm {
     private String image_url;
 
+  }
+
+  @Builder
+  @Getter
+  @AllArgsConstructor
+  @NoArgsConstructor
+  public static class CommonResponseDTO {
+    private boolean success;
+    private String reason;
   }
 }
