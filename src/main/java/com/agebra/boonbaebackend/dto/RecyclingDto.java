@@ -1,6 +1,5 @@
 package com.agebra.boonbaebackend.dto;
 
-import com.agebra.boonbaebackend.domain.TrashType;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +24,7 @@ public class RecyclingDto {
     private String description;
 
     @NotNull(message = "분리배출 정보 타입이 null이면 안됩니다")
-    private TrashType type;
+    private String[] types;
 
     private String image_url;
     private String[] tags;
@@ -50,7 +49,7 @@ public class RecyclingDto {
     private String name;
     private String process;
     private String description;
-    private TrashType type;
+    private String[] types;
     private String imageUrl;
     private String[] tags;
     private int viewCnt;
@@ -65,7 +64,7 @@ public class RecyclingDto {
     private String name;
     private String process;
     private String description;
-    private TrashType type;
+    private String[] types;
     private String imageUrl;
     private String[] tags;
     private int viewCnt;
