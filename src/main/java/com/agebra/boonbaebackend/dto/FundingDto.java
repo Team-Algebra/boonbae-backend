@@ -1,10 +1,7 @@
 package com.agebra.boonbaebackend.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -39,6 +36,31 @@ public class FundingDto {
     private Long target_amount;
     private String main_img;
     private Long DDay;
+  }
+
+  @Getter
+  @Builder
+  @AllArgsConstructor
+  public static class MyFundingLike {
+    private Long funding_pk;
+    private String title;
+    private String first_category_name;
+    private String second_category_name;
+    private String owner_user_name;
+    private String description;
+    private Long current_amount;
+    private Long target_amount;
+    private String main_img;
+    private Long DDay;
+  }
+
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class MyFundingLikeResult {
+    private int count;
+    private List<FundingDto.MyFundingLike> likeList;
   }
 
 }

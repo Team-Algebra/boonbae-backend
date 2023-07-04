@@ -93,6 +93,33 @@ public class FundingService {
     }
   }
 
+
+  // 유저가 좋아요한 펀딩 전체 조회
+  @Transactional(readOnly = true)
+  public FundingDto.MyFundingLikeResult findAllFundingLikeByUser(Users user){
+    List<FundingLike> fundingLikeList = fundingLikeRepository.findByUser(user);
+    if(fundingLikeList.isEmpty()){
+      throw new NotFoundException("해당 유저가 좋아요한 펀딩이 없습니다");
+    }
+
+    List<FundingDto.MyFundingLike> myFundingLikeList = fundingLikeList.stream().map(fundingLike -> new FundingDto.MyFundingLike(
+            fundingLike.getPk(),
+            fundingLike.getFunding().getTitle(),
+            fundingLike.getFunding().getCategory().getFirstCategory().getName(),
+            fundingLike.getFunding().getCategory().getName(),
+            fundingLike.getUser().getNickname(),
+            fundingLike.getFunding().getContent(),
+            fundingLike.getFunding().getCurrentAmount(),
+            fundingLike.getFunding().getTargetAmount(),
+            fundingLike.getFunding().getMainImg(),
+            fundingLike.getFunding().getDDay()
+    )).toList();
+
+    return new FundingDto.MyFundingLikeResult(myFundingLikeList.size(), myFundingLikeList);
+
+    
+  }
+
   public List<FundingDto.MyFundingResponse> findAllDonateByUser(Users user){  //유저가 후원한 펀딩 전체 출력
     List<FundingDonate> fundingDonateList = fundingDonateRepository.findByUser(user);
     if(fundingDonateList.isEmpty()){
