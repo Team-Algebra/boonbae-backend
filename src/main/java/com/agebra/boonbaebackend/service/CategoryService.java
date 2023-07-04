@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -52,10 +54,30 @@ public class CategoryService {
     firstCategoryRepository.save(newFirstCategory);
   }
 
-//  public void getAll() {
-//    List<FirstCategory> firstCategoryList = firstCategoryRepository.findAll();
-//
-//
-//
-//  }
+  public CategoryDto.All getAll() {
+    List<FirstCategory> firstCategories = firstCategoryRepository.findAll();
+
+    List<CategoryDto.FirstCategoryDto> firstCategoryDtos = new ArrayList<>();
+
+    for (FirstCategory firstCategory: firstCategories) {
+      List<SecondCategory> secondCategories = secondCategoryRepository.findAllByFirstCategory(firstCategory);
+
+      List<CategoryDto.SecondCategoryDto> secondDtoList = secondCategories.stream().map(secondCategory -> {
+        return new CategoryDto.SecondCategoryDto(secondCategory.getPk(), secondCategory.getName());
+      }).toList();
+
+      CategoryDto.FirstCategoryDto firstCategoryDto = CategoryDto.FirstCategoryDto.builder()
+        .second_category(secondDtoList)
+        .second_category_cnt(secondDtoList.size())
+        .name(firstCategory.getName())
+        .build();
+
+      firstCategoryDtos.add(firstCategoryDto);
+    }
+
+    return CategoryDto.All.builder()
+      .first_category_cnt(firstCategories.size())
+      .first_category(firstCategoryDtos)
+      .build();
+  }
 }

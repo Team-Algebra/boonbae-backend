@@ -58,12 +58,12 @@ public class FundingController {
     return ResponseEntity.ok().build();
   }
 
-//  @GetMapping("/category") //전체조회
-//  public ResponseEntity getCategoryList() {
-//    categoryService.getAll();
-//
-//    return ResponseEntity.ok().build();
-//  }
+  @GetMapping("/category") //전체조회
+  public ResponseEntity getCategoryList() {
+    CategoryDto.All all = categoryService.getAll();
+
+    return ResponseEntity.ok(all);
+  }
 
   // 펀딩 좋아요 추가 (Only User)
   @PostMapping("/{funding_pk}/likes")
