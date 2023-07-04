@@ -85,7 +85,7 @@ public class FundingService {
 
     if(!checkDonate){
       funding.addCurrentAmount();
-      FundingDonateList fundingDonateList = FundingDonateList.builder()
+      FundingDonate fundingDonateList = FundingDonate.builder()
               .funding(funding)
               .user(user)
               .build();
@@ -94,12 +94,12 @@ public class FundingService {
   }
 
   public List<FundingDto.MyFundingResponse> findAllDonateByUser(Users user){  //유저가 후원한 펀딩 전체 출력
-    List<FundingDonateList> fundingDonateList = fundingDonateRepository.findByUser(user);
+    List<FundingDonate> fundingDonateList = fundingDonateRepository.findByUser(user);
     if(fundingDonateList.isEmpty()){
       throw new NotFoundException("해당 유저의 펀딩이 없습니다");
     }
     List<FundingDto.MyFundingResponse> fundingList = new ArrayList<>();
-    for(FundingDonateList donate : fundingDonateList){
+    for(FundingDonate donate : fundingDonateList){
       Funding funding = donate.getFunding();
       List<SecondCategory> secondCategoryList = secondCategoryRepository.findAllByFirstCategory(funding.getCategory().getFirstCategory());
       List<String> secondCategoryNameList = new ArrayList<>();

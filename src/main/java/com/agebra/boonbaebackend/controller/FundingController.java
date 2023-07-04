@@ -79,7 +79,7 @@ public class FundingController {
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/{funding_pk}/sponsor/CARD")
+  @PostMapping("/{funding_pk}/sponsor")
   public ResponseEntity addFundingDoanate(@RequestParam(value = "PaymentMethod",required = true)PaymentMethod paymentMethod,
                                           @AuthenticationPrincipal Users user,
                                           @PathVariable("funding_pk") Long fundingPk,
