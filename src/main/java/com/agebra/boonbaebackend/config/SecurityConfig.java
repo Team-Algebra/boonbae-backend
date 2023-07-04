@@ -28,7 +28,7 @@ public class SecurityConfig {
       "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/error",
       "/api/v1/users/login", "/api/v1/users/id/*/exists", "/api/v1/users/username/*/exists", "/api/v1/users/referrers",
       "/api/v1/search/ranking",
-      "/api/v1/recycling/*", "/api/v1/tip/",
+      "/api/v1/recycling/*", "/api/v1/tip/", "/api/v1/tip",
       "/api/v1/comments/*/reports",
       "/api/v1/recycling/*", 
       "/api/v1/funding/category", "/api/v1/token/validate"
