@@ -103,7 +103,7 @@ public class FundingService {
     }
 
     List<FundingDto.MyFundingLike> myFundingLikeList = fundingLikeList.stream().map(fundingLike -> new FundingDto.MyFundingLike(
-            fundingLike.getPk(),
+            fundingLike.getFunding().getPk(),
             fundingLike.getFunding().getTitle(),
             fundingLike.getFunding().getCategory().getFirstCategory().getName(),
             fundingLike.getFunding().getCategory().getName(),
