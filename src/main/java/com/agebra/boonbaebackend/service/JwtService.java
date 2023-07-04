@@ -1,5 +1,6 @@
 package com.agebra.boonbaebackend.service;
 
+import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.UserDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -86,5 +87,9 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
 
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public boolean isTokenValidByUsers(Users user) {
+        return !(user == null);
     }
 }
