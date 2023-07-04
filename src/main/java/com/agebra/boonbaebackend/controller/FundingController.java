@@ -79,6 +79,13 @@ public class FundingController {
     return ResponseEntity.ok().build();
   }
 
+  // 내가 좋아요한 펀딩 조회
+  @GetMapping("/like")
+  public ResponseEntity<FundingDto.MyFundingLikeResult> MyFundingLikeList(@AuthenticationPrincipal Users user){
+    FundingDto.MyFundingLikeResult myFundingLikeResult = fundingService.findAllFundingLikeByUser(user);
+    return ResponseEntity.ok().body(myFundingLikeResult);
+  }
+
   @PostMapping("/{funding_pk}/sponsor")
   public ResponseEntity addFundingDoanate(@RequestParam(value = "PaymentMethod",required = true)PaymentMethod paymentMethod,
                                           @AuthenticationPrincipal Users user,
