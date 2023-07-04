@@ -100,4 +100,8 @@ public class Funding {
         Long betweenDays=Long.valueOf(dday);
         return betweenDays;
     }
+
+    public void accessFunding(){
+        this.isApproved=true;
+    }
 }
