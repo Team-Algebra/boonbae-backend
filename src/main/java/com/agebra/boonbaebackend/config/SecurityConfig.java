@@ -30,7 +30,8 @@ public class SecurityConfig {
       "/api/v1/search/ranking",
       "/api/v1/recycling/*", "/api/v1/tip/",
       "/api/v1/comments/*/reports",
-      "/api/v1/recycling/*"
+      "/api/v1/recycling/*", 
+      "/api/v1/funding/category", "/api/v1/token/validate"
     };
 
     private String[] adminList = {
