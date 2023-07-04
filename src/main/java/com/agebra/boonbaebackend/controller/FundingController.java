@@ -81,9 +81,9 @@ public class FundingController {
 
   // 내가 좋아요한 펀딩 조회
   @GetMapping("/like")
-  public ResponseEntity<FundingDto.MyFundingLikeResult> MyFundingLikeList(@AuthenticationPrincipal Users user){
+  public ResponseEntity<FundingDto.MyFundingLikeResult> findAllFundingLikeByUser(@AuthenticationPrincipal Users user){
     FundingDto.MyFundingLikeResult myFundingLikeResult = fundingService.findAllFundingLikeByUser(user);
-    return ResponseEntity.ok().body(myFundingLikeResult);
+    return ResponseEntity.ok(myFundingLikeResult);
   }
 
   @PostMapping("/{funding_pk}/sponsor")
