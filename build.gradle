@@ -47,8 +47,19 @@ dependencies {
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+//깃 서브모듈 임포트
+task copyPrivate(type: Copy) {
+    copy {
+        from 'boonbae-backend-private'
+        include "*.yml"
+        into 'src/main/resources'
+    }
 }

@@ -43,27 +43,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                  .httpBasic().disable()
-                  .cors().configurationSource(corsConfigurationSource())
+          .csrf().disable()
+          .httpBasic().disable()
+          .cors().configurationSource(corsConfigurationSource())
           .and()
 
           .authorizeHttpRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .requestMatchers(whiteList).permitAll()
-                //.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/recycling/*/comments").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/qna/*").permitAll()
-                .requestMatchers(HttpMethod.GET,  "/api/v1/recycling/").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/trees/").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/users/").permitAll()
+          .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+          .requestMatchers(whiteList).permitAll()
+          //.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+          .requestMatchers(HttpMethod.GET, "/api/v1/recycling/*/comments").permitAll()
+          .requestMatchers(HttpMethod.GET, "/api/v1/qna/*").permitAll()
+          .requestMatchers(HttpMethod.GET,  "/api/v1/recycling/").permitAll()
+          .requestMatchers(HttpMethod.GET, "/api/v1/trees/").permitAll()
+          .requestMatchers(HttpMethod.POST, "/api/v1/users/").permitAll()
 //                .requestMatchers(HttpMethod.POST, "/api/v1/recycling").hasAuthority("ADMIN")
-                .requestMatchers(adminList).hasAuthority("ADMIN")
-                .anyRequest()
-                .authenticated()
-            .and()
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+          .requestMatchers(adminList).hasAuthority("ADMIN")
+          .anyRequest()
+          .authenticated()
+          .and()
+          .authenticationProvider(authenticationProvider)
+          .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
