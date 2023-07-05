@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -90,9 +91,19 @@ public class Users implements UserDetails {
 
     //포인트 충전
     public void chargePoint(int amount) {
-        this.ecoPoint = amount;
+        this.ecoPoint += amount;
     }
 
+    // 토닉에서 포인트 사용 가능 여부
+    public boolean isExceedPoint(int amount, int addPoint) {
+        // 여기서 addPoint 는 음수
+        return this.ecoPoint + addPoint * amount < 0;
+    }
+
+    // 토닉 사용
+    public void useTonic(int amount, int addPoint) {
+        this.ecoPoint += addPoint * amount;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

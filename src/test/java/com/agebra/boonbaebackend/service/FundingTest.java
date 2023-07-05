@@ -1,12 +1,10 @@
 package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.Funding;
-import com.agebra.boonbaebackend.domain.FundingDonate;
 import com.agebra.boonbaebackend.domain.UserRole;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.domain.funding.FirstCategory;
 import com.agebra.boonbaebackend.domain.funding.SecondCategory;
-import com.agebra.boonbaebackend.repository.FundingDonateRepository;
 import com.agebra.boonbaebackend.repository.FundingRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -84,18 +81,15 @@ class FundingTest {
                 .build();
         fundingRepository.save(funding1);
         fundingRepository.save(funding2);
-        when(fundingRepository.findByApproved(false, Sort.by(Sort.Direction.DESC,"createAt"))).thenReturn(List.of(funding1,funding3));
-
-        List<Funding> fundingDeAccessList = fundingRepository.findByApproved(false,Sort.by(Sort.Direction.DESC,"createAt"));
+        when(fundingRepository.findByApproved(false)).thenReturn(List.of(funding1,funding3));
+        List<Funding> fundingDeAccessList = fundingRepository.findByApproved(false);
         List<Funding> fundingList = new ArrayList<>();
         fundingList.add(funding1);
         fundingList.add(funding3);
-
-
         assertEquals(fundingDeAccessList,fundingList);
 
-        when(fundingRepository.findByApproved(true,Sort.by(Sort.Direction.DESC,"createAt"))).thenReturn(List.of(funding2));
-        List<Funding> fundingAccessList = fundingRepository.findByApproved(true,Sort.by(Sort.Direction.DESC,"createAt"));
+        when(fundingRepository.findByApproved(true)).thenReturn(List.of(funding2));
+        List<Funding> fundingAccessList = fundingRepository.findByApproved(true);
         List<Funding> fundingList2 = new ArrayList<>();
         fundingList2.add(funding2);
 

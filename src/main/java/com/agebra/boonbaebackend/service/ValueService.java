@@ -8,8 +8,19 @@ import org.springframework.stereotype.Service;
 public class ValueService {
 
   //분리수거 인증 시 지급되는 포인트량
-  private int referralPoint = 1000;
-  private int recyclePoint = 50;
-  private int recycleExp = 100;
+
+  private int referralPoint = 10;
+
+  private int recycleExp = 10;
+  private int recyclePoint = 5;
+
+  private int tonicExp = 30;
+  private int tonicPoint = -15;
+  private int tonicWonPrice = 1500;
+
+  private int advertisementExp = 30;
+
+
+
 
 }

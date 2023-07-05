@@ -1,6 +1,5 @@
 package com.agebra.boonbaebackend.domain.funding;
 
-import com.agebra.boonbaebackend.domain.Tag;
 import jakarta.persistence.*;
 import lombok.*;
 

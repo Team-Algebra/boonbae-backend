@@ -1,6 +1,5 @@
 package com.agebra.boonbaebackend.config;
 
-import com.agebra.boonbaebackend.domain.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,8 +26,10 @@ public class SecurityConfig {
     private String[] whiteList = {
       "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/error",
       "/api/v1/users/login", "/api/v1/users/id/*/exists", "/api/v1/users/username/*/exists", "/api/v1/users/referrers",
-      "/api/v1/search/ranking", "/api/v1/recycling/*",
+      "/api/v1/search/ranking",
+      "/api/v1/recycling/*", "/api/v1/tip/", "/api/v1/tip",
       "/api/v1/comments/*/reports",
+      "/api/v1/recycling/*", "/api/v1/recycling/search",
       "/api/v1/funding/category", "/api/v1/token/validate"
     };
 
@@ -42,26 +43,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                  .httpBasic().disable()
-                  .cors().configurationSource(corsConfigurationSource())
+          .csrf().disable()
+          .httpBasic().disable()
+          .cors().configurationSource(corsConfigurationSource())
           .and()
 
           .authorizeHttpRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .requestMatchers(whiteList).permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/recycling/*/comments").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/qna/*").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/tip/").permitAll()
-                .requestMatchers(HttpMethod.GET,  "/api/v1/recycling/").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/trees/").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/users/").permitAll()
-                .requestMatchers(adminList).hasAuthority("ADMIN")
-                .anyRequest()
-                .authenticated()
-            .and()
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+          .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+          .requestMatchers(whiteList).permitAll()
+          //.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+          .requestMatchers(HttpMethod.GET, "/api/v1/recycling/*/comments").permitAll()
+          .requestMatchers(HttpMethod.GET, "/api/v1/qna/*").permitAll()
+          .requestMatchers(HttpMethod.GET,  "/api/v1/recycling/").permitAll()
+          .requestMatchers(HttpMethod.GET, "/api/v1/trees/").permitAll()
+          .requestMatchers(HttpMethod.POST, "/api/v1/users/").permitAll()
+//                .requestMatchers(HttpMethod.POST, "/api/v1/recycling").hasAuthority("ADMIN")
+          .requestMatchers(adminList).hasAuthority("ADMIN")
+          .anyRequest()
+          .authenticated()
+          .and()
+          .authenticationProvider(authenticationProvider)
+          .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -72,8 +74,10 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedOrigin("http://localhost");
-//        configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app");
-//        configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app/");
+        configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app");
+        configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app/");
+        configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app:443");
+//        configuration.addAllowedOrigin("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);

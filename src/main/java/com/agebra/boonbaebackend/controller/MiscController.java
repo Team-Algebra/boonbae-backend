@@ -1,6 +1,5 @@
 package com.agebra.boonbaebackend.controller;
 
-import com.agebra.boonbaebackend.domain.RecyclingInfo;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.service.RecyclingService;
 import com.agebra.boonbaebackend.service.UserService;
