@@ -17,7 +17,6 @@ build/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
-*.yml
 
 # Ignore all .yml files
 *.yml
