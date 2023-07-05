@@ -27,10 +27,8 @@ public class SecurityConfig {
     private String[] whiteList = {
       "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/error",
       "/api/v1/users/login", "/api/v1/users/id/*/exists", "/api/v1/users/username/*/exists", "/api/v1/users/referrers",
-      "/api/v1/search/ranking",
-      "/api/v1/recycling/*", "/api/v1/tip/",
+      "/api/v1/search/ranking", "/api/v1/recycling/*",
       "/api/v1/comments/*/reports",
-      "/api/v1/recycling/*", 
       "/api/v1/funding/category", "/api/v1/token/validate"
     };
 
@@ -52,13 +50,12 @@ public class SecurityConfig {
           .authorizeHttpRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .requestMatchers(whiteList).permitAll()
-                //.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/recycling/*/comments").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/qna/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/tip/").permitAll()
                 .requestMatchers(HttpMethod.GET,  "/api/v1/recycling/").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/trees/").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/users/").permitAll()
-//                .requestMatchers(HttpMethod.POST, "/api/v1/recycling").hasAuthority("ADMIN")
                 .requestMatchers(adminList).hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
@@ -75,10 +72,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedOrigin("http://localhost");
-        configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app");
-        configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app/");
-        configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app:443");
-//        configuration.addAllowedOrigin("*");
+//        configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app");
+//        configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app/");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);

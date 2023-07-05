@@ -1,0 +1,3 @@
+[submodule "boonbae-backend"]
+	path = boonbae-backend
+	url = https://github.com/Team-Algebra/boonbae-backend.git
