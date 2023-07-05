@@ -67,9 +67,6 @@
     <td align="center">
         <img src="https://static.codenary.co.kr/framework_logo/mysql.png" width="100px" />
     </td>
-    <td align="center">
-        <img src="https://automated-testing.info/uploads/default/original/2X/7/760cbf21278280fd7d4980c577d64da634c9fc42.png" width="100px" />
-    </td>
   </tr>
   <tr>
     <td align="center"><b>Java 17</b></td>
@@ -78,7 +75,6 @@
     <td align="center"><b>Srping Data JPA</b></td>
     <td align="center"><b>Srping Security</b></td>
     <td align="center"><b>MySQL</b></td>
-    <td align="center"><b>JUnit5</b></td>
   </tr>
 </table>
 
