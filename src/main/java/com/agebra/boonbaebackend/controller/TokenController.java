@@ -29,7 +29,16 @@ public class TokenController {
 
     boolean isValid = jwtService.isTokenValidByUsers(user);
 
+
+    Map<String, Object> userResponse = new HashMap<>();
+    if (isValid) {
+      userResponse.put("id", user.getId());
+      userResponse.put("username", user.getNickname());
+    }
+
     response.put("isValid", isValid);
+    response.put("user", userResponse);
+
     return ResponseEntity.ok(response);
   }
 
