@@ -76,6 +76,9 @@ public class SecurityConfig {
         configuration.addAllowedOrigin("http://localhost");
         configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app");
         configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app/");
+        configuration.addAllowedOrigin("https://boonbae.seol.pro");
+        configuration.addAllowedOrigin("https://boonbae.seol.pro/");
+        configuration.addAllowedOrigin("https://boonbae.seol.pro:443");
         configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app:443");
 //        configuration.addAllowedOrigin("*");
         configuration.addAllowedHeader("*");
