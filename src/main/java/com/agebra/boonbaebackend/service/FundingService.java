@@ -1,6 +1,7 @@
 package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.*;
+import com.agebra.boonbaebackend.domain.funding.ResearchType;
 import com.agebra.boonbaebackend.domain.funding.SecondCategory;
 import com.agebra.boonbaebackend.dto.FundingDonateDto;
 import com.agebra.boonbaebackend.dto.FundingDto;
@@ -88,9 +89,23 @@ public class FundingService {
   }*/
 
   @Transactional(readOnly = true)
-  public FundingDto.MyFundingResult List_Funding(Users user) {
+  public FundingDto.MyFundingResult List_Funding(Users user, ResearchType type) {
     List<Funding> fundingList;
-    fundingList = fundingRepository.findByApproved(true);
+
+    if (type != null) {
+      switch(type) { //타입에 따라 나눔
+        case IMMINENT:
+          fundingList = fundingRepository.findAllByOrderByCloseDateAsc();
+          break;
+        case POPULARITY:
+          fundingList = fundingRepository.findAllByOrderByCurrentAmountDivSupportingAmount();
+          break;
+        default: //최신순 findByIsApprovedTrueOrderByOpenDateDesc
+          fundingList = fundingRepository.findByIsApprovedTrueOrderByOpenDateDesc();
+      }
+    } else { //type이 없을 때 최신순
+      fundingList = fundingRepository.findByIsApprovedTrueOrderByOpenDateDesc();
+    }
 
     List<FundingDto.MyFunding> allFundingList = fundingList.stream().map((funding) -> {
       boolean isLike = false;
@@ -214,16 +229,17 @@ public class FundingService {
   public void addDonateToFunding(Users user, Long fundingPk) {   //펀딩 후원
     Funding funding = fundingRepository.findById(fundingPk)
             .orElseThrow(() -> new NotFoundException("해당하는 펀딩이 존재하지 않습니다"));
-    Boolean checkDonate = fundingDonateRepository.existsByUserAndFunding(user, funding);
 
-    if (!checkDonate) {
-      funding.addCurrentAmount();
-      FundingDonate fundingDonateList = FundingDonate.builder()
-              .funding(funding)
-              .user(user)
-              .build();
-      fundingDonateRepository.save(fundingDonateList);
-    }
+    //여러 번 후원가능
+//    Boolean checkDonate = fundingDonateRepository.existsByUserAndFunding(user, funding);
+
+    funding.addCurrentAmount();
+    FundingDonate fundingDonateList = FundingDonate.builder()
+            .funding(funding)
+            .user(user)
+            .build();
+
+    fundingDonateRepository.save(fundingDonateList);
   }
 
 

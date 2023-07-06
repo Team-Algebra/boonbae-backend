@@ -93,6 +93,7 @@ public class Funding {
     public void addCurrentAmount(){
         this.currentAmount+=supportingAmount;
     }
+
     public Long getDDay(){
         LocalDateTime date1 = this.getOpenDate().atStartOfDay();
         LocalDateTime date2 = this.getCloseDate().atStartOfDay();

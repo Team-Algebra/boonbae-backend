@@ -2,6 +2,7 @@ package com.agebra.boonbaebackend.controller;
 
 import com.agebra.boonbaebackend.domain.PaymentMethod;
 import com.agebra.boonbaebackend.domain.Users;
+import com.agebra.boonbaebackend.domain.funding.ResearchType;
 import com.agebra.boonbaebackend.dto.CategoryDto;
 import com.agebra.boonbaebackend.dto.FundingDonateDto;
 import com.agebra.boonbaebackend.dto.FundingDto;
@@ -38,8 +39,11 @@ public class FundingController {
     return ResponseEntity.ok().build();
   }
   @GetMapping("/")  //펀딩 전체 리스트 (관리자가 승인 안한것은 출력 x) - 로그인 되어있다면 좋아요 여부 표시
-  public ResponseEntity<FundingDto.MyFundingResult> findAllFunding(@AuthenticationPrincipal Users user){
-    FundingDto.MyFundingResult dto = fundingService.List_Funding(user);
+  public ResponseEntity<FundingDto.MyFundingResult> findAllFunding(
+          @AuthenticationPrincipal Users user,
+          @RequestParam(value = "sort", required = false)ResearchType type
+  ){
+    FundingDto.MyFundingResult dto = fundingService.List_Funding(user, type);
     return ResponseEntity.ok().body(dto);
   }
   @GetMapping("/{funding_pk}") //펀딩 상세정보 페이지
@@ -106,14 +110,14 @@ public class FundingController {
   public ResponseEntity addFundingDoanate(@RequestParam(value = "PaymentMethod",required = true)PaymentMethod paymentMethod,
                                           @AuthenticationPrincipal Users user,
                                           @PathVariable("funding_pk") Long fundingPk,
-                                          @RequestBody FundingDonateDto.Request_All dto){
-    if(dto==null){
-      throw new NotFoundException("올바르지 않은 값이 입력되었습니다");
-    }
+                                          @RequestBody @Valid FundingDonateDto.Request_All dto){
+
     Boolean checkPayment = fundingService.paymentCheck(dto,paymentMethod);
+
     if(!checkPayment){
       throw new NotFoundException("결제에 실패하였습니다 잘못된 정보가 없는지 확인해주세요");
     }
+
     fundingService.addDonateToFunding(user, fundingPk);
     return ResponseEntity.ok().build();
   }

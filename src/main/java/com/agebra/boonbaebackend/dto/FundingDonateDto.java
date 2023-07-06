@@ -37,11 +37,16 @@ public class FundingDonateDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Request_All{
-        private Long cardNumber;
-        private Long CVCNumber;
-        private Long accountNumber;
-        private PaymentBank paymentBank;
-        private Long phoneNumber;
+        @NotNull
+        private Long card_number;
+        @NotNull
+        private Long cvc_number;
+        @NotNull
+        private Long account_number;
+        @NotNull
+        private PaymentBank payment_bank;
+        @NotNull
+        private String phone_number;
     }
 
 

@@ -19,4 +19,13 @@ public interface FundingRepository extends JpaRepository<Funding, Long> {
     @Query(value = "SELECT p FROM Funding p WHERE p.isApproved= :check ORDER BY p.createAt desc ")
     List<Funding> findByApproved(boolean check);
 
+    List<Funding> findByIsApprovedTrueOrderByOpenDateDesc();
+
+    //후원자 수 많은 순
+    @Query("SELECT f FROM Funding f ORDER BY (f.currentAmount / f.supportingAmount) DESC")
+    List<Funding> findAllByOrderByCurrentAmountDivSupportingAmount();
+
+    //마감임박 순
+    List<Funding> findAllByOrderByCloseDateAsc();
+
 }
