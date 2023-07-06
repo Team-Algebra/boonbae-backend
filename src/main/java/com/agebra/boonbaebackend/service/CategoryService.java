@@ -68,6 +68,7 @@ public class CategoryService {
       CategoryDto.FirstCategoryDto firstCategoryDto = CategoryDto.FirstCategoryDto.builder()
         .second_category(secondDtoList)
         .second_category_cnt(secondDtoList.size())
+        .first_category_pk(firstCategory.getPk())
         .name(firstCategory.getName())
         .build();
 
