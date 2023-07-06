@@ -43,6 +43,7 @@ public class Comment {
     private LocalDateTime createAt;
 
     // 양방향 매핑
+    @Builder.Default
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private Set<CommentLike> commentLikeList = new HashSet<>();
 

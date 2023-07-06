@@ -21,6 +21,7 @@ public class RecyclingInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pk;
 
+    @Builder.Default
     @OneToMany(mappedBy = "recyclingInfo")
 //    @JsonIgnoreProperties("recyclingInfo")
     private List<RecyclingInfoTag> RecycleTagList = new ArrayList<>();
@@ -32,6 +33,7 @@ public class RecyclingInfo {
     @Column(name = "image_url", length = 99999)
     private String imageUrl;
 
+    @Builder.Default
     @OneToMany(mappedBy = "recyclingInfo")
     private List<RecyclingInfoType> RecycleTypeList = new ArrayList<>();
 
@@ -43,10 +45,12 @@ public class RecyclingInfo {
     @Column(name="descriptions", length = 99999)
     private String description;
 
+    @Builder.Default
     @NotNull
     @Column(name="view_cnt", columnDefinition = "int default 0")
     private int viewCnt = 0;
 
+    @Builder.Default
     @NotNull
     @CreationTimestamp
     @Column(name="create_date")

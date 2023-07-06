@@ -37,9 +37,9 @@ public class FundingController {
 
     return ResponseEntity.ok().build();
   }
-  @GetMapping("/")  //펀딩 전체 리스트 (관리자가 승인 안한것은 출력 x)
-  public ResponseEntity<FundingDto.MyFundingResult> findAllFunding(){
-    FundingDto.MyFundingResult dto = fundingService.List_Funding();
+  @GetMapping("/")  //펀딩 전체 리스트 (관리자가 승인 안한것은 출력 x) - 로그인 되어있다면 좋아요 여부 표시
+  public ResponseEntity<FundingDto.MyFundingResult> findAllFunding(@AuthenticationPrincipal Users user){
+    FundingDto.MyFundingResult dto = fundingService.List_Funding(user);
     return ResponseEntity.ok().body(dto);
   }
   @GetMapping("/{funding_pk}") //펀딩 상세정보 페이지
@@ -139,8 +139,8 @@ public class FundingController {
 
   @Secured("ADMIN")
   @PostMapping("/access") //승인안된 funding 리스트 전체승인 (관리자 전용)
-  public ResponseEntity<Void> AccessFunding(@RequestBody List<Long> fundingPk){
-    fundingService.fundingAccess(fundingPk);
+  public ResponseEntity<Void> AccessFunding(){
+    fundingService.fundingAccess();
     return ResponseEntity.ok().build();
   }
 
@@ -153,7 +153,7 @@ public class FundingController {
 
   //관리자가 펀딩 승인
   @Secured("ADMIN")
-  @GetMapping("/{funding_pk}/approve") // 승인안된 funding 리스트 전체출력(관리자 전용)
+  @GetMapping("/{funding_pk}/approve")
   public ResponseEntity<FundingDto.MyFundingResult> approveFunding(@RequestParam(value = "funding_pk",required = true) Long fundingPk){
     fundingService.approve(fundingPk);
 
