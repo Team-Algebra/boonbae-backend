@@ -48,6 +48,7 @@ public class FundingController {
     return ResponseEntity.ok().body(dto);
   }
 
+  @Secured("ADMIN")
   @DeleteMapping("/{funding_pk}") //펀딩 삭제
   public ResponseEntity<Void> deleteFunding(@AuthenticationPrincipal Users user ,@PathVariable("funding_pk") Long fundingPk){
     fundingService.deleteFunding(fundingPk,user);
@@ -116,11 +117,13 @@ public class FundingController {
     fundingService.addDonateToFunding(user, fundingPk);
     return ResponseEntity.ok().build();
   }
+
   @GetMapping("/donate") //사용자 후원 리스트 확인
   public ResponseEntity<FundingDto.MyFundingResult> findAllFundingDonateByUser(@AuthenticationPrincipal Users user){
      FundingDto.MyFundingResult fundingDonateList = fundingService.findAllDonateByUser(user);
      return ResponseEntity.ok().body(fundingDonateList);
   }
+
   @GetMapping("/my") // 사용자 만든 펀딩 리스트 확인
   public ResponseEntity<FundingDto.MyFundingResult> findAllFundingMakeByUser(@AuthenticationPrincipal Users user){
     FundingDto.MyFundingResult fundingMakeList = fundingService.findAllMakeUser(user);
@@ -133,8 +136,9 @@ public class FundingController {
     FundingDto.MyFundingResult userFundingList = fundingService.findOngoingFundingByUser(user);
     return ResponseEntity.ok().body(userFundingList);
   }
+
   @Secured("ADMIN")
-  @PostMapping("/access") //승인안된 funding 리스트 전체출력 (관리자 전용)
+  @PostMapping("/access") //승인안된 funding 리스트 전체승인 (관리자 전용)
   public ResponseEntity<Void> AccessFunding(@RequestBody List<Long> fundingPk){
     fundingService.fundingAccess(fundingPk);
     return ResponseEntity.ok().build();
@@ -145,6 +149,16 @@ public class FundingController {
   public ResponseEntity<FundingDto.MyFundingResult> findAllDeAccess(){
     FundingDto.MyFundingResult dto = fundingService.List_Funding_DeAccess();
     return ResponseEntity.ok().body(dto);
+  }
+
+  //관리자가 펀딩 승인
+  @Secured("ADMIN")
+  @GetMapping("/{funding_pk}/approve") // 승인안된 funding 리스트 전체출력(관리자 전용)
+  public ResponseEntity<FundingDto.MyFundingResult> approveFunding(@RequestParam(value = "funding_pk",required = true) Long fundingPk){
+    fundingService.approve(fundingPk);
+
+
+    return ResponseEntity.ok().build();
   }
 
 }

@@ -47,7 +47,6 @@ public class FundingService {
     fundingRepository.save(funding);
   }
 
-  @Transactional
   public void deleteFunding(Long fundingPk, Users user){
     Funding funding = fundingRepository.findById(fundingPk)
             .orElseThrow(() -> new NotFoundException("해당하는 펀딩이 존재하지 않음"));
@@ -128,18 +127,13 @@ public class FundingService {
     return fundingDto;
   }
 
+
   public void fundingAccess(List<Long> fundingPk){  // 관리자용 -> 승인안된 funding 일괄수락
     for(Long pk : fundingPk){
       Funding funding = fundingRepository.findById(pk)
               .orElseThrow(() -> new NotFoundException("펀딩을 찾을 수 없습니다"));
       funding.accessFunding();
     }
-
-  }
-  public void fundingAccessTest(Long fundingPk){  // 관리자용 -> 승인안된 funding 일괄수락
-    Funding funding = fundingRepository.findById(fundingPk)
-            .orElseThrow(() -> new NotFoundException("해당하는 펀딩이 존재하지 않음"));
-      funding.accessFunding();
   }
 
   @Transactional(readOnly = true) // 괸리자용 -> 승인안된 funding 확인
@@ -306,5 +300,16 @@ public class FundingService {
     return new FundingDto.MyFundingResult(myFundingList.size(), myFundingList);
   }
 
+  @Transactional(readOnly = true)
+  public void approve(Long fundingPk) {
+    Funding funding = fundingRepository.findById(fundingPk)
+            .orElseThrow(() -> new NotFoundException("해당하는 펀딩을 찾을 수 없습니다"));
+
+    //펀딩승인
+    funding.accessFunding();
+  }
 
 }
+
+
+

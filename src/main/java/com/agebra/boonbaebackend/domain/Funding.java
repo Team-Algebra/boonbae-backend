@@ -101,7 +101,9 @@ public class Funding {
         return betweenDays;
     }
 
+    //펀딩승인
     public void accessFunding(){
         this.isApproved=true;
     }
+    
 }
