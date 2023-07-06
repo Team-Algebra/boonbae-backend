@@ -36,11 +36,13 @@ public class QnA {
     @Column(name="descriptions",length = 999999999) //설명
     private String descriptions;
 
+    @Builder.Default
     @NotNull
     @CreationTimestamp
     @Column(name="create_at")
     private LocalDateTime createAt =LocalDateTime.now();
 
+    @Builder.Default
     @Column(name="reply_text", length=999999999) //답변이 달리면 Null이 아님 -> 답변완료
     private String replyText=null;
 

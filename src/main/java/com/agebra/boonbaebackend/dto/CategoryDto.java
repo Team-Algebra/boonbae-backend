@@ -35,6 +35,10 @@ public class CategoryDto {
   @AllArgsConstructor
   @NoArgsConstructor
   public static class FirstCategoryDto {
+
+    @NotNull
+    private Long first_category_pk;
+
     @NotNull
     private int second_category_cnt;
 

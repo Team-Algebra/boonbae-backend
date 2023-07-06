@@ -33,7 +33,7 @@ public class CategoryService {
       throw new CategoryDuplicateException("같은 이름의 두 번째 카테고리가 존재합니다");
 
     SecondCategory newSecond = SecondCategory.builder()
-      .name(dto.getName())
+      .name(dto.getName().strip())
       .firstCategory(firstCategory)
       .build();
 
@@ -47,7 +47,7 @@ public class CategoryService {
       throw new CategoryDuplicateException("같은 이름의 첫 번째 카테고리가 존재합니다");
 
     FirstCategory newFirstCategory = FirstCategory.builder()
-      .name(name)
+      .name(name.strip())
       .build();
 
     firstCategoryRepository.save(newFirstCategory);
@@ -68,6 +68,7 @@ public class CategoryService {
       CategoryDto.FirstCategoryDto firstCategoryDto = CategoryDto.FirstCategoryDto.builder()
         .second_category(secondDtoList)
         .second_category_cnt(secondDtoList.size())
+        .first_category_pk(firstCategory.getPk())
         .name(firstCategory.getName())
         .build();
 

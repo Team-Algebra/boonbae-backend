@@ -1,6 +1,7 @@
 package com.agebra.boonbaebackend.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -37,6 +38,10 @@ public class FundingDto {
     private Long target_amount;
     private String main_img;
     private Long DDay;
+
+    @Builder.Default
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean isLike = null;
   }
 
   @Getter
