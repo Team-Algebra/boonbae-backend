@@ -27,7 +27,7 @@ public class FundingService {
   private final SecondCategoryRepository secondCategoryRepository;
   private final FundingLikeRepository fundingLikeRepository;
   private final FundingDonateRepository fundingDonateRepository;
-  public void addFunding(FundingDto.AddFunding dto, Users user) throws RuntimeException {
+  public Funding addFunding(FundingDto.AddFunding dto, Users user) throws RuntimeException {
     //카테고리 올바른지 확인
     SecondCategory secondCategory = secondCategoryRepository.findById(dto.getSecond_category_pk())
             .orElseThrow(() -> new NotFoundException("해당하는 두 번째 카테고리가 존재하지 않음"));
@@ -45,7 +45,9 @@ public class FundingService {
             .mainImg(dto.getMain_image())
             .build();
 
-    fundingRepository.save(funding);
+    Funding save = fundingRepository.save(funding);
+
+    return save;
   }
 
   public void deleteFunding(Long fundingPk, Users user){

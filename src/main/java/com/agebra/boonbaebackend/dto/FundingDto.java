@@ -12,6 +12,7 @@ public class FundingDto {
   @Getter
   @AllArgsConstructor
   @NoArgsConstructor
+  @Builder
   public static class AddFunding {
     private String title;
     private Long target_amount;

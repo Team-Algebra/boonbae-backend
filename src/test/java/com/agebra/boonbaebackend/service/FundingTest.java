@@ -32,6 +32,7 @@ class FundingTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
     }
+
     @Test
     @DisplayName("관리자 승인 확인")
     void AdminFunding_Test() {

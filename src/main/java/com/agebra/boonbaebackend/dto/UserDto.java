@@ -73,6 +73,10 @@ public class UserDto {
             private String id;
             private String username;
         }
+
+        public String getId() {
+            return this.user.id;
+        }
     }
 
 }
