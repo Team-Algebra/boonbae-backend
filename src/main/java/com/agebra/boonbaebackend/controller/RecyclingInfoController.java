@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "RecyclingInfoController", description = "분리배출정보 컨트롤러 입니다")
 @RequiredArgsConstructor
@@ -42,5 +45,13 @@ public class RecyclingInfoController {
     RecyclingDto.DetailResult dto = recyclingService.getRecyclingInfoDetail(recyclePk);
     return ResponseEntity.ok(dto);
   }
+
+  @GetMapping("/infoname/{info_name}/exists") //중복 이름 확인
+  public ResponseEntity<Map> isExistsNickname(@PathVariable("info_name") String infoName) {
+    Map<String, Boolean> map = new HashMap<>();
+    map.put("exists", recyclingService.isExistInfoName(infoName));
+    return ResponseEntity.status(HttpStatus.OK).body(map);
+  }
+
 
 }

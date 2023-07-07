@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RecyclingRepository extends JpaRepository<RecyclingInfo, Long> {
 //    @Query("SELECT r FROM RecyclingInfo r join RecyclingInfoTag rit join rit.tag t WHERE r.name LIKE %:keyword% OR t.name LIKE %:keyword% OR CAST(r.type AS string) " +
@@ -23,4 +24,8 @@ public interface RecyclingRepository extends JpaRepository<RecyclingInfo, Long> 
     List<RecyclingInfo> findByKeyword(String keyword);
 
     List<RecyclingInfo> findTop5ByOrderByViewCntDesc();
+
+    Optional<RecyclingInfo> findByName(String infoName);
+
+
 }
