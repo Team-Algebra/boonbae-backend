@@ -97,7 +97,7 @@ public class FundingService {
     }
 
     if(title!=null){
-      fundingListByTitle=fundingRepository.findByTitle(title);
+      fundingListByTitle=fundingRepository.findByTitleContaining(title);
       fundingList_sec=new ArrayList<>(fundingList_fir);
       fundingList_sec.retainAll(fundingListByTitle);
     }else{
@@ -167,7 +167,7 @@ public class FundingService {
     }
 
     if(title!=null){
-      fundingListByTitle=fundingRepository.findByTitle(title);
+      fundingListByTitle=fundingRepository.findByTitleContaining(title);
       fundingList_sec=new ArrayList<>(fundingList_fir);
       fundingList_sec.retainAll(fundingListByTitle);
     }else{

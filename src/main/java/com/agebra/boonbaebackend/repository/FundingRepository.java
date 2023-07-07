@@ -38,6 +38,6 @@ public interface FundingRepository extends JpaRepository<Funding, Long> {
     @Query(value = "select  p From Funding p where p.category.firstCategory = :firstCategory")
     List<Funding> findByCategory_FirstCategory(FirstCategory firstCategory);
 
-    @Query(value = "select f From Funding f where f.title =:title")
-    List<Funding> findByTitle(String title);
+    @Query(value = "select f From Funding f where f.title LIKE %:title%")
+    List<Funding> findByTitleContaining(String title);
 }
