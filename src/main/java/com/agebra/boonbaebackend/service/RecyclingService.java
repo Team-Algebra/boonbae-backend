@@ -3,7 +3,7 @@ package com.agebra.boonbaebackend.service;
 import com.agebra.boonbaebackend.domain.*;
 import com.agebra.boonbaebackend.dto.RecyclingDto;
 import com.agebra.boonbaebackend.exception.NotFoundException;
-import com.agebra.boonbaebackend.exception.RecyclingDuplicateException;
+import com.agebra.boonbaebackend.exception.RecyclingInfoDuplicateException;
 import com.agebra.boonbaebackend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,7 @@ public class RecyclingService {
     );
 
     if(isExistInfoName(dto.getName()))
-      throw new RecyclingDuplicateException("분리배출 정보의 이름이 중복됩니다.");
+      throw new RecyclingInfoDuplicateException("분리배출 정보의 이름이 중복됩니다.");
 
     // 게시글 저장
     RecyclingInfo saveInfo = recyclingRepository.save(info);
