@@ -32,6 +32,8 @@ public class UserDto {
         private String username;
         private String id;
         private int eco_point;
+        private Long all_cnt;
+        private Long rank;
     }
 
     @Getter
@@ -42,6 +44,7 @@ public class UserDto {
         private String id;
         @NotNull
         private String password;
+
     }
     @Getter
     @AllArgsConstructor
@@ -73,6 +76,7 @@ public class UserDto {
             private String id;
             private String username;
             private String role;
+
         }
 
         public String getId() {
