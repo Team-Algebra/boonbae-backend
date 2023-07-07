@@ -100,6 +100,6 @@ public class Tree {
   public void recyclePass(int perExp) {
     exp += perExp;
     accumulatedExp += perExp;
-    recycleCnt ++;
+    recycleCnt += 1;
   }
 }
