@@ -62,8 +62,8 @@ public class RecyclingDto {
   @AllArgsConstructor
   public static class DetailResult {
     private String name;
-    private String process;
-    private String description;
+    private String[] process;
+    private String[] description;
     private String[] types;
     private String imageUrl;
     private String[] tags;
