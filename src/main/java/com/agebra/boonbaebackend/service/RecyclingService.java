@@ -44,8 +44,13 @@ public class RecyclingService {
     // type 매핑 -> 일치 type 없을 시 404
     if (dto.getTypes() != null) {
       for (String recyclingType  : dto.getTypes()) {
-        RecyclingType existingRecyclingType = recyclingTypeRepository.findByName(recyclingType)
+        List<RecyclingType> existingRecyclingTypeList = recyclingTypeRepository.findByName(recyclingType)
           .orElseThrow(() -> new NotFoundException("RecyclingType not found with name: " + recyclingType));
+
+        if (existingRecyclingTypeList.size() == 0)
+          throw new NotFoundException("RecyclingType not found with name: " + recyclingType);
+
+        RecyclingType existingRecyclingType = existingRecyclingTypeList.get(0);
 
         RecyclingInfoType recyclingInfoType = RecyclingInfoType.builder()
           .recyclingInfo(saveInfo)
@@ -58,7 +63,12 @@ public class RecyclingService {
 
     // tag 매핑 -> 일치 tag 없을 시 생성 후 저장
     for (String tag : dto.getTags()) {
-      Tag existingTag = tagRepository.findByName(tag);
+      List<Tag> existingTagList = tagRepository.findByName(tag);
+
+      Tag existingTag = null;
+
+      if (existingTagList.size() != 0)
+        existingTag = existingTagList.get(0);
 
       if (existingTag == null) {
         Tag newTag = Tag.builder()
@@ -81,10 +91,10 @@ public class RecyclingService {
   //중복 분리배출 정보 이름 확인
   @Transactional(readOnly = true)
   public boolean isExistInfoName(String infoName) {
-    RecyclingInfo recyclingInfo = recyclingRepository.findByName(infoName)
-            .orElseGet(() -> null);
+    List<RecyclingInfo> recyclingInfoList = recyclingRepository.findByName(infoName)
+            .orElseGet(() -> new ArrayList<>());
 
-    return (recyclingInfo == null)? false : true;
+    return (recyclingInfoList.size() == 0)? false : true;
   }
 
   // 분리배출 정보 검색

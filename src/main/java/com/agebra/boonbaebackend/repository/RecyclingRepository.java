@@ -25,7 +25,7 @@ public interface RecyclingRepository extends JpaRepository<RecyclingInfo, Long> 
 
     List<RecyclingInfo> findTop5ByOrderByViewCntDesc();
 
-    Optional<RecyclingInfo> findByName(String infoName);
+    Optional<List<RecyclingInfo>> findByName(String infoName);
 
 
 }
