@@ -76,6 +76,9 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedOrigin("http://localhost");
+        configuration.addAllowedOrigin("http://localhost/");
+        configuration.addAllowedOrigin("http://localhost:80");
+        configuration.addAllowedOrigin("http://localhost:80/");
         configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app");
         configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app/");
         configuration.addAllowedOrigin("https://boonbae.seol.pro");

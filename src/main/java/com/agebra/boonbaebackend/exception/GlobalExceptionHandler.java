@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.InputMismatchException;
-import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 @Slf4j
@@ -59,6 +58,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler({CategoryDuplicateException.class})
   protected ResponseEntity handleCategoryDuplicateException(CategoryDuplicateException e) {
     log.info("CategoryDuplicateException = {}", e.getMessage());
+    return ResponseEntity.status(HttpStatus.CONFLICT).build();
+  }
+
+  @ExceptionHandler({RecyclingInfoDuplicateException.class})
+  protected ResponseEntity handleRecyclingInfoDuplicateException(RecyclingInfoDuplicateException e) {
+    log.info("RecyclingInfoDuplicateException = {}", e.getMessage());
     return ResponseEntity.status(HttpStatus.CONFLICT).build();
   }
 }

@@ -65,12 +65,8 @@ public class UserService {
 
         String jwtToken = jwtService.generateToken(user);
 
-//        RefreshToken refreshToken = refreshTokenRepository.findByLoginId(dto.getId())
-//                .orElseGet(() -> null);
-//
-//        if (refreshToken != nul)
+        return new UserDto.LoginResponse(jwtToken, user.getId(), user.getNickname(), user.getRole().name());
 
-        return new UserDto.LoginResponse(jwtToken, user.getId(), user.getNickname());
     }
 
     //중복 아이디 확인
