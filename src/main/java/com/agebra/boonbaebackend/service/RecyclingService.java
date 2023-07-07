@@ -47,6 +47,9 @@ public class RecyclingService {
         List<RecyclingType> existingRecyclingTypeList = recyclingTypeRepository.findByName(recyclingType)
           .orElseThrow(() -> new NotFoundException("RecyclingType not found with name: " + recyclingType));
 
+        if (existingRecyclingTypeList.size() == 0)
+          throw new NotFoundException("RecyclingType not found with name: " + recyclingType);
+
         RecyclingType existingRecyclingType = existingRecyclingTypeList.get(0);
 
         RecyclingInfoType recyclingInfoType = RecyclingInfoType.builder()
@@ -61,7 +64,11 @@ public class RecyclingService {
     // tag 매핑 -> 일치 tag 없을 시 생성 후 저장
     for (String tag : dto.getTags()) {
       List<Tag> existingTagList = tagRepository.findByName(tag);
-      Tag existingTag = existingTagList.get(0);
+
+      Tag existingTag = null;
+
+      if (existingTagList.size() != 0)
+        existingTag = existingTagList.get(0);
 
       if (existingTag == null) {
         Tag newTag = Tag.builder()
