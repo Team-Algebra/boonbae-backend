@@ -37,6 +37,7 @@ public class FundingController {
   private final FundingService fundingService;
   private final CategoryService categoryService;
 
+  @Secured("USER")
   @PostMapping("/") //펀딩 추가
   public ResponseEntity addFunding(@RequestBody FundingDto.AddFunding dto, @AuthenticationPrincipal Users user) {
     fundingService.addFunding(dto, user);
@@ -104,6 +105,7 @@ public class FundingController {
   }
 
   // 펀딩 좋아요 추가 (Only User)
+  @Secured("USER")
   @PostMapping("/{funding_pk}/likes")
   public ResponseEntity addLikeToFunding(@AuthenticationPrincipal Users user, @PathVariable("funding_pk") Long fundingPk) {
     fundingService.addLikeToFunding(user, fundingPk);
@@ -111,6 +113,7 @@ public class FundingController {
   }
 
   // 펀딩 좋아요 제거 (Only User)
+  @Secured("USER")
   @DeleteMapping("/{funding_pk}/likes")
   public ResponseEntity removeLikeFromComment(@AuthenticationPrincipal Users user, @PathVariable("funding_pk") Long fundingPk) {
     fundingService.removeLikeFromFunding(user, fundingPk);
@@ -118,12 +121,14 @@ public class FundingController {
   }
 
   // 내가 좋아요한 펀딩 조회
+  @Secured("USER")
   @GetMapping("/like")
   public ResponseEntity<FundingDto.MyFundingResult> findAllFundingLikeByUser(@AuthenticationPrincipal Users user){
     FundingDto.MyFundingResult myFundingLikeResult = fundingService.findAllFundingLikeByUser(user);
     return ResponseEntity.ok(myFundingLikeResult);
   }
 
+  @Secured("USER")
   @PostMapping("/{funding_pk}/sponsor") //펀딩 후원(결제기능 미구현)
   public ResponseEntity addFundingDoanate(@RequestParam(value = "PaymentMethod",required = true)PaymentMethod paymentMethod,
                                           @AuthenticationPrincipal Users user,
@@ -146,12 +151,14 @@ public class FundingController {
      return ResponseEntity.ok().body(fundingDonateList);
   }
 
+  @Secured("USER")
   @GetMapping("/my") // 사용자 만든 펀딩 리스트 확인
   public ResponseEntity<FundingDto.MyFundingResult> findAllFundingMakeByUser(@AuthenticationPrincipal Users user){
     FundingDto.MyFundingResult fundingMakeList = fundingService.findAllMakeUser(user);
     return ResponseEntity.ok().body(fundingMakeList);
   }
 
+  @Secured("USER")
   // 나의 진행중인 펀딩 조회(최신순)
   @GetMapping("/my/ongoing")
   public ResponseEntity<FundingDto.MyFundingResult> MyOngoingFundingList(@AuthenticationPrincipal Users user){
