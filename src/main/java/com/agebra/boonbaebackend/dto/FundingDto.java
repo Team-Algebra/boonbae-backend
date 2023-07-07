@@ -3,6 +3,7 @@ package com.agebra.boonbaebackend.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -53,6 +54,13 @@ public class FundingDto {
     private int count;
     private List<FundingDto.MyFunding> fundingList;
   }
-
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class MyFundingResult_Page {
+    private int PageCount;
+    private Page<MyFunding> fundingList;
+  }
 
 }

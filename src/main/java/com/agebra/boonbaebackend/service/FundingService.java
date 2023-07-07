@@ -1,21 +1,21 @@
 package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.*;
+import com.agebra.boonbaebackend.domain.funding.FirstCategory;
 import com.agebra.boonbaebackend.domain.funding.ResearchType;
 import com.agebra.boonbaebackend.domain.funding.SecondCategory;
 import com.agebra.boonbaebackend.dto.FundingDonateDto;
 import com.agebra.boonbaebackend.dto.FundingDto;
 import com.agebra.boonbaebackend.exception.ForbiddenException;
 import com.agebra.boonbaebackend.exception.NotFoundException;
-import com.agebra.boonbaebackend.repository.FundingDonateRepository;
-import com.agebra.boonbaebackend.repository.FundingLikeRepository;
-import com.agebra.boonbaebackend.repository.FundingRepository;
-import com.agebra.boonbaebackend.repository.SecondCategoryRepository;
+import com.agebra.boonbaebackend.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -25,6 +25,7 @@ import java.util.List;
 public class FundingService {
   private final FundingRepository fundingRepository;
   private final SecondCategoryRepository secondCategoryRepository;
+  private final FirstCategoryRepository firstCategoryRepository;
   private final FundingLikeRepository fundingLikeRepository;
   private final FundingDonateRepository fundingDonateRepository;
   public Funding addFunding(FundingDto.AddFunding dto, Users user) throws RuntimeException {
@@ -62,51 +63,104 @@ public class FundingService {
     fundingRepository.delete(funding);
   }
 
-  /*@Transactional(readOnly = true)
-  public FundingDto.MyFundingResult page_Funding(Pageable pageable) {
-    List<Funding> fundingList;
-    pageable= PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),Sort.by(Sort.Direction.DESC,"createAt"));
-    fundingList = fundingRepository.findByApprovedOrderByCreateAt(pageable, true).getContent();
-    if (fundingList.isEmpty()) {
-      throw new NotFoundException("등록된 펀딩이 없습니다");
-    }
-    List<FundingDto.MyFunding> allFundingList = fundingList.stream().map(funding -> new FundingDto.MyFunding(
-            funding.getPk(),
-            funding.getTitle(),
-            funding.getCategory().getFirstCategory().getName(),
-            funding.getCategory().getName(),
-            funding.getUser().getNickname(),
-            funding.getContent(),
-            funding.getCurrentAmount(),
-            funding.getTargetAmount(),
-            funding.getMainImg(),
-            funding.getDDay()
-    )).toList();
-    int start = (int) pageable.getOffset();
-    int end=Math.min((start + pageable.getPageSize()),allFundingList.size());
-    Page<FundingDto.MyFunding> fundingAll= new PageImpl<>(allFundingList.subList(start,end),pageable,allFundingList.size());
-    List<FundingDto.MyFunding> fundingPageToList = fundingAll.getContent();
-    FundingDto.MyFundingResult fundingAllList = new FundingDto.MyFundingResult(fundingPageToList.size(),fundingPageToList);
-    return fundingAllList;
-  }*/
-
-  @Transactional(readOnly = true)
-  public FundingDto.MyFundingResult List_Funding(Users user, ResearchType type) {
-    List<Funding> fundingList;
+  @Transactional(readOnly = true)  // 페이지로 펀딩 전체출력(카테고리검색)
+  public FundingDto.MyFundingResult_Page Page_Funding(Users user,Pageable pageable, ResearchType type, String firstCategoryName) {
+    List<Funding> fundingListByType;
+    List<Funding> fundingListByCategory;
+    List<Funding> fundingList=new ArrayList<>();
 
     if (type != null) {
       switch(type) { //타입에 따라 나눔
         case IMMINENT:
-          fundingList = fundingRepository.findAllByOrderByCloseDateAsc();
+          fundingListByType = fundingRepository.findAllByOrderByCloseDateAsc();
           break;
         case POPULARITY:
-          fundingList = fundingRepository.findAllByOrderByCurrentAmountDivSupportingAmount();
+          fundingListByType = fundingRepository.findAllByOrderByCurrentAmountDivSupportingAmount();
           break;
         default: //최신순 findByIsApprovedTrueOrderByOpenDateDesc
-          fundingList = fundingRepository.findByIsApprovedTrueOrderByOpenDateDesc();
+          fundingListByType = fundingRepository.findByIsApprovedTrueOrderByOpenDateDesc();
       }
     } else { //type이 없을 때 최신순
-      fundingList = fundingRepository.findByIsApprovedTrueOrderByOpenDateDesc();
+      fundingListByType = fundingRepository.findByIsApprovedTrueOrderByOpenDateDesc();
+    }
+
+    if(firstCategoryName!=null){ //카테고리 있을 시 카테고리로 찾은후 type으로 찾은 리스트와 중복되는 값으로 새로 리스트 만듬
+      FirstCategory firstCategory = firstCategoryRepository.findByName(firstCategoryName)
+              .orElseThrow(()-> new NotFoundException("해당하는 단어의 카테고리가 없습니다"));
+      fundingListByCategory=fundingRepository.findByCategory_FirstCategory(firstCategory);
+      for(Funding fundingCategory : fundingListByCategory){
+        for(Funding fundingType : fundingListByType){
+          if(fundingType.equals(fundingCategory)){
+            fundingList.add(fundingType);
+          }
+        }
+      }
+    }else{
+      fundingList=fundingListByType;
+    }
+
+    List<FundingDto.MyFunding> allFundingList = fundingList.stream().map((funding) -> {
+      boolean isLike = false;
+      if (user != null)
+        isLike = fundingLikeRepository.existsByUserAndFunding(user , funding);
+
+      return FundingDto.MyFunding.builder()
+              .funding_pk(funding.getPk())
+              .title(funding.getTitle())
+              .first_category_name(funding.getCategory().getFirstCategory().getName())
+              .second_category_name(funding.getCategory().getName())
+              .owner_user_name(funding.getUser().getNickname())
+              .description(funding.getContent())
+              .current_amount(funding.getCurrentAmount())
+              .target_amount(funding.getTargetAmount())
+              .main_img(funding.getMainImg())
+              .DDay(funding.getDDay())
+              .isLike(isLike)
+              .build();
+    }).toList();
+
+    int start = (int) pageable.getOffset();
+    int end=Math.min((start + pageable.getPageSize()),allFundingList.size());
+    Page<FundingDto.MyFunding> fundingAll= new PageImpl<>(allFundingList.subList(start,end),pageable,allFundingList.size());
+    FundingDto.MyFundingResult_Page dto = new FundingDto.MyFundingResult_Page((int) Math.ceil(allFundingList.size()/pageable.getPageSize()),fundingAll);
+    return dto;
+  }
+
+
+
+  @Transactional(readOnly = true) // 리스트로 펀딩 전체 출력( 카테고리 검색)
+  public FundingDto.MyFundingResult List_Funding(Users user, ResearchType type, String firstCategoryName) {
+    List<Funding> fundingListByType;
+    List<Funding> fundingListByCategory;
+    List<Funding> fundingList=new ArrayList<>();
+
+    if (type != null) {
+      switch(type) { //타입에 따라 나눔
+        case IMMINENT:
+          fundingListByType = fundingRepository.findAllByOrderByCloseDateAsc();
+          break;
+        case POPULARITY:
+          fundingListByType = fundingRepository.findAllByOrderByCurrentAmountDivSupportingAmount();
+          break;
+        default: //최신순 findByIsApprovedTrueOrderByOpenDateDesc
+          fundingListByType = fundingRepository.findByIsApprovedTrueOrderByOpenDateDesc();
+      }
+    } else { //type이 없을 때 최신순
+      fundingListByType = fundingRepository.findByIsApprovedTrueOrderByOpenDateDesc();
+    }
+    if(firstCategoryName!=null){
+      FirstCategory firstCategory = firstCategoryRepository.findByName(firstCategoryName)
+              .orElseThrow(()-> new NotFoundException("해당하는 단어의 카테고리가 없습니다"));
+      fundingListByCategory=fundingRepository.findByCategory_FirstCategory(firstCategory);
+      for(Funding fundingCategory : fundingListByCategory){
+        for(Funding fundingType : fundingListByType){
+          if(fundingType.equals(fundingCategory)){
+            fundingList.add(fundingType);
+          }
+        }
+      }
+    }else{
+      fundingList=fundingListByType;
     }
 
     List<FundingDto.MyFunding> allFundingList = fundingList.stream().map((funding) -> {
@@ -144,6 +198,7 @@ public class FundingService {
     FundingDto.MyFundingResult dto = new FundingDto.MyFundingResult(allFundingList.size(),allFundingList);
     return dto;
   }
+
   @Transactional(readOnly = true)
   public FundingDto.MyFunding one_funding(Long fundingPk){
     Funding funding = fundingRepository.findById(fundingPk)
