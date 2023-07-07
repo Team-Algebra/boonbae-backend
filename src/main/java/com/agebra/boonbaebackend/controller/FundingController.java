@@ -13,6 +13,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,12 +43,24 @@ public class FundingController {
 
     return ResponseEntity.ok().build();
   }
-  @GetMapping("/")  //펀딩 전체 리스트 (관리자가 승인 안한것은 출력 x) - 로그인 되어있다면 좋아요 여부 표시
+  /*@GetMapping("/")  //펀딩 전체 리스트 (관리자가 승인 안한것은 출력 x) - 로그인 되어있다면 좋아요 여부 표시
   public ResponseEntity<FundingDto.MyFundingResult> findAllFunding(
           @AuthenticationPrincipal Users user,
           @RequestParam(value = "sort", required = false)ResearchType type
   ){
     FundingDto.MyFundingResult dto = fundingService.List_Funding(user, type);
+    return ResponseEntity.ok().body(dto);
+  }*/
+  @GetMapping("/")  //펀딩 전체 리스트 (관리자가 승인 안한것은 출력 x) - 로그인 되어있다면 좋아요 여부 표시
+  public ResponseEntity<FundingDto.MyFundingResult_Page> findAllFundingPage(
+          @AuthenticationPrincipal Users user,
+          @RequestParam(value = "sort", required = false)ResearchType type,
+          @RequestParam(value = "FirstCategory", required=false)String firstCategoryName,
+          @RequestParam(value = "PageNumber",required = false,defaultValue = "0") int pageNum,
+          @RequestParam(value = "PageSize", required = false, defaultValue = "10") int pageSize
+  ){
+    Pageable pageable = PageRequest.of(pageNum,pageSize);
+    FundingDto.MyFundingResult_Page dto = fundingService.Page_Funding(user, pageable,type,firstCategoryName);
     return ResponseEntity.ok().body(dto);
   }
   @GetMapping("/{funding_pk}") //펀딩 상세정보 페이지
