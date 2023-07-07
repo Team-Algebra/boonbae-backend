@@ -11,7 +11,7 @@ public class TipDto {
   @Getter
   @AllArgsConstructor
   @NoArgsConstructor
-  public static class List {
+  public static class Tip_List {
     private Long tip_pk;
     private String name;
   }

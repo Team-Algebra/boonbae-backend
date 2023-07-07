@@ -37,7 +37,7 @@ public class TipController {
   @Secured("ADMIN") //관리자권한 필요
   @GetMapping("/all")
   public ResponseEntity getAllTip() {
-    List<TipDto.List> tipList = tipService.getAll();
+    List<TipDto.Tip_List> tipList = tipService.getAll();
 
     return ResponseEntity.ok(tipList);
   }
