@@ -36,4 +36,6 @@ public interface FundingRepository extends JpaRepository<Funding, Long> {
     @Query(value = "select  p From Funding p where p.category.firstCategory = :firstCategory")
     List<Funding> findByCategory_FirstCategory(FirstCategory firstCategory);
 
+    
+
 }
