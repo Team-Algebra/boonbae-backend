@@ -1,13 +1,11 @@
 package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.Funding;
-import com.agebra.boonbaebackend.domain.Tree;
 import com.agebra.boonbaebackend.domain.Users;
 import com.agebra.boonbaebackend.dto.FundingDto;
 import com.agebra.boonbaebackend.dto.UserDto;
 import com.agebra.boonbaebackend.exception.ForbiddenException;
 import com.agebra.boonbaebackend.exception.NotFoundException;
-import com.agebra.boonbaebackend.exception.UserInfoDuplicatedException;
 import com.agebra.boonbaebackend.repository.UserRepository;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
@@ -16,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.time.LocalDate;
 
@@ -245,7 +242,7 @@ public class FundingTest2 {
 
         fundingService.approve(saveFunding.getPk());
 
-        FundingDto.MyFundingResult myFundingResult = fundingService.List_Funding(user, null);
+        FundingDto.MyFundingResult myFundingResult = fundingService.List_Funding(user, null, "asdf");
 
         boolean hasData = false;
         for (FundingDto.MyFunding result : myFundingResult.getFundingList()) {
