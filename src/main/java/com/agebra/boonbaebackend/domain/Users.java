@@ -27,8 +27,8 @@ public class Users implements UserDetails {
     @Builder.Default
     private Tree tree = new Tree();
 
-    @Column(name = "image_url", length = 99999)
     @Builder.Default
+    @Column(name = "image_url", length = 99999)
     private String imageUrl = null;
 
     @NotNull
