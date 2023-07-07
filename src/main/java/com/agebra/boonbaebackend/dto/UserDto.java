@@ -62,9 +62,9 @@ public class UserDto {
         private String token;
         private UserInfo user;
 
-        public LoginResponse(String token, String id, String username) {
+        public LoginResponse(String token, String id, String username, String role) {
             this.token = token;
-            this.user = new UserInfo(id, username);
+            this.user = new UserInfo(id, username, role);
         }
 
         @Data
@@ -72,6 +72,7 @@ public class UserDto {
         private class UserInfo {
             private String id;
             private String username;
+            private String role;
         }
 
         public String getId() {

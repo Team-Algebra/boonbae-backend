@@ -38,6 +38,7 @@ public class SecurityConfig {
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
+    private final JwtExceptionFilter jwtExceptionFilter;
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
@@ -63,7 +64,8 @@ public class SecurityConfig {
           .authenticated()
           .and()
           .authenticationProvider(authenticationProvider)
-          .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+          .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }
@@ -74,6 +76,9 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedOrigin("http://localhost");
+        configuration.addAllowedOrigin("http://localhost/");
+        configuration.addAllowedOrigin("http://localhost:80");
+        configuration.addAllowedOrigin("http://localhost:80/");
         configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app");
         configuration.addAllowedOrigin("https://timely-concha-38b820.netlify.app/");
         configuration.addAllowedOrigin("https://boonbae.seol.pro");

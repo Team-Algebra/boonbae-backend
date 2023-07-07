@@ -34,6 +34,7 @@ public class TokenController {
     if (isValid) {
       userResponse.put("id", user.getId());
       userResponse.put("username", user.getNickname());
+      userResponse.put("role", user.getRole().name());
     }
 
     response.put("isValid", isValid);
