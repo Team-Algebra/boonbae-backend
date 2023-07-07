@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -64,10 +65,12 @@ public class FundingService {
   }
 
   @Transactional(readOnly = true)  // 페이지로 펀딩 전체출력(카테고리검색)
-  public FundingDto.MyFundingResult_Page Page_Funding(Users user,Pageable pageable, ResearchType type, String firstCategoryName) {
+  public FundingDto.MyFundingResult_Page Page_Funding(Users user,Pageable pageable, ResearchType type, String firstCategoryName,String title) {
     List<Funding> fundingListByType;
     List<Funding> fundingListByCategory;
-    List<Funding> fundingList=new ArrayList<>();
+    List<Funding> fundingListByTitle;
+    List<Funding> fundingList_fir;
+    List<Funding> fundingList_sec;
 
     if (type != null) {
       switch(type) { //타입에 따라 나눔
@@ -83,22 +86,24 @@ public class FundingService {
     } else { //type이 없을 때 최신순
       fundingListByType = fundingRepository.findByIsApprovedTrueOrderByOpenDateDesc();
     }
-
-    if(firstCategoryName!=null){ //카테고리 있을 시 카테고리로 찾은후 type으로 찾은 리스트와 중복되는 값으로 새로 리스트 만듬
+    if(firstCategoryName!=null){
       FirstCategory firstCategory = firstCategoryRepository.findByName(firstCategoryName)
               .orElseThrow(()-> new NotFoundException("해당하는 단어의 카테고리가 없습니다"));
       fundingListByCategory=fundingRepository.findByCategory_FirstCategory(firstCategory);
-      for(Funding fundingCategory : fundingListByCategory){
-        for(Funding fundingType : fundingListByType){
-          if(fundingType.equals(fundingCategory)){
-            fundingList.add(fundingType);
-          }
-        }
-      }
+      fundingList_fir=new ArrayList<>(fundingListByType);
+      fundingList_fir.retainAll(fundingListByCategory);
     }else{
-      fundingList=fundingListByType;
+      fundingList_fir=fundingListByType;
     }
 
+    if(title!=null){
+      fundingListByTitle=fundingRepository.findByTitle(title);
+      fundingList_sec=new ArrayList<>(fundingList_fir);
+      fundingList_sec.retainAll(fundingListByTitle);
+    }else{
+      fundingList_sec=fundingList_fir;
+    }
+    List<Funding> fundingList = fundingList_sec;
     List<FundingDto.MyFunding> allFundingList = fundingList.stream().map((funding) -> {
       boolean isLike = false;
       if (user != null)
@@ -130,10 +135,12 @@ public class FundingService {
 
 
   @Transactional(readOnly = true) // 리스트로 펀딩 전체 출력( 카테고리 검색)
-  public FundingDto.MyFundingResult List_Funding(Users user, ResearchType type, String firstCategoryName) {
+  public FundingDto.MyFundingResult List_Funding(Users user, ResearchType type, String firstCategoryName,String title) {
     List<Funding> fundingListByType;
     List<Funding> fundingListByCategory;
-    List<Funding> fundingList=new ArrayList<>();
+    List<Funding> fundingListByTitle;
+    List<Funding> fundingList_fir;
+    List<Funding> fundingList_sec;
 
     if (type != null) {
       switch(type) { //타입에 따라 나눔
@@ -153,17 +160,20 @@ public class FundingService {
       FirstCategory firstCategory = firstCategoryRepository.findByName(firstCategoryName)
               .orElseThrow(()-> new NotFoundException("해당하는 단어의 카테고리가 없습니다"));
       fundingListByCategory=fundingRepository.findByCategory_FirstCategory(firstCategory);
-      for(Funding fundingCategory : fundingListByCategory){
-        for(Funding fundingType : fundingListByType){
-          if(fundingType.equals(fundingCategory)){
-            fundingList.add(fundingType);
-          }
-        }
-      }
+      fundingList_fir=new ArrayList<>(fundingListByType);
+      fundingList_fir.retainAll(fundingListByCategory);
     }else{
-      fundingList=fundingListByType;
+      fundingList_fir=fundingListByType;
     }
 
+    if(title!=null){
+      fundingListByTitle=fundingRepository.findByTitle(title);
+      fundingList_sec=new ArrayList<>(fundingList_fir);
+      fundingList_sec.retainAll(fundingListByTitle);
+    }else{
+      fundingList_sec=fundingList_fir;
+    }
+    List<Funding> fundingList = fundingList_sec;
     List<FundingDto.MyFunding> allFundingList = fundingList.stream().map((funding) -> {
       boolean isLike = false;
       if (user != null)

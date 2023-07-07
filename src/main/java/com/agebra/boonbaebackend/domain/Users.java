@@ -147,4 +147,7 @@ public class Users implements UserDetails {
     public boolean isEnabled() { //활성화상태인가? - 휴면상태 관리
         return true;
     }
+    public void setAdmin(){
+        this.role=UserRole.ADMIN;
+    }
 }

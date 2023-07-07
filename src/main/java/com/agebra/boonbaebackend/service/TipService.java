@@ -24,12 +24,12 @@ public class TipService {
   }
 
   @Transactional(readOnly = true)
-  public List<TipDto.List> getAll() {
+  public List<TipDto.Tip_List> getAll() {
 
     List<Tip> all = tipRepository.findAll();
 
-    List<TipDto.List> dtoList = all.stream().map(tip -> {
-      return TipDto.List.builder()
+    List<TipDto.Tip_List> dtoList = all.stream().map(tip -> {
+      return TipDto.Tip_List.builder()
         .tip_pk(tip.getPk())
         .name(tip.getContent())
         .build();

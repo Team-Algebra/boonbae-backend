@@ -56,11 +56,12 @@ public class FundingController {
           @AuthenticationPrincipal Users user,
           @RequestParam(value = "sort", required = false)ResearchType type,
           @RequestParam(value = "FirstCategory", required=false)String firstCategoryName,
+          @RequestParam(value = "TitleSearch",required = false)String title,
           @RequestParam(value = "PageNumber",required = false,defaultValue = "0") int pageNum,
           @RequestParam(value = "PageSize", required = false, defaultValue = "10") int pageSize
   ){
     Pageable pageable = PageRequest.of(pageNum,pageSize);
-    FundingDto.MyFundingResult_Page dto = fundingService.Page_Funding(user, pageable,type,firstCategoryName);
+    FundingDto.MyFundingResult_Page dto = fundingService.Page_Funding(user, pageable,type,firstCategoryName,title);
     return ResponseEntity.ok().body(dto);
   }
   @GetMapping("/{funding_pk}") //펀딩 상세정보 페이지
