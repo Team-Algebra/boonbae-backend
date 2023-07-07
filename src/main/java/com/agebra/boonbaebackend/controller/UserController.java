@@ -92,7 +92,6 @@ public class UserController {
 
     @GetMapping("/info/my")
     public ResponseEntity getUserInfo(@AuthenticationPrincipal Users user) {
-
         UserDto.Info userInfo = userService.getUserInfo(user);
 
         return ResponseEntity.ok(userInfo);
@@ -105,6 +104,17 @@ public class UserController {
         map.put("introduction", introduction);
 
         return ResponseEntity.ok(map);
+    }
+
+    @PatchMapping("/info/user_img")
+    public ResponseEntity modifyUserImg(@AuthenticationPrincipal Users user, @RequestBody Map<String, String> map) {
+        String imgUrl = map.get("img_url");
+        if (imgUrl == null)
+            throw new InputMismatchException("img_url은 필수입니다");
+
+        userService.modifyUserImg(user, imgUrl);
+
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/introduction")

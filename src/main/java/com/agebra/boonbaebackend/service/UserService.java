@@ -135,8 +135,16 @@ public class UserService {
           .username(findUsers.getNickname())
           .id(findUsers.getId())
           .eco_point(findUsers.getEcoPoint())
+          .user_img(findUsers.getImageUrl())
           .build();
+    }
 
+    public void modifyUserImg(Users user, String img_url) {
+        Users findUser = userRepository.findById(user.getPk())
+                .orElseThrow(() -> new NotFoundException("user를 찾을 수 없음"));
+
+        //s3 이미지 삭제 코드 추가
+        findUser.modifyUserImg(img_url);
     }
 
     public void modifyPassword(Users user,UserDto.modifyPassword dto){

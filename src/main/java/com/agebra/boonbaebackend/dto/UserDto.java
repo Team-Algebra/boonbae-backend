@@ -32,6 +32,7 @@ public class UserDto {
         private String username;
         private String id;
         private int eco_point;
+        private String user_img;
     }
 
     @Getter
