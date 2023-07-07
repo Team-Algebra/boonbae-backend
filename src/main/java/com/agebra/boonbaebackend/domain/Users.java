@@ -72,6 +72,10 @@ public class Users implements UserDetails {
         return user;
     }
 
+    public void modifyUserImg(String imgUrl) {
+        this.imageUrl = imgUrl;
+    }
+
     public void changeIntroduction(String introduction) {
         this.introduction = introduction;
     }

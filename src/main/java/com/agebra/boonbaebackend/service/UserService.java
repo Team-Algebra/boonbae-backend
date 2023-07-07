@@ -132,7 +132,7 @@ public class UserService {
     public UserDto.Info getUserInfo(Users user) {
         //이렇게 안하면 새로 반영이 안되는듯?
         Users findUsers = userRepository.findById(user.getPk())
-          .orElseThrow(() -> new NotFoundException("없는 user입니다"));
+                .orElseThrow(() -> new NotFoundException("없는 user입니다"));
         Tree tree = findUsers.getTree();
         tree.initAll();
         return UserDto.Info.builder()
@@ -141,7 +141,16 @@ public class UserService {
                 .eco_point(findUsers.getEcoPoint())
                 .all_cnt(userRepository.countBy())
                 .rank(treeRepository.findRankByExp(tree.getExp()))
+                .user_img(findUsers.getImageUrl())
                 .build();
+    }
+
+    public void modifyUserImg(Users user, String img_url) {
+        Users findUser = userRepository.findById(user.getPk())
+                .orElseThrow(() -> new NotFoundException("user를 찾을 수 없음"));
+
+        //s3 이미지 삭제 코드 추가
+        findUser.modifyUserImg(img_url);
     }
 
     public void modifyPassword(Users user,UserDto.modifyPassword dto){
