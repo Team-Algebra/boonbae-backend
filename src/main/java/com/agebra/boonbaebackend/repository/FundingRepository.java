@@ -7,13 +7,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface FundingRepository extends JpaRepository<Funding, Long> {
     // 현재 진행중인 해당 user의 펀딩을 최신순으로 조회
-    @Query("SELECT f FROM Funding f WHERE f.closeDate >= CURRENT_DATE() ORDER BY f.createAt ASC")
-    List<Funding> findOngoingFundingByUser(Users users);
+    @Query("SELECT f FROM Funding f WHERE f.user = :user AND f.closeDate >= CURRENT_DATE() ORDER BY f.createAt DESC")
+    List<Funding> findOngoingFundingByUser(@Param("user") Users user);
     List<Funding> findByUser(Users user);
 
 //    @Query(value = "SELECT p FROM Funding p WHERE p.isApproved= :check ORDER BY p.createAt desc")
