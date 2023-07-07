@@ -72,10 +72,10 @@ public class FundingService {
     if (type != null) {
       switch(type) { //타입에 따라 나눔
         case IMMINENT:
-          fundingListByType = fundingRepository.findAllByOrderByCloseDateAsc();
+          fundingListByType = fundingRepository.findByIsAndApprovedTrueOrderByCloseDateAsc();
           break;
         case POPULARITY:
-          fundingListByType = fundingRepository.findAllByOrderByCurrentAmountDivSupportingAmount();
+          fundingListByType = fundingRepository.findByIsApprovedTrueOrderByCurrentAmountDivSupportingAmount();
           break;
         default: //최신순 findByIsApprovedTrueOrderByOpenDateDesc
           fundingListByType = fundingRepository.findByIsApprovedTrueOrderByOpenDateDesc();
@@ -122,7 +122,8 @@ public class FundingService {
     int start = (int) pageable.getOffset();
     int end=Math.min((start + pageable.getPageSize()),allFundingList.size());
     Page<FundingDto.MyFunding> fundingAll= new PageImpl<>(allFundingList.subList(start,end),pageable,allFundingList.size());
-    FundingDto.MyFundingResult_Page dto = new FundingDto.MyFundingResult_Page((int) Math.ceil(allFundingList.size()/pageable.getPageSize()),fundingAll);
+    int pageCount = (int)Math.ceil((double)allFundingList.size()/pageable.getPageSize());
+    FundingDto.MyFundingResult_Page dto = new FundingDto.MyFundingResult_Page(pageCount,fundingAll);
     return dto;
   }
 
@@ -137,10 +138,10 @@ public class FundingService {
     if (type != null) {
       switch(type) { //타입에 따라 나눔
         case IMMINENT:
-          fundingListByType = fundingRepository.findAllByOrderByCloseDateAsc();
+          fundingListByType = fundingRepository.findByIsAndApprovedTrueOrderByCloseDateAsc();
           break;
         case POPULARITY:
-          fundingListByType = fundingRepository.findAllByOrderByCurrentAmountDivSupportingAmount();
+          fundingListByType = fundingRepository.findByIsApprovedTrueOrderByCurrentAmountDivSupportingAmount();
           break;
         default: //최신순 findByIsApprovedTrueOrderByOpenDateDesc
           fundingListByType = fundingRepository.findByIsApprovedTrueOrderByOpenDateDesc();
