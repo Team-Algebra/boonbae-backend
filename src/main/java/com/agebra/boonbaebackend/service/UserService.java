@@ -5,6 +5,7 @@ import com.agebra.boonbaebackend.dto.UserDto;
 import com.agebra.boonbaebackend.exception.ForbiddenException;
 import com.agebra.boonbaebackend.exception.NotFoundException;
 import com.agebra.boonbaebackend.exception.UserInfoDuplicatedException;
+import com.agebra.boonbaebackend.repository.RefreshTokenRepository;
 import com.agebra.boonbaebackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -64,6 +66,12 @@ public class UserService {
           .orElseThrow(() -> new NotFoundException());
 
         String jwtToken = jwtService.generateToken(user);
+
+//        RefreshToken refreshToken = refreshTokenRepository.findByLoginId(dto.getId())
+//                .orElseGet(() -> null);
+//
+//        if (refreshToken != nul)
+
         return new UserDto.LoginResponse(jwtToken, user.getId(), user.getNickname());
     }
 
