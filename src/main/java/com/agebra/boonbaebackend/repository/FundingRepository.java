@@ -22,6 +22,7 @@ public interface FundingRepository extends JpaRepository<Funding, Long> {
     @Query(value = "SELECT p FROM Funding p WHERE p.isApproved= :check ORDER BY p.createAt desc ")
     List<Funding> findByApproved(boolean check);
 
+    
     List<Funding> findByIsApprovedTrueOrderByOpenDateDesc();
 
     //후원자 수 많은 순
@@ -31,7 +32,7 @@ public interface FundingRepository extends JpaRepository<Funding, Long> {
     //마감임박 순
     List<Funding> findAllByOrderByCloseDateAsc();
 
-    @Query(value = "select  p From Funding p where p.category.firstCategory = : firstCategory")
+    @Query(value = "select  p From Funding p where p.category.firstCategory = :firstCategory")
     List<Funding> findByCategory_FirstCategory(FirstCategory firstCategory);
 
 }
