@@ -160,8 +160,8 @@ public class RecyclingService {
 
     return new RecyclingDto.DetailResult(
       recyclingInfo.getName(),
-      recyclingInfo.getProcess(),
-      recyclingInfo.getDescription(),
+            recyclingInfo.getProcess().split("\t\t\t"),
+            recyclingInfo.getDescription().split("\t\t\t"),
       typeNames,
       recyclingInfo.getImageUrl(),
       tagNames,
