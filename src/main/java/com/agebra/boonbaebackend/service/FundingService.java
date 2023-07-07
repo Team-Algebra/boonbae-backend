@@ -72,10 +72,10 @@ public class FundingService {
     if (type != null) {
       switch(type) { //타입에 따라 나눔
         case IMMINENT:
-          fundingListByType = fundingRepository.findAllByOrderByCloseDateAsc();
+          fundingListByType = fundingRepository.findByIsAndApprovedTrueOrderByCloseDateAsc();
           break;
         case POPULARITY:
-          fundingListByType = fundingRepository.findAllByOrderByCurrentAmountDivSupportingAmount();
+          fundingListByType = fundingRepository.findByIsApprovedTrueOrderByCurrentAmountDivSupportingAmount();
           break;
         default: //최신순 findByIsApprovedTrueOrderByOpenDateDesc
           fundingListByType = fundingRepository.findByIsApprovedTrueOrderByOpenDateDesc();
@@ -137,10 +137,10 @@ public class FundingService {
     if (type != null) {
       switch(type) { //타입에 따라 나눔
         case IMMINENT:
-          fundingListByType = fundingRepository.findAllByOrderByCloseDateAsc();
+          fundingListByType = fundingRepository.findByIsAndApprovedTrueOrderByCloseDateAsc();
           break;
         case POPULARITY:
-          fundingListByType = fundingRepository.findAllByOrderByCurrentAmountDivSupportingAmount();
+          fundingListByType = fundingRepository.findByIsApprovedTrueOrderByCurrentAmountDivSupportingAmount();
           break;
         default: //최신순 findByIsApprovedTrueOrderByOpenDateDesc
           fundingListByType = fundingRepository.findByIsApprovedTrueOrderByOpenDateDesc();
