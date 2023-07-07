@@ -84,10 +84,10 @@ public class RecyclingService {
   //중복 분리배출 정보 이름 확인
   @Transactional(readOnly = true)
   public boolean isExistInfoName(String infoName) {
-    RecyclingInfo recyclingInfo = recyclingRepository.findByName(infoName)
-            .orElseGet(() -> null);
+    List<RecyclingInfo> recyclingInfoList = recyclingRepository.findByName(infoName)
+            .orElseGet(() -> new ArrayList<>());
 
-    return (recyclingInfo == null)? false : true;
+    return (recyclingInfoList.size() == 0)? false : true;
   }
 
   // 분리배출 정보 검색
