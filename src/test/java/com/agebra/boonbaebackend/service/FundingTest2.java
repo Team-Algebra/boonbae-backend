@@ -2,20 +2,29 @@ package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.Funding;
 import com.agebra.boonbaebackend.domain.Users;
+import com.agebra.boonbaebackend.domain.funding.FirstCategory;
+import com.agebra.boonbaebackend.domain.funding.ResearchType;
+import com.agebra.boonbaebackend.domain.funding.SecondCategory;
 import com.agebra.boonbaebackend.dto.FundingDto;
 import com.agebra.boonbaebackend.dto.UserDto;
 import com.agebra.boonbaebackend.exception.ForbiddenException;
 import com.agebra.boonbaebackend.exception.NotFoundException;
+import com.agebra.boonbaebackend.repository.FirstCategoryRepository;
+import com.agebra.boonbaebackend.repository.FundingRepository;
+import com.agebra.boonbaebackend.repository.SecondCategoryRepository;
 import com.agebra.boonbaebackend.repository.UserRepository;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,12 +33,18 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class) //
 public class FundingTest2 {
     private final Logger log = LoggerFactory.getLogger(getClass());
+    @Autowired
+    private FirstCategoryRepository firstCategoryRepository;
+    @Autowired
+    private SecondCategoryRepository secondCategoryRepository;
 
     @Autowired
     private FundingService fundingService;
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private FundingRepository fundingRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -41,6 +56,9 @@ public class FundingTest2 {
     Long target_amount = 10000000L;
     Long supporting_amount = 10000L;
     Long second_category_pk = 1L;
+    String second_category_name="2차카테고리";
+    Long first_category_pk = 1L;
+    String first_category_name="1차카테고리";
     String introduction = "asdf";
     LocalDate open_date = LocalDate.now();
     LocalDate close_date = LocalDate.now();
@@ -49,7 +67,6 @@ public class FundingTest2 {
     @BeforeAll
     void setUp() {
     }
-
     @DisplayName("펀딩추가")
     @Test
     @Transactional //rollback
@@ -66,7 +83,7 @@ public class FundingTest2 {
                 .main_image(main_image)
                 .build();
 
-        UserDto.RegisterRequest request = new UserDto.RegisterRequest("asdf", "asdf", "asdf", "");
+        UserDto.RegisterRequest request = new UserDto.RegisterRequest("asdf1", "asdf1", "asdf1", "");
         Users user = userService.register(request);
 
         Funding saveFunding = fundingService.addFunding(dto, user);
@@ -97,7 +114,7 @@ public class FundingTest2 {
                 .main_image(main_image)
                 .build();
 
-        UserDto.RegisterRequest request = new UserDto.RegisterRequest("asdf", "asdf", "asdf", "");
+        UserDto.RegisterRequest request = new UserDto.RegisterRequest("asdf1", "asdf1", "asdf1", "");
         Users user = userService.register(request);
 
         Funding saveFunding = fundingService.addFunding(dto, user);
@@ -125,10 +142,9 @@ public class FundingTest2 {
                 .build();
 
         //관리자아이디
-        UserDto.Login loginDto = new UserDto.Login("admin", "admin");
-        UserDto.LoginResponse response = userService.authenticate(loginDto);
-        String userId = response.getId();
-        Users user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("user 없음"));
+        UserDto.RegisterRequest request = new UserDto.RegisterRequest("asdf781", "asdf781", "asdf781", "");
+        Users user = userService.register(request);
+        user.setAdmin();
 
         Funding saveFunding = fundingService.addFunding(dto, user);
 
@@ -157,15 +173,14 @@ public class FundingTest2 {
                 .build();
 
         //관리자아이디
-        UserDto.Login loginDto = new UserDto.Login("admin", "admin");
-        UserDto.LoginResponse response = userService.authenticate(loginDto);
-        String userId = response.getId();
-        Users user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("user 없음"));
+        UserDto.RegisterRequest request = new UserDto.RegisterRequest("asdf781", "asdf781", "asdf781", "");
+        Users user = userService.register(request);
+        user.setAdmin();
 
         Funding saveFunding = fundingService.addFunding(dto, user);
 
-        fundingService.approve(saveFunding.getPk());
-
+//      fundingService.approve(saveFunding.getPk());
+//      해당 코드 실행 안해야 성공적으로 작동됨
         FundingDto.MyFundingResult myFundingResult = fundingService.List_Funding_DeAccess();
 
         boolean hasData = false;
@@ -196,7 +211,7 @@ public class FundingTest2 {
                 .main_image(main_image)
                 .build();
 
-        UserDto.RegisterRequest request = new UserDto.RegisterRequest("asdf", "asdf", "asdf", "");
+        UserDto.RegisterRequest request = new UserDto.RegisterRequest("asdf1", "asdf1", "asdf1", "");
         Users user = userService.register(request);
 
         Funding saveFunding = fundingService.addFunding(dto, user);
@@ -233,16 +248,15 @@ public class FundingTest2 {
                 .build();
 
         //관리자아이디
-        UserDto.Login loginDto = new UserDto.Login("admin", "admin");
-        UserDto.LoginResponse response = userService.authenticate(loginDto);
-        String userId = response.getId();
-        Users user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("user 없음"));
+        UserDto.RegisterRequest request = new UserDto.RegisterRequest("asdf781", "asdf781", "asdf781", "");
+        Users user = userService.register(request);
+        user.setAdmin();
 
         Funding saveFunding = fundingService.addFunding(dto, user);
 
         fundingService.approve(saveFunding.getPk());
 
-        FundingDto.MyFundingResult myFundingResult = fundingService.List_Funding(user, null, "asdf");
+        FundingDto.MyFundingResult myFundingResult = fundingService.findAllMakeUser(user);
 
         boolean hasData = false;
         for (FundingDto.MyFunding result : myFundingResult.getFundingList()) {
@@ -252,6 +266,50 @@ public class FundingTest2 {
             }
         }
 
+        assertTrue(hasData);
+    }
+    @DisplayName("전체 펀딩 category 확인")
+    @Test
+    @Order(7)
+    @Transactional  //안하면 롤백 x ( db에 해당 값이 저장되버림 -> 중복 오류)
+    void allFunding() {
+        FirstCategory firstCategory = FirstCategory.builder()
+                .pk(first_category_pk)
+                .name(first_category_name)
+                .build();
+        SecondCategory secondCategory = SecondCategory.builder()
+                .pk(second_category_pk)
+                .name(second_category_name)
+                .firstCategory(firstCategory)
+                .build();
+        FundingDto.AddFunding dto = FundingDto.AddFunding.builder()
+                .title(title)
+                .target_amount(target_amount)
+                .supporting_amount(supporting_amount)
+                .second_category_pk(secondCategory.getPk())
+                .introduction(introduction)
+                .open_date(open_date)
+                .close_date(close_date)
+                .main_image(main_image)
+                .build();
+        firstCategoryRepository.save(firstCategory);
+        secondCategoryRepository.save(secondCategory);
+        //관리자아이디
+        UserDto.RegisterRequest request = new UserDto.RegisterRequest("asdf781", "asdf781", "asdf781", "");
+        Users user = userService.register(request);
+        user.setAdmin();
+        Funding saveFunding = fundingService.addFunding(dto, user);
+        fundingRepository.save(saveFunding);
+        fundingService.approve(saveFunding.getPk());
+        Pageable pageable = PageRequest.of(0, 10);
+        List<FundingDto.MyFunding> myFundingResult = fundingService.Page_Funding(user, pageable, ResearchType.RECENT, first_category_name,title).getFundingList().getContent();
+        boolean hasData = false;
+        for (FundingDto.MyFunding result : myFundingResult) {
+            if (result.getFunding_pk() == saveFunding.getPk()) {
+                hasData = true;
+                break;
+            }
+        }
         assertTrue(hasData);
     }
 
