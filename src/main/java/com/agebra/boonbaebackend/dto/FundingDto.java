@@ -40,6 +40,9 @@ public class FundingDto {
     private Long target_amount;
     private String main_img;
     private Long DDay;
+    private LocalDate open_date;
+    private LocalDate close_date;
+    private Long supporting_amount;
 
     @Builder.Default
     @JsonInclude(JsonInclude.Include.NON_NULL)

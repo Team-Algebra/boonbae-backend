@@ -11,13 +11,14 @@ import com.agebra.boonbaebackend.exception.NotFoundException;
 import com.agebra.boonbaebackend.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -217,6 +218,9 @@ public class FundingService {
     FundingDto.MyFunding fundingDto = FundingDto.MyFunding.builder()
             .funding_pk(funding.getPk())
             .title(funding.getTitle())
+            .open_date(funding.getOpenDate())
+            .close_date(funding.getCloseDate())
+            .supporting_amount(funding.getSupportingAmount())
             .first_category_name(funding.getCategory().getFirstCategory().getName())
             .second_category_name(funding.getCategory().getName())
             .owner_user_name(funding.getUser().getNickname())
