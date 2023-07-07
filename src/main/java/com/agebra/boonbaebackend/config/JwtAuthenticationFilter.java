@@ -1,5 +1,6 @@
 package com.agebra.boonbaebackend.config;
 
+import com.agebra.boonbaebackend.exception.JwtException;
 import com.agebra.boonbaebackend.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -104,7 +105,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-        return null;
+        throw new JwtException("유효하지 않은 토큰");
     }
 
 }
