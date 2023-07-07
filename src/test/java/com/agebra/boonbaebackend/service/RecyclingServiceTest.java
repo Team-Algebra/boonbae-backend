@@ -1,11 +1,13 @@
 package com.agebra.boonbaebackend.service;
 
 import com.agebra.boonbaebackend.domain.RecyclingInfo;
+import com.agebra.boonbaebackend.domain.RecyclingType;
 import com.agebra.boonbaebackend.dto.RecyclingDto;
 import com.agebra.boonbaebackend.exception.NotFoundException;
 import com.agebra.boonbaebackend.repository.RecyclingInfoTagRepository;
 import com.agebra.boonbaebackend.repository.RecyclingInfoTypeRepository;
 import com.agebra.boonbaebackend.repository.RecyclingRepository;
+import com.agebra.boonbaebackend.repository.RecyclingTypeRepository;
 import org.junit.jupiter.api.*;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -34,6 +36,8 @@ class RecyclingServiceTest {
     @Autowired
     private RecyclingRepository recyclingRepository;
     @Autowired
+    private RecyclingTypeRepository recyclingTypeRepository;
+    @Autowired
     private RecyclingInfoTagRepository recyclingInfoTagRepository;
     @Autowired
     private RecyclingInfoTypeRepository recyclingInfoTypeRepository;
@@ -61,10 +65,13 @@ class RecyclingServiceTest {
     @Test
     @DisplayName("분리배출 정보 등록 테스트")
     @Transactional //rollback
+    @Order(1)
     void write() {
-        RecyclingDto.Write writeDto = new RecyclingDto.Write(
-                name, process, description, types, image_url, tags
-        );
+        RecyclingType infomation =RecyclingType.builder()
+                .name(name)
+                .build();
+        recyclingTypeRepository.save(infomation);
+        RecyclingDto.Write writeDto = new RecyclingDto.Write(name, process, description, types, image_url, tags);
         recyclingService.write(writeDto);
 
         List<RecyclingInfo> savedInfos = recyclingRepository.findAll();
@@ -74,6 +81,7 @@ class RecyclingServiceTest {
 
     @Test
     @DisplayName("분리배출 정보 검색 테스트")
+    @Order(2)
     void searchResultDto_Test() {
         int count = 2;
         List<RecyclingDto.Search> infoList = Arrays.asList(
