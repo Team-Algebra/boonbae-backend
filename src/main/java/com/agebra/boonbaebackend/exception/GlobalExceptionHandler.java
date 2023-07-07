@@ -13,6 +13,13 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+//  @ExceptionHandler({JwtException.class})
+//  protected ResponseEntity handleJwtException(JwtException e) {
+//    log.info("JwtException = {}", e.getMessage());
+//    return ResponseEntity.status(HttpStatus.unautuorsddsfsdasd).build();
+//  }
+
   @ExceptionHandler({UserInfoDuplicatedException.class})
   protected ResponseEntity handleUserInfoDuplicatedException(UserInfoDuplicatedException e) {
     log.info("UserInfoDuplicatedException = {}", e.getMessage());
