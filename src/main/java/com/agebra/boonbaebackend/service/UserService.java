@@ -67,7 +67,9 @@ public class UserService {
           .orElseThrow(() -> new NotFoundException());
 
         String jwtToken = jwtService.generateToken(user);
+
         return new UserDto.LoginResponse(jwtToken, user.getId(), user.getNickname(), user.getRole().name());
+
     }
 
     //중복 아이디 확인
