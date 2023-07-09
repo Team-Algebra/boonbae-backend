@@ -1,7 +1,8 @@
 # boonbae-backend
 [![Java CI with Gradle](https://github.com/Team-Algebra/boonbae-backend/actions/workflows/Deploy.yml/badge.svg)](https://github.com/Team-Algebra/boonbae-backend/actions/workflows/Deploy.yml)
 
-분배법칙 백엔드 리포지토리  
+
+
 ## 👬 팀 소개
 
 <table>
@@ -42,6 +43,16 @@
 </table>  
 
 <br/>
+
+
+
+## 📒 프로젝트 소개
+분배법칙은 분리배출 정보를 얻고 분리배출에 직접 참여할 수 있는 서비스입니다.<br/>
+기능은 다음과 같습니다. <br/>
+1. 검색을 통해 분리배출 정보를 얻을 수 있습니다.
+2. 분리배출을 인증하여 포인트를 받고 나무를 키울 수 있습니다.
+3. 친환경 펀딩을 등록, 후원하여 환경보호를 실천할 수 있습니다.
+<br/><br/>
 
 
 ## 🛠 기술 스택
@@ -102,5 +113,6 @@
 <br/>  
 
 ## 🖼 E-R Diagram
-![boonbae](https://github.com/Team-Algebra/boonbae-backend/assets/70826982/22f95f0c-4c3f-4ae7-972e-c1d291d973f9)
+<!--![boonbae](https://github.com/Team-Algebra/boonbae-backend/assets/70826982/22f95f0c-4c3f-4ae7-972e-c1d291d973f9)-->
+<img src="https://github.com/Team-Algebra/boonbae-backend/assets/86856676/c9f78e7f-16e3-4f13-b3ac-2f1f90ef98a1" width="600px">
 
