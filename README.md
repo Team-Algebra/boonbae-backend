@@ -1,6 +1,6 @@
 # boonbae-backend
 [![Java CI with Gradle](https://github.com/Team-Algebra/boonbae-backend/actions/workflows/Deploy.yml/badge.svg)](https://github.com/Team-Algebra/boonbae-backend/actions/workflows/Deploy.yml)
-
+<a href="https://saber-continent-6c7.notion.site/11-b652375c6a8042519c968b79ea706847?pvs=4"><img src="https://img.shields.io/badge/Project Notion-000000?style=flat&logo=Notion&logoColor=ffffff"/></a>
 
 
 ## 👬 팀 소개
@@ -99,12 +99,16 @@
         <img src="https://github.com/Team-Algebra/boonbae-backend/assets/70826982/db14b0a7-5324-4555-bcf7-bcc55b649ca9" width="100px" />
     </td>
     <td align="center">
+        <img src="https://github.com/Team-Algebra/boonbae-backend/assets/70826982/be163ed0-6e1f-4e3c-96e1-0b977fda7d53" width="100px" />
+    </td>
+    <td align="center">
         <img src="https://avatars.githubusercontent.com/u/44036562?s=280&v=4" width="100px" />
     </td>
   </tr>
   <tr>
     <td align="center"><b>Github</b></td>
     <td align="center"><b>AWS EC2</b></td>
+    <td align="center"><b>AWS S3</b></td>
     <td align="center"><b>Github Actions</b></td>
   </tr>
 </table>
